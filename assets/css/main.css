@@ -927,9 +927,19 @@ button:disabled {
 }
 
 .qr-empty-card {
+  align-content: center;
   min-height: 250px;
   gap: 12px;
   color: var(--muted);
+  text-align: center;
+}
+
+.qr-empty-icon {
+  display: grid;
+  width: 92px;
+  height: 92px;
+  place-items: center;
+  color: #697386;
 }
 
 .faq-section {

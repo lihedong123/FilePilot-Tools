@@ -40,7 +40,9 @@
               </div>
             </div>
             <div v-else class="qr-empty-card">
-              <QrCode :size="54" />
+              <span class="qr-empty-icon">
+                <QrCode :size="54" />
+              </span>
               <span>{{ t('qr.emptyPreview') }}</span>
             </div>
           </div>
