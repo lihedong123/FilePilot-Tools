@@ -177,7 +177,7 @@ Files are processed directly in your browser and are not uploaded to our server.
 | 区域 | 内容 | 要求 |
 | --- | --- | --- |
 | 品牌区 | FilePilot Tools | 点击后回到首页 |
-| 导航区 | Home、Image Tools、PDF Tools、QR Code | 当前原型只有 Home 有实际页面切换 |
+| 导航区 | Home、Image Tools、PDF Tools、QR Code | 顶部导航需要提供对应入口；QR Code 第一阶段可以先放占位页，真实生成能力后续补 |
 | 语言切换 | EN、中文 | 可切换全站文案 |
 
 移动端要求：
@@ -488,7 +488,7 @@ Compress Images
 
 ### 7.2 页面目标
 
-用户选择 JPG、PNG、WebP 图片后，转换为指定格式，并下载结果。
+用户选择 JPG、PNG、WebP 图片后，默认转换为 PNG，也可以选择保持原格式或转为 JPG、WebP，并下载结果。
 
 ### 7.3 页面结构
 
@@ -570,7 +570,7 @@ Conversion Settings
 
 | 参数 | 默认值 | 要求 |
 | --- | --- | --- |
-| Target format / 目标格式 | WebP | 可选 Same、JPG、PNG、WebP |
+| Target format / 目标格式 | PNG | 可选 Same、JPG、PNG、WebP |
 
 后续可以增加：
 
@@ -583,7 +583,7 @@ Conversion Settings
 
 当前原型中结果预览区固定展示两条示例：
 
-- photo-large.jpg，将转换为 WebP。
+- photo-large.jpg，将转换为 PNG。
 - graphic.png，需要透明背景时保留 PNG。
 
 正式开发时，结果预览要根据用户选择的真实文件生成。
@@ -832,7 +832,7 @@ Combine multiple PDF files into one document. This prototype shows file order, m
 - 展示每个 PDF 文件名。
 - 展示每个 PDF 页数。
 - 展示当前顺序编号。
-- 支持拖拽排序。
+- 支持拖拽排序；为了键盘和移动端操作，也可以保留上移、下移按钮。
 - 支持删除单个 PDF。
 
 ### 9.7 合并设置
@@ -1594,4 +1594,3 @@ PDF 合并页通过标准：
 - 移动端布局正常。
 - 错误提示能看懂。
 - 下载按钮不会和广告或其他内容混淆。
-

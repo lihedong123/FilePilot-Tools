@@ -44,6 +44,7 @@
     "remove": "Remove",
     "moveUp": "Move up",
     "moveDown": "Move down",
+    "dragToReorder": "Drag to reorder",
     "dropTitle": "Choose files",
     "dropCopy": "Drag files here or use the button below.",
     "chooseFiles": "Choose Files",
@@ -61,6 +62,8 @@
     "orientationLandscape": "Landscape",
     "margin": "Margin",
     "outputName": "Output name",
+    "page": "page",
+    "pages": "pages",
     "pageRange": "Page range",
     "width": "Width",
     "height": "Height",
@@ -112,6 +115,13 @@
       "description": "Change image width or height while keeping the original ratio.",
       "card": "Adjust image dimensions for web, email, and documents.",
       "action": "Resize Images"
+    },
+    "qrCode": {
+      "title": "QR Code Generator",
+      "description": "Create QR codes from text or links.",
+      "card": "Generate a QR code from a URL or short text.",
+      "action": "Generate QR Code",
+      "placeholder": "QR Code Generator is listed in the navigation for the product structure. The full QR generation tool will be implemented after the first file tools are complete."
     }
   },
   "error": {
@@ -152,7 +162,9 @@
     "splitPdfTitle": "Split PDF Online - Extract PDF Pages",
     "splitPdfDescription": "Split one PDF online. Enter a page range and export selected pages directly in your browser.",
     "resizeImageTitle": "Resize Image Online - Change Image Size in Browser",
-    "resizeImageDescription": "Resize JPG, PNG, and WebP images online. Change image dimensions directly in your browser."
+    "resizeImageDescription": "Resize JPG, PNG, and WebP images online. Change image dimensions directly in your browser.",
+    "qrCodeTitle": "QR Code Generator Online",
+    "qrCodeDescription": "Create QR codes from text or links online."
   },
   "footer": {
     "prototype": "FilePilot Tools",

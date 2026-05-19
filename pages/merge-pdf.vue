@@ -69,9 +69,7 @@ function clearFiles() {
   results.value = []
 }
 
-function moveFile(index: number, direction: -1 | 1) {
-  const targetIndex = index + direction
-
+function moveFile(index: number, targetIndex: number) {
   if (targetIndex < 0 || targetIndex >= files.value.length) {
     return
   }

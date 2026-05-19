@@ -4,7 +4,7 @@ const imageMaxSize = 20 * 1024 * 1024
 const pdfMaxSize = 50 * 1024 * 1024
 
 export function useToolCatalog() {
-  const tools: ToolInfo[] = [
+  const allTools: ToolInfo[] = [
     {
       key: 'image-compressor',
       titleKey: 'tools.imageCompressor.title',
@@ -100,11 +100,27 @@ export function useToolCatalog() {
       actionKey: 'tools.resizeImage.action',
       seoTitleKey: 'seo.resizeImageTitle',
       seoDescriptionKey: 'seo.resizeImageDescription'
+    },
+    {
+      key: 'qr-code-generator',
+      titleKey: 'tools.qrCode.title',
+      descriptionKey: 'tools.qrCode.description',
+      cardDescriptionKey: 'tools.qrCode.card',
+      href: '/qr-code-generator',
+      icon: 'qr-code',
+      category: 'qr',
+      accept: '',
+      multiple: false,
+      maxFiles: 0,
+      maxFileSize: 0,
+      actionKey: 'tools.qrCode.action',
+      seoTitleKey: 'seo.qrCodeTitle',
+      seoDescriptionKey: 'seo.qrCodeDescription'
     }
   ]
 
   const getTool = (key: ToolInfo['key']) => {
-    const tool = tools.find((item) => item.key === key)
+    const tool = allTools.find((item) => item.key === key)
 
     if (!tool) {
       throw new Error(`Unknown tool: ${key}`)
@@ -114,9 +130,10 @@ export function useToolCatalog() {
   }
 
   return {
-    tools,
+    tools: allTools.filter((tool) => tool.category !== 'qr'),
     getTool,
-    imageTools: tools.filter((tool) => tool.category === 'image'),
-    pdfTools: tools.filter((tool) => tool.category === 'pdf')
+    imageTools: allTools.filter((tool) => tool.category === 'image'),
+    pdfTools: allTools.filter((tool) => tool.category === 'pdf'),
+    qrTools: allTools.filter((tool) => tool.category === 'qr')
   }
 }

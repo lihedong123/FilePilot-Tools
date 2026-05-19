@@ -39,20 +39,39 @@
     </div>
 
     <ul class="selected-list">
-      <li v-for="(file, index) in files" :key="`${file.name}-${file.size}-${index}`" class="selected-item">
+      <li
+        v-for="(file, index) in files"
+        :key="`${file.name}-${file.size}-${index}`"
+        class="selected-item"
+        :class="{ 'is-file-dragging': draggedIndex === index }"
+        draggable="true"
+        @dragstart="handleFileDragStart(index)"
+        @dragover.prevent
+        @dragenter.prevent
+        @drop.prevent="handleFileDrop(index)"
+        @dragend="handleFileDragEnd"
+      >
         <span class="file-chip">{{ formatExtension(file.name) }}</span>
         <div class="selected-file-main">
           <strong>{{ file.name }}</strong>
-          <span>{{ formatBytes(file.size) }}</span>
+          <span>{{ getFileMeta(file) }}</span>
         </div>
         <div class="file-actions">
           <button
             v-if="files.length > 1"
             class="icon-button"
             type="button"
+            :aria-label="t('tool.dragToReorder')"
+          >
+            <GripVertical :size="16" />
+          </button>
+          <button
+            v-if="files.length > 1"
+            class="icon-button"
+            type="button"
             :aria-label="t('tool.moveUp')"
             :disabled="index === 0"
-            @click="$emit('move', index, -1)"
+            @click="$emit('move', index, index - 1)"
           >
             <ArrowUp :size="16" />
           </button>
@@ -62,7 +81,7 @@
             type="button"
             :aria-label="t('tool.moveDown')"
             :disabled="index === files.length - 1"
-            @click="$emit('move', index, 1)"
+            @click="$emit('move', index, index + 1)"
           >
             <ArrowDown :size="16" />
           </button>
@@ -76,8 +95,9 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowDown, ArrowUp, FolderOpen, Trash2, UploadCloud } from 'lucide-vue-next'
+import { ArrowDown, ArrowUp, FolderOpen, GripVertical, Trash2, UploadCloud } from 'lucide-vue-next'
 import { formatBytes } from '~/utils/fileSize'
+import { getPdfPageCount } from '~/utils/pdf'
 
 const props = defineProps<{
   files: File[]
@@ -93,7 +113,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [files: File[]]
   remove: [index: number]
-  move: [index: number, direction: -1 | 1]
+  move: [index: number, targetIndex: number]
   clear: []
 }>()
 
@@ -102,6 +122,8 @@ const { t } = useLocale()
 const inputRef = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
 const error = ref('')
+const draggedIndex = ref<number | null>(null)
+const pdfPageCounts = ref<Record<string, number>>({})
 
 const supportLabel = computed(() => {
   return props.accept
@@ -113,6 +135,20 @@ const supportLabel = computed(() => {
 function formatExtension(fileName: string) {
   const extension = fileName.split('.').pop()
   return extension ? extension.slice(0, 4).toUpperCase() : 'FILE'
+}
+
+function getFileKey(file: File) {
+  return `${file.name}-${file.size}-${file.lastModified}`
+}
+
+function getFileMeta(file: File) {
+  const pageCount = pdfPageCounts.value[getFileKey(file)]
+
+  if (file.type === 'application/pdf' && pageCount) {
+    return `${formatBytes(file.size)} · ${pageCount} ${pageCount === 1 ? t('tool.page') : t('tool.pages')}`
+  }
+
+  return formatBytes(file.size)
 }
 
 function acceptsFile(file: File) {
@@ -169,4 +205,44 @@ function handleDrop(event: DragEvent) {
     filterFiles(event.dataTransfer.files)
   }
 }
+
+function handleFileDragStart(index: number) {
+  draggedIndex.value = index
+}
+
+function handleFileDrop(targetIndex: number) {
+  if (draggedIndex.value === null || draggedIndex.value === targetIndex) {
+    draggedIndex.value = null
+    return
+  }
+
+  emit('move', draggedIndex.value, targetIndex)
+  draggedIndex.value = null
+}
+
+function handleFileDragEnd() {
+  draggedIndex.value = null
+}
+
+watch(
+  () => props.files.map((file) => getFileKey(file)),
+  async () => {
+    const entries = await Promise.all(props.files.map(async (file) => {
+      const key = getFileKey(file)
+
+      if (file.type !== 'application/pdf' || pdfPageCounts.value[key]) {
+        return [key, pdfPageCounts.value[key]] as const
+      }
+
+      try {
+        return [key, await getPdfPageCount(file)] as const
+      } catch {
+        return [key, 0] as const
+      }
+    }))
+
+    pdfPageCounts.value = Object.fromEntries(entries.filter(([, count]) => count))
+  },
+  { immediate: true }
+)
 </script>

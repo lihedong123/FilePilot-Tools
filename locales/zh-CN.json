@@ -44,6 +44,7 @@
     "remove": "删除",
     "moveUp": "上移",
     "moveDown": "下移",
+    "dragToReorder": "拖拽调整顺序",
     "dropTitle": "选择文件",
     "dropCopy": "把文件拖到这里，或者点击下方按钮选择。",
     "chooseFiles": "选择文件",
@@ -61,6 +62,8 @@
     "orientationLandscape": "横向",
     "margin": "边距",
     "outputName": "输出文件名",
+    "page": "页",
+    "pages": "页",
     "pageRange": "页码范围",
     "width": "宽度",
     "height": "高度",
@@ -112,6 +115,13 @@
       "description": "调整图片宽度或高度，同时保持原始比例。",
       "card": "调整图片尺寸，适合网页、邮件和文档使用。",
       "action": "调整图片尺寸"
+    },
+    "qrCode": {
+      "title": "二维码生成",
+      "description": "根据文字或链接生成二维码。",
+      "card": "把链接或短文本生成二维码。",
+      "action": "生成二维码",
+      "placeholder": "二维码生成已经放入导航，先用于完整产品结构占位。真实二维码生成功能会在第一阶段文件工具完成后继续实现。"
     }
   },
   "error": {
@@ -152,7 +162,9 @@
     "splitPdfTitle": "在线拆分 PDF - 导出 PDF 页面",
     "splitPdfDescription": "在线拆分一个 PDF。输入页码范围，并直接在浏览器中导出指定页面。",
     "resizeImageTitle": "在线调整图片尺寸 - 在浏览器中修改图片大小",
-    "resizeImageDescription": "在线调整 JPG、PNG、WebP 图片尺寸。直接在浏览器中修改宽高。"
+    "resizeImageDescription": "在线调整 JPG、PNG、WebP 图片尺寸。直接在浏览器中修改宽高。",
+    "qrCodeTitle": "在线二维码生成工具",
+    "qrCodeDescription": "在线根据文字或链接生成二维码。"
   },
   "footer": {
     "prototype": "FilePilot Tools",

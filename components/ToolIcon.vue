@@ -6,6 +6,7 @@
     <Files v-else-if="icon === 'merge-pdf'" :size="24" />
     <SplitSquareHorizontal v-else-if="icon === 'split-pdf'" :size="24" />
     <Scaling v-else-if="icon === 'resize'" :size="24" />
+    <QrCode v-else-if="icon === 'qr-code'" :size="24" />
     <FileText v-else :size="24" />
   </span>
 </template>
@@ -16,6 +17,7 @@ import {
   FileText,
   Files,
   Minimize2,
+  QrCode,
   RefreshCw,
   Scaling,
   SplitSquareHorizontal

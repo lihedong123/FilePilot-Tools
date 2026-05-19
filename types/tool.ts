@@ -7,8 +7,9 @@ export type ToolKey =
   | 'merge-pdf'
   | 'split-pdf'
   | 'resize-image'
+  | 'qr-code-generator'
 
-export type ToolCategory = 'image' | 'pdf'
+export type ToolCategory = 'image' | 'pdf' | 'qr'
 
 export type ToolInfo = {
   key: ToolKey

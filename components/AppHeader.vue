@@ -21,6 +21,10 @@
           <Files :size="16" />
           {{ t('nav.pdfTools') }}
         </NuxtLink>
+        <NuxtLink to="/qr-code-generator" class="nav-link">
+          <QrCode :size="16" />
+          {{ t('nav.qrCode') }}
+        </NuxtLink>
       </nav>
 
       <div class="header-actions">
@@ -48,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { FileText, Files, Home, Image } from 'lucide-vue-next'
+import { FileText, Files, Home, Image, QrCode } from 'lucide-vue-next'
 
 
 const { locale, setLocale, t } = useLocale()

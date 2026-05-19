@@ -17,3 +17,10 @@ export function getPdfPageSize(name: PdfPageSizeName, orientation: 'portrait' | 
 
   return size
 }
+
+export async function getPdfPageCount(file: File): Promise<number> {
+  const { PDFDocument } = await import('pdf-lib')
+  const pdf = await PDFDocument.load(await file.arrayBuffer())
+
+  return pdf.getPageCount()
+}

@@ -82,6 +82,7 @@ const processing = ref(false)
 const error = ref('')
 
 const formats = computed(() => [
+  { value: 'same' as const, label: t('tool.same') },
   { value: 'jpg' as const, label: 'JPG' },
   { value: 'png' as const, label: 'PNG' },
   { value: 'webp' as const, label: 'WebP' }
@@ -101,9 +102,7 @@ function clearFiles() {
   results.value = []
 }
 
-function moveFile(index: number, direction: -1 | 1) {
-  const targetIndex = index + direction
-
+function moveFile(index: number, targetIndex: number) {
   if (targetIndex < 0 || targetIndex >= files.value.length) {
     return
   }
