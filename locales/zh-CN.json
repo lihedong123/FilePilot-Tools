@@ -120,9 +120,23 @@
       "title": "二维码生成",
       "description": "根据文字或链接生成二维码。",
       "card": "把链接或短文本生成二维码。",
-      "action": "生成二维码",
-      "placeholder": "二维码生成已经放入导航，先用于完整产品结构占位。真实二维码生成功能会在第一阶段文件工具完成后继续实现。"
+      "action": "生成二维码"
     }
+  },
+  "qr": {
+    "contentLabel": "文字或链接",
+    "contentPlaceholder": "粘贴网址、邮箱、手机号、Wi-Fi 文本，或任意短文本。",
+    "contentHelp": "二维码直接在浏览器里生成，不会上传到服务器。",
+    "previewTitle": "二维码预览",
+    "previewAlt": "生成后的二维码",
+    "emptyPreview": "生成二维码后会在这里预览。",
+    "sizeLabel": "尺寸",
+    "foregroundLabel": "前景色",
+    "backgroundLabel": "背景色",
+    "marginLabel": "留白",
+    "downloadPng": "下载 PNG",
+    "contentRequired": "请先输入文字或链接。",
+    "generateFailed": "二维码生成失败，请尝试缩短内容。"
   },
   "error": {
     "chooseFile": "请先选择至少一个文件。",

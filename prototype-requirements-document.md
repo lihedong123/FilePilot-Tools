@@ -177,7 +177,7 @@ Files are processed directly in your browser and are not uploaded to our server.
 | 区域 | 内容 | 要求 |
 | --- | --- | --- |
 | 品牌区 | FilePilot Tools | 点击后回到首页 |
-| 导航区 | Home、Image Tools、PDF Tools、QR Code | 顶部导航需要提供对应入口；QR Code 第一阶段可以先放占位页，真实生成能力后续补 |
+| 导航区 | Home、Image Tools、PDF Tools、QR Code | 顶部导航需要提供对应入口；QR Code 进入二维码生成页 |
 | 语言切换 | EN、中文 | 可切换全站文案 |
 
 移动端要求：
@@ -962,6 +962,41 @@ Merge PDF Files
 - 只填高度时，根据原图比例计算宽度。
 - 宽高都填且保持比例开启时，以宽度为准。
 
+### 10.3 QR 码生成
+
+正式路径：
+
+```text
+/qr-code-generator
+```
+
+核心需求：
+
+- 输入文字或链接。
+- 设置二维码尺寸。
+- 设置前景色。
+- 设置背景色。
+- 设置留白。
+- 生成二维码预览。
+- 下载 PNG 图片。
+
+基本参数：
+
+| 参数 | 默认值 | 说明 |
+| --- | --- | --- |
+| content | `https://filepilot.tools` | 二维码内容 |
+| size | 512 | 输出图片尺寸，单位 px |
+| foreground | `#111827` | 二维码前景色 |
+| background | `#ffffff` | 二维码背景色 |
+| margin | 2 | 二维码留白 |
+
+交互要求：
+
+- 内容为空时不能生成，提示用户先输入文字或链接。
+- 修改内容、尺寸或颜色后，旧预览失效，需要重新生成。
+- 下载文件名使用 `qr-code.png`。
+- 生成过程在浏览器中完成，不上传到服务器。
+
 ## 11. 多语言需求
 
 ### 11.1 支持语言
@@ -1540,10 +1575,9 @@ PDF 合并页通过标准：
 继续扩展：
 
 1. PDF 转图片。
-2. QR 码生成。
-3. 批量下载 ZIP。
-4. FAQ 页面。
-5. 隐私政策页面。
+2. 批量下载 ZIP。
+3. FAQ 页面。
+4. 隐私政策页面。
 
 ## 24. 和当前原型的差异说明
 

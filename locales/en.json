@@ -120,9 +120,23 @@
       "title": "QR Code Generator",
       "description": "Create QR codes from text or links.",
       "card": "Generate a QR code from a URL or short text.",
-      "action": "Generate QR Code",
-      "placeholder": "QR Code Generator is listed in the navigation for the product structure. The full QR generation tool will be implemented after the first file tools are complete."
+      "action": "Generate QR Code"
     }
+  },
+  "qr": {
+    "contentLabel": "Text or link",
+    "contentPlaceholder": "Paste a URL, email, phone number, Wi-Fi text, or any short text.",
+    "contentHelp": "The QR code is generated in your browser. Nothing is uploaded to this server.",
+    "previewTitle": "QR Preview",
+    "previewAlt": "Generated QR code",
+    "emptyPreview": "Generate a QR code to preview it here.",
+    "sizeLabel": "Size",
+    "foregroundLabel": "Foreground color",
+    "backgroundLabel": "Background color",
+    "marginLabel": "Quiet zone",
+    "downloadPng": "Download PNG",
+    "contentRequired": "Enter text or a link first.",
+    "generateFailed": "Failed to generate the QR code. Try shorter content."
   },
   "error": {
     "chooseFile": "Choose at least one file first.",

@@ -41,7 +41,8 @@ a {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -724,7 +725,8 @@ button:disabled {
 .range-input,
 .text-input,
 .select-input,
-.color-input {
+.color-input,
+.textarea-input {
   width: 100%;
 }
 
@@ -733,13 +735,21 @@ button:disabled {
 }
 
 .text-input,
-.select-input {
+.select-input,
+.textarea-input {
   min-height: 40px;
   padding: 0 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #ffffff;
   color: var(--text);
+}
+
+.textarea-input {
+  min-height: 78px;
+  padding: 12px;
+  resize: vertical;
+  line-height: 1.6;
 }
 
 .color-input {
@@ -869,6 +879,57 @@ button:disabled {
 
 .related-tools {
   padding: 0 0 54px;
+}
+
+.qr-input-panel {
+  padding: 4px 0 18px;
+}
+
+.qr-preview-area {
+  display: grid;
+  min-height: 340px;
+  padding: 18px;
+  place-items: center;
+}
+
+.qr-preview-card,
+.qr-empty-card {
+  display: grid;
+  width: min(100%, 360px);
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fbfdff;
+}
+
+.qr-preview-card {
+  gap: 16px;
+  padding: 22px;
+}
+
+.qr-preview-image {
+  width: min(100%, 280px);
+  aspect-ratio: 1;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.qr-preview-meta {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+}
+
+.qr-preview-meta span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.qr-empty-card {
+  min-height: 250px;
+  gap: 12px;
+  color: var(--muted);
 }
 
 .faq-section {
