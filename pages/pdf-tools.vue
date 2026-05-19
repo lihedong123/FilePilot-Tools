@@ -1,0 +1,35 @@
+<template>
+  <section class="container section">
+    <ObBlock :ob_info="ob_info" />
+    <div class="section-title-row">
+      <div>
+        <NuxtLink class="crumb-link" to="/">{{ t('category.backHome') }}</NuxtLink>
+        <h1>{{ t('category.pdfTitle') }}</h1>
+      </div>
+      <p>{{ t('category.pdfCopy') }}</p>
+    </div>
+    <div class="tool-grid">
+      <ToolCard v-for="tool in pdfTools" :key="tool.key" :tool="tool" />
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+const ob_info = {
+  name: 'pdf-tools-page',
+  file: 'D:\\zhizhouAi\\myproject\\pages\\pdf-tools.vue'
+}
+
+const { t } = useLocale()
+const { pdfTools } = useToolCatalog()
+
+useHead(() => ({
+  title: t('seo.pdfCategoryTitle'),
+  meta: [
+    {
+      name: 'description',
+      content: t('seo.pdfCategoryDescription')
+    }
+  ]
+}))
+</script>

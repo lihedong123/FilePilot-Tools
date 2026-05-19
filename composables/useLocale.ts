@@ -8,10 +8,15 @@ const dictionaries = {
 }
 
 export function useLocale() {
-  const locale = useState<LocaleCode>('filepilot-locale', () => 'en')
+  const localeCookie = useCookie<LocaleCode>('filepilot-locale', {
+    default: () => 'en',
+    sameSite: 'lax'
+  })
+  const locale = useState<LocaleCode>('filepilot-locale', () => localeCookie.value)
 
   const setLocale = (value: LocaleCode) => {
     locale.value = value
+    localeCookie.value = value
 
     if (import.meta.client) {
       document.documentElement.lang = value
@@ -37,7 +42,10 @@ export function useLocale() {
 
     if (saved === 'en' || saved === 'zh-CN') {
       locale.value = saved
+      localeCookie.value = saved
       document.documentElement.lang = saved
+    } else {
+      document.documentElement.lang = locale.value
     }
   }
 

@@ -5,6 +5,7 @@ dist
 .env
 .env.*
 *.log
+.codex-logs
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*

@@ -1,5 +1,7 @@
 import { PDFDocument } from 'pdf-lib'
 import type { ProcessedResult } from '~/types/tool'
+import { bytesToArrayBuffer } from '~/utils/blob'
+import { renderImageToBlob } from '~/utils/image'
 import { getPdfPageSize, type PdfPageSizeName } from '~/utils/pdf'
 
 export function useImageToPdf() {
@@ -14,7 +16,13 @@ export function useImageToPdf() {
     const pdfDoc = await PDFDocument.create()
 
     for (const file of files) {
-      const bytes = await file.arrayBuffer()
+      const bytes = file.type === 'image/webp'
+        ? await (await renderImageToBlob(file, {
+          outputFormat: 'jpg',
+          quality: 0.92,
+          background: '#ffffff'
+        })).blob.arrayBuffer()
+        : await file.arrayBuffer()
       const image = file.type === 'image/png'
         ? await pdfDoc.embedPng(bytes)
         : await pdfDoc.embedJpg(bytes)
@@ -40,7 +48,7 @@ export function useImageToPdf() {
     }
 
     const pdfBytes = await pdfDoc.save()
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+    const blob = new Blob([bytesToArrayBuffer(pdfBytes)], { type: 'application/pdf' })
 
     return [
       {

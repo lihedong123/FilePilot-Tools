@@ -1,5 +1,6 @@
 import { PDFDocument } from 'pdf-lib'
 import type { ProcessedResult } from '~/types/tool'
+import { bytesToArrayBuffer } from '~/utils/blob'
 import { parsePageRange } from '~/utils/pageRange'
 
 export function useSplitPdf() {
@@ -18,7 +19,7 @@ export function useSplitPdf() {
     copiedPages.forEach((page) => outputPdf.addPage(page))
 
     const bytes = await outputPdf.save()
-    const blob = new Blob([bytes], { type: 'application/pdf' })
+    const blob = new Blob([bytesToArrayBuffer(bytes)], { type: 'application/pdf' })
 
     return [
       {

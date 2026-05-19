@@ -1,5 +1,6 @@
 import { PDFDocument } from 'pdf-lib'
 import type { ProcessedResult } from '~/types/tool'
+import { bytesToArrayBuffer } from '~/utils/blob'
 
 export function useMergePdf() {
   const mergePdfs = async (
@@ -22,7 +23,7 @@ export function useMergePdf() {
     }
 
     const bytes = await mergedPdf.save()
-    const blob = new Blob([bytes], { type: 'application/pdf' })
+    const blob = new Blob([bytesToArrayBuffer(bytes)], { type: 'application/pdf' })
 
     return [
       {

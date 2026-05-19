@@ -20,8 +20,8 @@
     "dropImages": "Drop images here",
     "previewFormats": "JPG, PNG, and WebP preview",
     "popularTitle": "Popular Tools",
-    "popularCopy": "Core tools are kept visible so visitors can start the task instead of reading a long marketing page.",
-    "trustCopy": "Files are processed directly in your browser for supported tools. The first version keeps the core file flow local: choose files, set options, process, and download."
+    "popularCopy": "Choose a tool, add your files, and start processing right away.",
+    "trustCopy": "Files are processed directly in your browser. Set the options, process the file, and download the result."
   },
   "category": {
     "imageTitle": "Image Tools",
@@ -130,7 +130,7 @@
     "uploadedQuestion": "Are my files uploaded?",
     "uploadedAnswer": "No. Supported tools process files inside your browser and do not upload them to this server.",
     "freeQuestion": "Is this tool free?",
-    "freeAnswer": "Yes. This first version does not require login, payment, or membership.",
+    "freeAnswer": "Yes. No login, payment, or membership is required.",
     "mobileQuestion": "Can I use it on mobile?",
     "mobileAnswer": "Yes. Tool pages use a single-column layout and card results on small screens."
   },

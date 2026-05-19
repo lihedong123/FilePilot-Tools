@@ -1,5 +1,5 @@
 import type { ProcessedResult } from '~/types/tool'
-import { renderImageToBlob, renameFile, type ImageOutputFormat } from '~/utils/image'
+import { loadImageElement, renderImageToBlob, renameFile, type ImageOutputFormat } from '~/utils/image'
 
 export function useResizeImage() {
   const resizeImages = async (

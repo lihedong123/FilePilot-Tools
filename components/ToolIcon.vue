@@ -1,5 +1,5 @@
 <template>
-  <span class="tool-icon" aria-hidden="true">
+  <span class="tool-icon" :data-ob-file="ob_info.file" :data-ob-name="ob_info.name" aria-hidden="true">
     <Minimize2 v-if="icon === 'compress'" :size="24" />
     <RefreshCw v-else-if="icon === 'convert'" :size="24" />
     <FileImage v-else-if="icon === 'image-pdf'" :size="24" />
@@ -24,4 +24,9 @@ import {
 defineProps<{
   icon: string
 }>()
+
+const ob_info = {
+  name: 'tool-icon',
+  file: 'D:\\zhizhouAi\\myproject\\components\\ToolIcon.vue'
+}
 </script>
