@@ -1,6 +1,5 @@
 <template>
   <section class="faq-section">
-    <ObBlock :ob_info="ob_info" />
     <h2>{{ t('faq.title') }}</h2>
     <div class="faq-grid">
       <article>
@@ -22,8 +21,4 @@
 <script setup lang="ts">
 const { t } = useLocale()
 
-const ob_info = {
-  name: 'tool-faq',
-  file: 'D:\\zhizhouAi\\myproject\\components\\ToolFaq.vue'
-}
 </script>

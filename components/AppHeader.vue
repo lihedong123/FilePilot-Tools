@@ -1,6 +1,5 @@
 <template>
   <header class="site-header">
-    <ObBlock :ob_info="ob_info" />
     <div class="header-inner">
       <NuxtLink class="brand-link" to="/" :aria-label="t('brand')">
         <span class="brand-mark">
@@ -51,10 +50,6 @@
 <script setup lang="ts">
 import { FileText, Files, Home, Image } from 'lucide-vue-next'
 
-const ob_info = {
-  name: 'app-header',
-  file: 'D:\\zhizhouAi\\myproject\\components\\AppHeader.vue'
-}
 
 const { locale, setLocale, t } = useLocale()
 </script>

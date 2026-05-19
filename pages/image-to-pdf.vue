@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ObBlock :ob_info="ob_info" />
     <section class="container tool-page-header">
       <NuxtLink class="crumb-link" to="/">{{ t('tool.back') }}</NuxtLink>
       <h1 class="tool-title">{{ t(tool.titleKey) }}</h1>
@@ -73,10 +72,6 @@
 import type { ProcessedResult } from '~/types/tool'
 import type { PdfPageSizeName } from '~/utils/pdf'
 
-const ob_info = {
-  name: 'image-to-pdf-page',
-  file: 'D:\\zhizhouAi\\myproject\\pages\\image-to-pdf.vue'
-}
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()

@@ -1,6 +1,5 @@
 <template>
   <section class="result-panel">
-    <ObBlock :ob_info="ob_info" />
     <div class="result-head">
       <div>
         <h2>{{ t('tool.result') }}</h2>
@@ -74,10 +73,6 @@ defineProps<{
   results: ProcessedResult[]
 }>()
 
-const ob_info = {
-  name: 'result-list',
-  file: 'D:\\zhizhouAi\\myproject\\components\\ResultList.vue'
-}
 
 const { t } = useLocale()
 const { downloadBlob } = useDownloadFile()

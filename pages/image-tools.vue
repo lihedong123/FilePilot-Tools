@@ -1,6 +1,5 @@
 <template>
   <section class="container section">
-    <ObBlock :ob_info="ob_info" />
     <div class="section-title-row">
       <div>
         <NuxtLink class="crumb-link" to="/">{{ t('category.backHome') }}</NuxtLink>
@@ -15,10 +14,6 @@
 </template>
 
 <script setup lang="ts">
-const ob_info = {
-  name: 'image-tools-page',
-  file: 'D:\\zhizhouAi\\myproject\\pages\\image-tools.vue'
-}
 
 const { t } = useLocale()
 const { imageTools } = useToolCatalog()

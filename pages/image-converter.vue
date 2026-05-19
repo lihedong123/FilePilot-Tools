@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ObBlock :ob_info="ob_info" />
     <section class="container tool-page-header">
       <NuxtLink class="crumb-link" to="/">{{ t('tool.back') }}</NuxtLink>
       <h1 class="tool-title">{{ t(tool.titleKey) }}</h1>
@@ -69,10 +68,6 @@
 import type { ProcessedResult } from '~/types/tool'
 import type { ImageOutputFormat } from '~/utils/image'
 
-const ob_info = {
-  name: 'image-converter-page',
-  file: 'D:\\zhizhouAi\\myproject\\pages\\image-converter.vue'
-}
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
@@ -80,7 +75,7 @@ const { convertImages } = useImageConverter()
 const tool = getTool('image-converter')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
-const targetFormat = ref<ImageOutputFormat>('webp')
+const targetFormat = ref<ImageOutputFormat>('png')
 const quality = ref(90)
 const background = ref('#ffffff')
 const processing = ref(false)

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ObBlock :ob_info="ob_info" />
     <section class="container hero">
       <div>
         <p class="eyebrow">
@@ -71,10 +70,6 @@
 </template>
 
 <script setup lang="ts">
-const ob_info = {
-  name: 'home-page',
-  file: 'D:\\zhizhouAi\\myproject\\pages\\index.vue'
-}
 
 const { t } = useLocale()
 const { tools } = useToolCatalog()

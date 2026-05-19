@@ -6,7 +6,6 @@
     @dragleave.prevent="isDragging = false"
     @drop.prevent="handleDrop"
   >
-    <ObBlock :ob_info="ob_info" />
     <UploadCloud class="drop-icon" :size="38" />
     <h2>{{ title || t('tool.dropTitle') }}</h2>
     <p>{{ description || t('tool.dropCopy') }}</p>
@@ -98,10 +97,6 @@ const emit = defineEmits<{
   clear: []
 }>()
 
-const ob_info = {
-  name: 'file-dropzone',
-  file: 'D:\\zhizhouAi\\myproject\\components\\FileDropzone.vue'
-}
 
 const { t } = useLocale()
 const inputRef = ref<HTMLInputElement | null>(null)

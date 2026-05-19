@@ -1,6 +1,5 @@
 <template>
   <div>
-    <ObBlock :ob_info="ob_info" />
     <section class="container tool-page-header">
       <NuxtLink class="crumb-link" to="/">{{ t('tool.back') }}</NuxtLink>
       <h1 class="tool-title">{{ t(tool.titleKey) }}</h1>
@@ -48,10 +47,6 @@
 <script setup lang="ts">
 import type { ProcessedResult } from '~/types/tool'
 
-const ob_info = {
-  name: 'split-pdf-page',
-  file: 'D:\\zhizhouAi\\myproject\\pages\\split-pdf.vue'
-}
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
@@ -79,7 +74,7 @@ function clearFiles() {
 }
 
 function moveFile() {
-  // 单文件工具不需要调整顺序。这里保留事件处理，是为了复用 FileDropzone 的统一组件接口。
+  // 单文件工具不需要调整顺序；保留这个事件处理，是为了复用 FileDropzone 的统一组件接口。
 }
 
 async function handleProcess() {
