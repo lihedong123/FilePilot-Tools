@@ -1,0 +1,161 @@
+{
+  "brand": "FilePilot Tools",
+  "nav": {
+    "home": "Home",
+    "imageTools": "Image Tools",
+    "pdfTools": "PDF Tools",
+    "qrCode": "QR Code",
+    "language": "Language"
+  },
+  "home": {
+    "eyebrow": "Browser-first file tools",
+    "title": "Free Online PDF & Image Tools",
+    "copy": "Process files directly in your browser. Compress images, convert formats, create PDFs, and finish common file tasks without installing extra software.",
+    "compressCta": "Compress Image",
+    "convertCta": "Convert Image",
+    "imageToPdfCta": "Image to PDF",
+    "quickTitle": "Fast image compression",
+    "quickCopy": "Choose files, tune quality, download smaller images.",
+    "localBadge": "Local",
+    "dropImages": "Drop images here",
+    "previewFormats": "JPG, PNG, and WebP preview",
+    "popularTitle": "Popular Tools",
+    "popularCopy": "Core tools are kept visible so visitors can start the task instead of reading a long marketing page.",
+    "trustCopy": "Files are processed directly in your browser for supported tools. The first version keeps the core file flow local: choose files, set options, process, and download."
+  },
+  "category": {
+    "imageTitle": "Image Tools",
+    "imageCopy": "Compress, convert, resize, and create PDFs from local images.",
+    "pdfTitle": "PDF Tools",
+    "pdfCopy": "Merge, split, and create PDF files directly in the browser.",
+    "backHome": "Back to home"
+  },
+  "tool": {
+    "back": "Back to all tools",
+    "relatedTitle": "Related Tools",
+    "relatedCopy": "Keep the next common action close to the result area.",
+    "selectedFiles": "Selected files",
+    "settings": "Settings",
+    "result": "Result",
+    "emptyResult": "Processed files will appear here.",
+    "process": "Process",
+    "download": "Download",
+    "clear": "Clear files",
+    "remove": "Remove",
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "dropTitle": "Choose files",
+    "dropCopy": "Drag files here or use the button below.",
+    "chooseFiles": "Choose Files",
+    "localNotice": "Files are processed directly in your browser and are not uploaded to our server.",
+    "supportedFormats": "Supported formats",
+    "quality": "Quality",
+    "outputFormat": "Output format",
+    "targetFormat": "Target format",
+    "same": "Same",
+    "background": "Background color",
+    "pageSize": "Page size",
+    "orientation": "Orientation",
+    "orientationAuto": "Auto",
+    "orientationPortrait": "Portrait",
+    "orientationLandscape": "Landscape",
+    "margin": "Margin",
+    "outputName": "Output name",
+    "pageRange": "Page range",
+    "width": "Width",
+    "height": "Height",
+    "keepAspectRatio": "Keep aspect ratio",
+    "dragHint": "Drag files to adjust order, or use the arrow buttons.",
+    "statusReady": "Ready",
+    "statusProcessing": "Processing...",
+    "statusDone": "Done",
+    "saved": "saved",
+    "newSize": "New size",
+    "original": "Original",
+    "file": "File",
+    "format": "Format",
+    "summary": "Summary"
+  },
+  "tools": {
+    "imageCompressor": {
+      "title": "Compress Image",
+      "description": "Reduce image file size directly in your browser.",
+      "card": "Reduce JPG, PNG, and WebP image size with a simple quality control.",
+      "action": "Compress Images"
+    },
+    "imageConverter": {
+      "title": "Convert Image",
+      "description": "Convert JPG, PNG, and WebP images in your browser.",
+      "card": "Convert between JPG, PNG, and WebP for common browser and sharing needs.",
+      "action": "Convert Images"
+    },
+    "imageToPdf": {
+      "title": "Image to PDF",
+      "description": "Turn selected images into one PDF.",
+      "card": "Create a PDF from one image or a batch of sorted images.",
+      "action": "Create PDF"
+    },
+    "mergePdf": {
+      "title": "Merge PDF",
+      "description": "Combine multiple PDF files into one document.",
+      "card": "Put multiple PDF files together and control the final order.",
+      "action": "Merge PDF Files"
+    },
+    "splitPdf": {
+      "title": "Split PDF",
+      "description": "Extract selected pages from one PDF file.",
+      "card": "Extract selected pages from a PDF using a clear page range.",
+      "action": "Split PDF"
+    },
+    "resizeImage": {
+      "title": "Resize Image",
+      "description": "Change image width or height while keeping the original ratio.",
+      "card": "Adjust image dimensions for web, email, and documents.",
+      "action": "Resize Images"
+    }
+  },
+  "error": {
+    "chooseFile": "Choose at least one file first.",
+    "chooseTwoPdf": "Choose at least two PDF files first.",
+    "chooseOnePdf": "Choose one PDF file first.",
+    "unsupported": "This file type is not supported.",
+    "tooLarge": "This file is too large for browser processing.",
+    "imageRead": "Failed to read this image.",
+    "pdfRead": "Failed to read this PDF file.",
+    "pageRange": "Enter a valid page range, such as 1-3 or 1,4,8.",
+    "processing": "Processing failed. Try again with another file."
+  },
+  "faq": {
+    "title": "FAQ",
+    "uploadedQuestion": "Are my files uploaded?",
+    "uploadedAnswer": "No. Supported tools process files inside your browser and do not upload them to this server.",
+    "freeQuestion": "Is this tool free?",
+    "freeAnswer": "Yes. This first version does not require login, payment, or membership.",
+    "mobileQuestion": "Can I use it on mobile?",
+    "mobileAnswer": "Yes. Tool pages use a single-column layout and card results on small screens."
+  },
+  "seo": {
+    "homeTitle": "Free Online PDF and Image Tools",
+    "homeDescription": "Free online PDF and image tools that process files directly in your browser.",
+    "imageCategoryTitle": "Image Tools - FilePilot Tools",
+    "imageCategoryDescription": "Compress, convert, resize, and create PDFs from images directly in your browser.",
+    "pdfCategoryTitle": "PDF Tools - FilePilot Tools",
+    "pdfCategoryDescription": "Merge, split, and create PDF files directly in your browser.",
+    "compressTitle": "Compress Image Online - Reduce Image Size in Browser",
+    "compressDescription": "Compress JPG, PNG, and WebP images online. Reduce image file size directly in your browser without uploading files.",
+    "convertTitle": "Convert Image Online - JPG PNG WebP Converter",
+    "convertDescription": "Convert JPG, PNG, and WebP images online. Change image format directly in your browser without uploading files.",
+    "imageToPdfTitle": "Image to PDF Converter Online",
+    "imageToPdfDescription": "Create a PDF from images online. Arrange JPG, PNG, and WebP files and generate a PDF directly in your browser.",
+    "mergePdfTitle": "Merge PDF Online - Combine PDF Files",
+    "mergePdfDescription": "Merge multiple PDF files into one PDF online. Reorder files and combine them directly in your browser.",
+    "splitPdfTitle": "Split PDF Online - Extract PDF Pages",
+    "splitPdfDescription": "Split one PDF online. Enter a page range and export selected pages directly in your browser.",
+    "resizeImageTitle": "Resize Image Online - Change Image Size in Browser",
+    "resizeImageDescription": "Resize JPG, PNG, and WebP images online. Change image dimensions directly in your browser."
+  },
+  "footer": {
+    "prototype": "FilePilot Tools",
+    "copy": "Browser-first PDF and image tools"
+  }
+}

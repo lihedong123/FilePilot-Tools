@@ -1,0 +1,161 @@
+{
+  "brand": "FilePilot Tools",
+  "nav": {
+    "home": "首页",
+    "imageTools": "图片工具",
+    "pdfTools": "PDF 工具",
+    "qrCode": "二维码",
+    "language": "语言"
+  },
+  "home": {
+    "eyebrow": "优先在浏览器处理文件",
+    "title": "免费在线 PDF 和图片工具",
+    "copy": "文件直接在浏览器里处理。你可以压缩图片、转换格式、创建 PDF，并快速完成常见文件处理任务，不需要安装额外软件。",
+    "compressCta": "图片压缩",
+    "convertCta": "图片转换",
+    "imageToPdfCta": "图片转 PDF",
+    "quickTitle": "快速图片压缩",
+    "quickCopy": "选择文件，调整质量，下载更小的图片。",
+    "localBadge": "本地处理",
+    "dropImages": "把图片拖到这里",
+    "previewFormats": "JPG、PNG、WebP 预览",
+    "popularTitle": "常用工具",
+    "popularCopy": "核心工具直接展示出来，让用户先开始处理文件，而不是先阅读一大段介绍。",
+    "trustCopy": "支持的工具会直接在浏览器中处理文件。第一版保留核心流程：选择文件、设置参数、处理文件、下载结果。"
+  },
+  "category": {
+    "imageTitle": "图片工具",
+    "imageCopy": "在本地压缩、转换、调整图片，并把图片生成 PDF。",
+    "pdfTitle": "PDF 工具",
+    "pdfCopy": "直接在浏览器中合并、拆分和创建 PDF 文件。",
+    "backHome": "返回首页"
+  },
+  "tool": {
+    "back": "返回全部工具",
+    "relatedTitle": "相关工具",
+    "relatedCopy": "把用户下一步可能用到的工具放在结果区附近。",
+    "selectedFiles": "已选文件",
+    "settings": "设置",
+    "result": "处理结果",
+    "emptyResult": "处理后的文件会显示在这里。",
+    "process": "处理",
+    "download": "下载",
+    "clear": "清空文件",
+    "remove": "删除",
+    "moveUp": "上移",
+    "moveDown": "下移",
+    "dropTitle": "选择文件",
+    "dropCopy": "把文件拖到这里，或者点击下方按钮选择。",
+    "chooseFiles": "选择文件",
+    "localNotice": "文件直接在浏览器中处理，不会上传到服务器。",
+    "supportedFormats": "支持格式",
+    "quality": "质量",
+    "outputFormat": "输出格式",
+    "targetFormat": "目标格式",
+    "same": "保持原格式",
+    "background": "背景颜色",
+    "pageSize": "页面尺寸",
+    "orientation": "页面方向",
+    "orientationAuto": "自动",
+    "orientationPortrait": "竖向",
+    "orientationLandscape": "横向",
+    "margin": "边距",
+    "outputName": "输出文件名",
+    "pageRange": "页码范围",
+    "width": "宽度",
+    "height": "高度",
+    "keepAspectRatio": "保持比例",
+    "dragHint": "拖动文件可以调整顺序，也可以用箭头按钮调整。",
+    "statusReady": "已准备",
+    "statusProcessing": "处理中...",
+    "statusDone": "完成",
+    "saved": "节省",
+    "newSize": "新大小",
+    "original": "原大小",
+    "file": "文件",
+    "format": "格式",
+    "summary": "摘要"
+  },
+  "tools": {
+    "imageCompressor": {
+      "title": "图片压缩",
+      "description": "直接在浏览器里减小图片体积。",
+      "card": "通过简单的质量控制，减小 JPG、PNG、WebP 图片体积。",
+      "action": "压缩图片"
+    },
+    "imageConverter": {
+      "title": "图片转换",
+      "description": "在浏览器里转换 JPG、PNG 和 WebP 图片。",
+      "card": "在 JPG、PNG、WebP 之间转换，适合浏览器、分享和文档场景。",
+      "action": "转换图片"
+    },
+    "imageToPdf": {
+      "title": "图片转 PDF",
+      "description": "把选中的图片合成一个 PDF。",
+      "card": "把一张或多张排序后的图片生成 PDF 文件。",
+      "action": "生成 PDF"
+    },
+    "mergePdf": {
+      "title": "PDF 合并",
+      "description": "把多个 PDF 文件合并成一个文档。",
+      "card": "把多个 PDF 合成一个文件，并控制最终顺序。",
+      "action": "合并 PDF 文件"
+    },
+    "splitPdf": {
+      "title": "PDF 拆分",
+      "description": "从一个 PDF 文件中导出指定页面。",
+      "card": "用清晰的页码范围，从 PDF 中提取指定页面。",
+      "action": "拆分 PDF"
+    },
+    "resizeImage": {
+      "title": "图片尺寸调整",
+      "description": "调整图片宽度或高度，同时保持原始比例。",
+      "card": "调整图片尺寸，适合网页、邮件和文档使用。",
+      "action": "调整图片尺寸"
+    }
+  },
+  "error": {
+    "chooseFile": "请先选择至少一个文件。",
+    "chooseTwoPdf": "请先选择至少两个 PDF 文件。",
+    "chooseOnePdf": "请先选择一个 PDF 文件。",
+    "unsupported": "不支持这个文件格式。",
+    "tooLarge": "这个文件太大，浏览器处理可能较慢。",
+    "imageRead": "图片读取失败。",
+    "pdfRead": "PDF 文件读取失败。",
+    "pageRange": "请输入正确的页码范围，例如 1-3 或 1,4,8。",
+    "processing": "处理失败，请换一个文件重试。"
+  },
+  "faq": {
+    "title": "常见问题",
+    "uploadedQuestion": "我的文件会被上传吗？",
+    "uploadedAnswer": "不会。支持的工具会在浏览器里处理文件，不会把文件上传到这个服务器。",
+    "freeQuestion": "这个工具免费吗？",
+    "freeAnswer": "是免费的。第一版不需要登录、付款或开通会员。",
+    "mobileQuestion": "手机上可以用吗？",
+    "mobileAnswer": "可以。工具页在小屏幕上使用单列布局，结果区会改成卡片展示。"
+  },
+  "seo": {
+    "homeTitle": "免费在线 PDF 和图片工具",
+    "homeDescription": "免费在线 PDF 和图片工具，文件直接在浏览器里处理。",
+    "imageCategoryTitle": "图片工具 - FilePilot Tools",
+    "imageCategoryDescription": "直接在浏览器中压缩、转换、调整图片，并把图片生成 PDF。",
+    "pdfCategoryTitle": "PDF 工具 - FilePilot Tools",
+    "pdfCategoryDescription": "直接在浏览器中合并、拆分和创建 PDF 文件。",
+    "compressTitle": "在线压缩图片 - 在浏览器中减小图片体积",
+    "compressDescription": "在线压缩 JPG、PNG 和 WebP 图片。文件直接在浏览器中处理，不会上传。",
+    "convertTitle": "在线图片转换 - JPG PNG WebP 转换器",
+    "convertDescription": "在线转换 JPG、PNG 和 WebP 图片。直接在浏览器中改变图片格式，不会上传文件。",
+    "imageToPdfTitle": "在线图片转 PDF 工具",
+    "imageToPdfDescription": "在线把图片生成 PDF。排列 JPG、PNG、WebP 文件，并直接在浏览器中生成 PDF。",
+    "mergePdfTitle": "在线合并 PDF - 合并多个 PDF 文件",
+    "mergePdfDescription": "在线把多个 PDF 合并成一个 PDF。调整顺序并直接在浏览器中合并文件。",
+    "splitPdfTitle": "在线拆分 PDF - 导出 PDF 页面",
+    "splitPdfDescription": "在线拆分一个 PDF。输入页码范围，并直接在浏览器中导出指定页面。",
+    "resizeImageTitle": "在线调整图片尺寸 - 在浏览器中修改图片大小",
+    "resizeImageDescription": "在线调整 JPG、PNG、WebP 图片尺寸。直接在浏览器中修改宽高。"
+  },
+  "footer": {
+    "prototype": "FilePilot Tools",
+    "copy": "优先在浏览器处理的 PDF 和图片工具"
+  }
+}
