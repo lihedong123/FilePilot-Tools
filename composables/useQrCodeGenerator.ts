@@ -5,6 +5,7 @@ export type QrCodeOptions = {
   foreground: string
   background: string
   margin: number
+  errorCorrectionLevel?: 'L' | 'M' | 'Q' | 'H'
 }
 
 export type QrCodeResult = {
@@ -24,7 +25,7 @@ export function useQrCodeGenerator() {
         dark: options.foreground,
         light: options.background
       },
-      errorCorrectionLevel: 'M'
+      errorCorrectionLevel: options.errorCorrectionLevel ?? 'M'
     })
     const response = await fetch(dataUrl)
     const blob = await response.blob()

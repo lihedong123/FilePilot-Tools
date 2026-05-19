@@ -118,15 +118,23 @@
     },
     "qrCode": {
       "title": "QR Code Generator",
-      "description": "Create QR codes from text or links.",
-      "card": "Generate a QR code from a URL or short text.",
+      "description": "Create QR codes from text, links, or images.",
+      "card": "Generate a QR code from a URL, short text, or image.",
       "action": "Generate QR Code"
     }
   },
   "qr": {
+    "inputModeLabel": "Input type",
+    "textMode": "Text or link",
+    "imageMode": "Upload image",
     "contentLabel": "Text or link",
     "contentPlaceholder": "Paste a URL, email, phone number, Wi-Fi text, or any short text.",
     "contentHelp": "The QR code is generated in your browser. Nothing is uploaded to this server.",
+    "imageLabel": "Image",
+    "chooseImage": "Choose Image",
+    "changeImage": "Change Image",
+    "imageHelp": "The image is compressed in your browser into a small image payload that one QR code can hold. It is not uploaded.",
+    "encodedSize": "QR payload",
     "previewTitle": "QR Preview",
     "previewAlt": "Generated QR code",
     "emptyPreview": "Generate a QR code to preview it here.",
@@ -136,7 +144,10 @@
     "marginLabel": "Quiet zone",
     "downloadPng": "Download PNG",
     "contentRequired": "Enter text or a link first.",
-    "generateFailed": "Failed to generate the QR code. Try shorter content."
+    "imageRequired": "Choose an image first.",
+    "generateFailed": "Failed to generate the QR code. Try shorter content.",
+    "imagePrepareFailed": "Failed to process this image. Try a smaller or simpler image.",
+    "imageGenerateFailed": "The image payload is still too large for one QR code. Try a smaller or simpler image."
   },
   "error": {
     "chooseFile": "Choose at least one file first.",
@@ -178,7 +189,7 @@
     "resizeImageTitle": "Resize Image Online - Change Image Size in Browser",
     "resizeImageDescription": "Resize JPG, PNG, and WebP images online. Change image dimensions directly in your browser.",
     "qrCodeTitle": "QR Code Generator Online",
-    "qrCodeDescription": "Create QR codes from text or links online."
+    "qrCodeDescription": "Create QR codes from text, links, or images online."
   },
   "footer": {
     "prototype": "FilePilot Tools",

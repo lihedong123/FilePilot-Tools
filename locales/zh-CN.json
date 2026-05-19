@@ -118,15 +118,23 @@
     },
     "qrCode": {
       "title": "二维码生成",
-      "description": "根据文字或链接生成二维码。",
-      "card": "把链接或短文本生成二维码。",
+      "description": "根据文字、链接或图片生成二维码。",
+      "card": "把链接、短文本或图片生成二维码。",
       "action": "生成二维码"
     }
   },
   "qr": {
+    "inputModeLabel": "输入方式",
+    "textMode": "文字或链接",
+    "imageMode": "上传图片",
     "contentLabel": "文字或链接",
     "contentPlaceholder": "粘贴网址、邮箱、手机号、Wi-Fi 文本，或任意短文本。",
     "contentHelp": "二维码直接在浏览器里生成，不会上传到服务器。",
+    "imageLabel": "图片",
+    "chooseImage": "选择图片",
+    "changeImage": "更换图片",
+    "imageHelp": "图片会先在浏览器里压缩成二维码可承载的小图内容，不会上传到服务器。",
+    "encodedSize": "二维码内容",
     "previewTitle": "二维码预览",
     "previewAlt": "生成后的二维码",
     "emptyPreview": "生成二维码后会在这里预览。",
@@ -136,7 +144,10 @@
     "marginLabel": "留白",
     "downloadPng": "下载 PNG",
     "contentRequired": "请先输入文字或链接。",
-    "generateFailed": "二维码生成失败，请尝试缩短内容。"
+    "imageRequired": "请先选择一张图片。",
+    "generateFailed": "二维码生成失败，请尝试缩短内容。",
+    "imagePrepareFailed": "图片处理失败，请换一张更小或更简单的图片。",
+    "imageGenerateFailed": "图片内容仍然超过二维码容量，请换一张更小或更简单的图片。"
   },
   "error": {
     "chooseFile": "请先选择至少一个文件。",
@@ -178,7 +189,7 @@
     "resizeImageTitle": "在线调整图片尺寸 - 在浏览器中修改图片大小",
     "resizeImageDescription": "在线调整 JPG、PNG、WebP 图片尺寸。直接在浏览器中修改宽高。",
     "qrCodeTitle": "在线二维码生成工具",
-    "qrCodeDescription": "在线根据文字或链接生成二维码。"
+    "qrCodeDescription": "在线根据文字、链接或图片生成二维码。"
   },
   "footer": {
     "prototype": "FilePilot Tools",
