@@ -1,0 +1,1880 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FilePilot Tools Prototype</title>
+  <style>
+    :root {
+      --page: #f7f9fc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --text: #101827;
+      --muted: #667085;
+      --line: #dce3ee;
+      --primary: #1d64f2;
+      --primary-dark: #164fc4;
+      --primary-soft: #e8f0ff;
+      --success: #11845b;
+      --warning: #b76e00;
+      --shadow: 0 20px 60px rgba(16, 24, 39, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220, 227, 238, 0.86);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(1120px, calc(100% - 48px));
+      height: 68px;
+      margin: 0 auto;
+      gap: 24px;
+    }
+
+    .brand-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      color: var(--text);
+      background: transparent;
+      font-weight: 760;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--text);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .language-switcher {
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+    }
+
+    .language-button {
+      min-width: 46px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .language-button.is-active {
+      background: var(--text);
+      color: #ffffff;
+    }
+
+    .nav-button {
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .nav-button:hover,
+    .nav-button.is-active {
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.is-visible {
+      display: block;
+    }
+
+    .container {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      align-items: center;
+      min-height: calc(100vh - 68px);
+      padding: 62px 0 42px;
+      gap: 44px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin: 0 0 18px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.75);
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(17, 132, 91, 0.12);
+    }
+
+    .hero-title {
+      max-width: 670px;
+      margin: 0;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .ghost-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .primary-button {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 16px 28px rgba(29, 100, 242, 0.2);
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .secondary-button:hover,
+    .ghost-button:hover {
+      border-color: #c5d1e2;
+      background: #f8fbff;
+    }
+
+    .ghost-button {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .quick-panel {
+      position: relative;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .quick-panel::before {
+      position: absolute;
+      inset: 16px auto auto -10px;
+      width: 20px;
+      height: 112px;
+      border-radius: 8px;
+      background: var(--primary);
+      content: "";
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .privacy-badge {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #e9f8f1;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .mini-upload {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+      margin-top: 18px;
+      border: 1px dashed #aebbd0;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(232, 240, 255, 0.72), rgba(255, 255, 255, 0.9)),
+        repeating-linear-gradient(135deg, rgba(29, 100, 242, 0.05) 0, rgba(29, 100, 242, 0.05) 8px, transparent 8px, transparent 18px);
+      text-align: center;
+    }
+
+    .mini-upload strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .mini-upload span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .mock-file-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .mock-file {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .mock-file strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .mock-file span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .saving {
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .section {
+      padding: 54px 0;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .section-title-row h2 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .section-title-row p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .tool-card {
+      min-height: 164px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      text-align: left;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .tool-card:hover {
+      border-color: #b6c5da;
+      box-shadow: 0 16px 36px rgba(16, 24, 39, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .tool-icon {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      background: #f7fbff;
+      color: #175cd3;
+      border: 1px solid #d6e4ff;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .tool-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .tool-card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .tool-card p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .trust-strip {
+      margin: 30px 0 70px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tool-page-header {
+      padding: 56px 0 28px;
+    }
+
+    .crumb-button {
+      margin-bottom: 22px;
+      padding: 0;
+      background: transparent;
+      color: var(--primary-dark);
+      font-weight: 760;
+    }
+
+    .tool-title {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .tool-subtitle {
+      max-width: 680px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 18px;
+      align-items: start;
+      padding-bottom: 70px;
+    }
+
+    .work-panel,
+    .settings-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 16px 40px rgba(16, 24, 39, 0.06);
+    }
+
+    .work-panel {
+      padding: 18px;
+    }
+
+    .dropzone {
+      display: grid;
+      place-items: center;
+      min-height: 288px;
+      padding: 26px;
+      border: 1px dashed #9fb0c9;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(248, 251, 255, 0.94), rgba(255, 255, 255, 0.96)),
+        radial-gradient(circle at 30% 22%, rgba(29, 100, 242, 0.11), transparent 34%);
+      text-align: center;
+    }
+
+    .drop-icon {
+      display: grid;
+      width: 66px;
+      height: 66px;
+      place-items: center;
+      margin: 0 auto 18px;
+      border-radius: 8px;
+      background: #eef5ff;
+      color: #175cd3;
+      border: 1px solid #c8dcff;
+      font-size: 28px;
+      font-weight: 900;
+    }
+
+    .drop-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .dropzone h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .dropzone p {
+      max-width: 430px;
+      margin: 10px auto 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      padding: 13px 14px;
+      border-radius: var(--radius);
+      background: #edf9f3;
+      color: #155f45;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .notice strong {
+      flex: 0 0 auto;
+    }
+
+    .mock-stack {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .mock-stack-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .mock-thumb {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .mock-stack-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .mock-stack-item span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .option-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .option-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .option-row.is-selected {
+      border-color: rgba(29, 100, 242, 0.45);
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .settings-panel {
+      padding: 18px;
+    }
+
+    .settings-panel h2 {
+      margin: 0 0 16px;
+      font-size: 19px;
+    }
+
+    .control-group {
+      padding: 16px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .control-group:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .control-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .control-value {
+      color: var(--primary-dark);
+      font-weight: 780;
+    }
+
+    .range-input {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .format-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .format-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .format-option.is-selected {
+      border-color: rgba(29, 100, 242, 0.45);
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .compress-button {
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .result-panel {
+      display: none;
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .result-panel.is-visible {
+      display: block;
+    }
+
+    .result-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .result-head h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .result-head span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .result-table th,
+    .result-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .result-table th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .result-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .download-button {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: var(--text);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .mobile-results {
+      display: none;
+      padding: 14px;
+      gap: 12px;
+    }
+
+    .mobile-result-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .mobile-result-card strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .mobile-result-card span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .related-tools {
+      padding: 0 0 74px;
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(1120px, calc(100% - 48px));
+      min-height: 72px;
+      margin: 0 auto;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .header-inner,
+      .container,
+      .footer-inner {
+        width: min(100% - 32px, 1120px);
+      }
+
+      .desktop-nav {
+        display: none;
+      }
+
+      .header-actions {
+        margin-left: auto;
+      }
+
+      .hero,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 44px;
+      }
+
+      .tool-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .section-title-row,
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .settings-panel {
+        order: -1;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .header-inner {
+        height: 62px;
+      }
+
+      .brand-button {
+        max-width: 100%;
+      }
+
+      .language-button {
+        min-width: 40px;
+        padding: 0 8px;
+      }
+
+      .hero-title,
+      .tool-title {
+        font-size: 42px;
+      }
+
+      .hero-copy,
+      .tool-subtitle {
+        font-size: 16px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .primary-button,
+      .secondary-button,
+      .ghost-button {
+        width: 100%;
+      }
+
+      .panel-head {
+        flex-direction: column;
+      }
+
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .workspace {
+        gap: 14px;
+      }
+
+      .work-panel,
+      .settings-panel {
+        padding: 14px;
+      }
+
+      .dropzone {
+        min-height: 240px;
+        padding: 22px 16px;
+      }
+
+      .result-table {
+        display: none;
+      }
+
+      .mobile-results {
+        display: grid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="brand-button" type="button" data-page-link="home" aria-label="Go to home page">
+          <span class="brand-mark">F</span>
+          <span>FilePilot Tools</span>
+        </button>
+
+        <div class="header-actions">
+          <nav class="desktop-nav" aria-label="Main navigation">
+            <button class="nav-button is-active" type="button" data-page-link="home" data-nav-key="home" data-i18n="navHome">Home</button>
+            <button class="nav-button" type="button" data-i18n="navImageTools">Image Tools</button>
+            <button class="nav-button" type="button" data-i18n="navPdfTools">PDF Tools</button>
+            <button class="nav-button" type="button" data-i18n="navQrCode">QR Code</button>
+          </nav>
+
+          <div class="language-switcher" aria-label="Language switcher">
+            <button class="language-button is-active" type="button" data-lang="en">EN</button>
+            <button class="language-button" type="button" data-lang="zh">中文</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="page is-visible" id="home-page">
+        <div class="container">
+          <div class="hero">
+            <div>
+              <p class="eyebrow">
+                <span class="status-dot"></span>
+                <span data-i18n="heroEyebrow">Browser-first file tools</span>
+              </p>
+              <h1 class="hero-title" data-i18n="heroTitle">Free Online PDF &amp; Image Tools</h1>
+              <p class="hero-copy" data-i18n="heroCopy">
+                Process files directly in your browser. Compress images, convert formats, create PDFs, and finish common file tasks without installing extra software.
+              </p>
+              <div class="hero-actions">
+                <button class="primary-button" type="button" data-page-link="compress" data-i18n="toolCompress">Compress Image</button>
+                <button class="secondary-button" type="button" data-page-link="convert" data-i18n="toolConvert">Convert Image</button>
+                <button class="secondary-button" type="button" data-page-link="imageToPdf" data-i18n="toolImageToPdf">Image to PDF</button>
+              </div>
+            </div>
+
+            <aside class="quick-panel" aria-label="Prototype upload preview">
+              <div class="panel-head">
+                <div>
+                  <h2 data-i18n="quickTitle">Fast image compression</h2>
+                  <p data-i18n="quickCopy">Choose files, tune quality, download smaller images.</p>
+                </div>
+                <span class="privacy-badge" data-i18n="localBadge">Local</span>
+              </div>
+              <div class="mini-upload">
+                <div>
+                  <strong data-i18n="miniUploadTitle">Drop images here</strong>
+                  <span data-i18n="miniUploadCopy">JPG, PNG, and WebP preview</span>
+                </div>
+              </div>
+              <div class="mock-file-list">
+                <div class="mock-file">
+                  <div>
+                    <strong>product-shot.jpg</strong>
+                    <span data-i18n="mockFileOneSize">2.4 MB to 840 KB</span>
+                  </div>
+                  <span class="saving">-65%</span>
+                </div>
+                <div class="mock-file">
+                  <div>
+                    <strong>receipt.png</strong>
+                    <span data-i18n="mockFileTwoSize">1.2 MB to 480 KB</span>
+                  </div>
+                  <span class="saving">-60%</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-title-row">
+              <h2 data-i18n="popularTitle">Popular Tools</h2>
+              <p data-i18n="popularCopy">Core tools are kept visible so visitors can start the task instead of reading a long marketing page.</p>
+            </div>
+
+            <div class="tool-grid">
+              <button class="tool-card" type="button" data-page-link="compress">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <rect x="4" y="5" width="16" height="14" rx="3"></rect>
+                    <circle cx="9" cy="10" r="1.5"></circle>
+                    <path d="M7 16l3.2-3.2 2.5 2.4 2.4-3 2.9 3.8"></path>
+                    <path d="M18 7v4h-4"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolCompress">Compress Image</h3>
+                <p data-i18n="toolCompressCopy">Reduce JPG, PNG, and WebP image size with a simple quality control.</p>
+              </button>
+              <button class="tool-card" type="button" data-page-link="convert">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M7 7h10"></path>
+                    <path d="M14 4l3 3-3 3"></path>
+                    <path d="M17 17H7"></path>
+                    <path d="M10 14l-3 3 3 3"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolConvert">Convert Image</h3>
+                <p data-i18n="toolConvertCopy">Convert between JPG, PNG, and WebP for common browser and sharing needs.</p>
+              </button>
+              <button class="tool-card" type="button" data-page-link="imageToPdf">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M7 3h7l4 4v14H7z"></path>
+                    <path d="M14 3v5h4"></path>
+                    <rect x="9" y="11" width="6" height="5" rx="1"></rect>
+                    <path d="M10 15l1.4-1.5 1.2 1 1.4-1.8"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolImageToPdf">Image to PDF</h3>
+                <p data-i18n="toolImageToPdfCopy">Create a PDF from one image or a batch of sorted images.</p>
+              </button>
+              <button class="tool-card" type="button" data-page-link="mergePdf">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M8 4h7l3 3v11H8z"></path>
+                    <path d="M15 4v4h3"></path>
+                    <path d="M5 8h3v12h11v-3"></path>
+                    <path d="M10 13h6"></path>
+                    <path d="M10 16h4"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolMergePdf">Merge PDF</h3>
+                <p data-i18n="toolMergePdfCopy">Put multiple PDF files together and control the final order.</p>
+              </button>
+              <button class="tool-card" type="button" data-page-link="convert">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M8 4h8l3 3v13H8z"></path>
+                    <path d="M16 4v4h3"></path>
+                    <path d="M12 11v7"></path>
+                    <path d="M9.5 14H6"></path>
+                    <path d="M18 14h-3.5"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolSplitPdf">Split PDF</h3>
+                <p data-i18n="toolSplitPdfCopy">Extract selected pages from a PDF using a clear page range.</p>
+              </button>
+              <button class="tool-card" type="button" data-page-link="imageToPdf">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M5 9V5h4"></path>
+                    <path d="M19 15v4h-4"></path>
+                    <path d="M5 5l6 6"></path>
+                    <path d="M19 19l-6-6"></path>
+                    <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolResize">Resize Image</h3>
+                <p data-i18n="toolResizeCopy">Change image width or height while keeping the original ratio.</p>
+              </button>
+            </div>
+
+            <div class="trust-strip">
+              <span data-i18n="trustCopy">Files are processed directly in your browser for supported tools. This prototype shows the intended product message and page structure before building the real processing logic.</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="compress-page">
+        <div class="container">
+          <div class="tool-page-header">
+            <button class="crumb-button" type="button" data-page-link="home" data-i18n="backToTools">← Back to all tools</button>
+            <h1 class="tool-title" data-i18n="toolCompress">Compress Image</h1>
+            <p class="tool-subtitle" data-i18n="compressSubtitle">
+              Reduce image file size directly in your browser. This prototype uses sample output to confirm the interface before real compression is added.
+            </p>
+          </div>
+
+          <div class="workspace">
+            <div>
+              <section class="work-panel">
+                <div class="dropzone">
+                  <div>
+                    <div class="drop-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <rect x="4" y="5" width="16" height="14" rx="3"></rect>
+                        <path d="M12 15V9"></path>
+                        <path d="M9 12l3-3 3 3"></path>
+                        <path d="M7 17l2.6-2.8 2 1.8 2.7-3.2L17 17"></path>
+                      </svg>
+                    </div>
+                    <h2 data-i18n="dropTitle">Drag and drop images here</h2>
+                    <p data-i18n="dropCopy">Choose JPG, PNG, or WebP files. The prototype will show simulated compression results.</p>
+                    <label class="primary-button" for="image-input" data-i18n="chooseImages">Choose Images</label>
+                    <input class="file-input" id="image-input" type="file" accept="image/*" multiple>
+                  </div>
+                </div>
+
+                <div class="notice">
+                  <strong data-i18n="localBadge">Local</strong>
+                  <span data-i18n="localNotice">Files are processed directly in your browser and are not uploaded to our server.</span>
+                </div>
+              </section>
+
+              <section class="result-panel" id="result-panel" aria-live="polite">
+                <div class="result-head">
+                  <h2 data-i18n="resultTitle">Result</h2>
+                  <span id="result-summary">0 files ready</span>
+                </div>
+
+                <table class="result-table">
+                  <thead>
+                    <tr>
+                      <th data-i18n="tableFile">File</th>
+                      <th data-i18n="tableOriginal">Original</th>
+                      <th data-i18n="tableNewSize">New size</th>
+                      <th data-i18n="tableSaved">Saved</th>
+                      <th data-i18n="tableAction">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="result-rows"></tbody>
+                </table>
+
+                <div class="mobile-results" id="mobile-results"></div>
+              </section>
+            </div>
+
+            <aside class="settings-panel">
+              <h2 data-i18n="settingsTitle">Compression Settings</h2>
+
+              <div class="control-group">
+                <label class="control-label" for="quality-range">
+                  <span data-i18n="qualityLabel">Quality</span>
+                  <span class="control-value" id="quality-value">80%</span>
+                </label>
+                <input class="range-input" id="quality-range" type="range" min="40" max="100" value="80">
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span data-i18n="outputFormat">Output format</span>
+                </div>
+                <div class="format-grid" aria-label="Output format preview">
+                  <button class="format-option is-selected" type="button" data-i18n="formatSame">Same</button>
+                  <button class="format-option" type="button">JPG</button>
+                  <button class="format-option" type="button">PNG</button>
+                  <button class="format-option" type="button">WebP</button>
+                </div>
+              </div>
+
+              <button class="primary-button compress-button" type="button" id="compress-button" data-i18n="compressImages">Compress Images</button>
+            </aside>
+          </div>
+        </div>
+
+        <section class="related-tools">
+          <div class="container">
+            <div class="section-title-row">
+              <h2 data-i18n="relatedTitle">Related Tools</h2>
+              <p data-i18n="relatedCopy">Keep the next common action close to the result area.</p>
+            </div>
+            <div class="tool-grid">
+              <button class="tool-card" type="button">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M7 7h10"></path>
+                    <path d="M14 4l3 3-3 3"></path>
+                    <path d="M17 17H7"></path>
+                    <path d="M10 14l-3 3 3 3"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolConvert">Convert Image</h3>
+                <p data-i18n="relatedConvertCopy">Change JPG, PNG, and WebP formats after compression.</p>
+              </button>
+              <button class="tool-card" type="button">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M7 3h7l4 4v14H7z"></path>
+                    <path d="M14 3v5h4"></path>
+                    <rect x="9" y="11" width="6" height="5" rx="1"></rect>
+                    <path d="M10 15l1.4-1.5 1.2 1 1.4-1.8"></path>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolImageToPdf">Image to PDF</h3>
+                <p data-i18n="relatedImageToPdfCopy">Turn selected images into a clean PDF document.</p>
+              </button>
+              <button class="tool-card" type="button">
+                <span class="tool-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24">
+                    <path d="M5 9V5h4"></path>
+                    <path d="M19 15v4h-4"></path>
+                    <path d="M5 5l6 6"></path>
+                    <path d="M19 19l-6-6"></path>
+                    <rect x="8" y="8" width="8" height="8" rx="2"></rect>
+                  </svg>
+                </span>
+                <h3 data-i18n="toolResize">Resize Image</h3>
+                <p data-i18n="relatedResizeCopy">Adjust image dimensions for web, email, and documents.</p>
+              </button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="page" id="convert-page">
+        <div class="container">
+          <div class="tool-page-header">
+            <button class="crumb-button" type="button" data-page-link="home" data-i18n="backToTools">← Back to all tools</button>
+            <h1 class="tool-title" data-i18n="toolConvert">Convert Image</h1>
+            <p class="tool-subtitle" data-i18n="convertSubtitle">
+              Convert JPG, PNG, and WebP images in your browser. This prototype shows the final tool layout before real conversion is connected.
+            </p>
+          </div>
+
+          <div class="workspace">
+            <div>
+              <section class="work-panel">
+                <div class="dropzone">
+                  <div>
+                    <div class="drop-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M7 7h10"></path>
+                        <path d="M14 4l3 3-3 3"></path>
+                        <path d="M17 17H7"></path>
+                        <path d="M10 14l-3 3 3 3"></path>
+                      </svg>
+                    </div>
+                    <h2 data-i18n="convertDropTitle">Choose images to convert</h2>
+                    <p data-i18n="convertDropCopy">Select JPG, PNG, or WebP files. The result preview shows the target format and expected output.</p>
+                    <button class="primary-button" type="button" data-i18n="chooseImages">Choose Images</button>
+                  </div>
+                </div>
+
+                <div class="notice">
+                  <strong data-i18n="localBadge">Local</strong>
+                  <span data-i18n="localNotice">Files are processed directly in your browser and are not uploaded to our server.</span>
+                </div>
+              </section>
+
+              <section class="result-panel is-visible" aria-live="polite">
+                <div class="result-head">
+                  <h2 data-i18n="resultPreviewTitle">Preview Result</h2>
+                  <span data-i18n="prototypeOnly">Prototype only</span>
+                </div>
+
+                <div class="mock-stack">
+                  <div class="mock-stack-item">
+                    <span class="mock-thumb">JPG</span>
+                    <div>
+                      <strong>travel-photo.jpg</strong>
+                      <span data-i18n="convertPreviewOne">Will be converted to WebP</span>
+                    </div>
+                    <span class="saving">WebP</span>
+                  </div>
+                  <div class="mock-stack-item">
+                    <span class="mock-thumb">PNG</span>
+                    <div>
+                      <strong>logo-export.png</strong>
+                      <span data-i18n="convertPreviewTwo">Transparent image keeps PNG when needed</span>
+                    </div>
+                    <span class="saving">PNG</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="settings-panel">
+              <h2 data-i18n="convertSettingsTitle">Conversion Settings</h2>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span data-i18n="targetFormat">Target format</span>
+                </div>
+                <div class="format-grid">
+                  <button class="format-option" type="button">JPG</button>
+                  <button class="format-option" type="button">PNG</button>
+                  <button class="format-option is-selected" type="button">WebP</button>
+                  <button class="format-option" type="button" data-i18n="formatSame">Same</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <label class="control-label">
+                  <span data-i18n="qualityLabel">Quality</span>
+                  <span class="control-value">90%</span>
+                </label>
+                <input class="range-input" type="range" min="40" max="100" value="90">
+              </div>
+
+              <button class="primary-button compress-button" type="button" data-i18n="convertImages">Convert Images</button>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="image-to-pdf-page">
+        <div class="container">
+          <div class="tool-page-header">
+            <button class="crumb-button" type="button" data-page-link="home" data-i18n="backToTools">← Back to all tools</button>
+            <h1 class="tool-title" data-i18n="toolImageToPdf">Image to PDF</h1>
+            <p class="tool-subtitle" data-i18n="imageToPdfSubtitle">
+              Turn selected images into one PDF. The prototype shows ordering, page settings, and the final download area.
+            </p>
+          </div>
+
+          <div class="workspace">
+            <div>
+              <section class="work-panel">
+                <div class="dropzone">
+                  <div>
+                    <div class="drop-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M7 3h7l4 4v14H7z"></path>
+                        <path d="M14 3v5h4"></path>
+                        <rect x="9" y="11" width="6" height="5" rx="1"></rect>
+                        <path d="M10 15l1.4-1.5 1.2 1 1.4-1.8"></path>
+                      </svg>
+                    </div>
+                    <h2 data-i18n="imageToPdfDropTitle">Choose images for the PDF</h2>
+                    <p data-i18n="imageToPdfDropCopy">Add multiple images, arrange their order, and export them as a single PDF.</p>
+                    <button class="primary-button" type="button" data-i18n="chooseImages">Choose Images</button>
+                  </div>
+                </div>
+
+                <div class="notice">
+                  <strong data-i18n="localBadge">Local</strong>
+                  <span data-i18n="localNotice">Files are processed directly in your browser and are not uploaded to our server.</span>
+                </div>
+              </section>
+
+              <section class="result-panel is-visible" aria-live="polite">
+                <div class="result-head">
+                  <h2 data-i18n="imageOrderTitle">Image Order</h2>
+                  <span data-i18n="dragOrderHint">Drag order preview</span>
+                </div>
+
+                <div class="mock-stack">
+                  <div class="mock-stack-item">
+                    <span class="mock-thumb">1</span>
+                    <div>
+                      <strong>cover.jpg</strong>
+                      <span data-i18n="pdfPageOne">Page 1 · A4 portrait</span>
+                    </div>
+                    <span class="saving">A4</span>
+                  </div>
+                  <div class="mock-stack-item">
+                    <span class="mock-thumb">2</span>
+                    <div>
+                      <strong>receipt.png</strong>
+                      <span data-i18n="pdfPageTwo">Page 2 · fit to page</span>
+                    </div>
+                    <span class="saving">PDF</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="settings-panel">
+              <h2 data-i18n="pdfSettingsTitle">PDF Settings</h2>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span data-i18n="pageSize">Page size</span>
+                </div>
+                <div class="option-list">
+                  <button class="option-row is-selected" type="button">A4</button>
+                  <button class="option-row" type="button">Letter</button>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span data-i18n="orientation">Orientation</span>
+                </div>
+                <div class="format-grid">
+                  <button class="format-option is-selected" type="button" data-i18n="orientationAuto">Auto</button>
+                  <button class="format-option" type="button" data-i18n="orientationPortrait">Portrait</button>
+                  <button class="format-option" type="button" data-i18n="orientationLandscape">Landscape</button>
+                </div>
+              </div>
+
+              <button class="primary-button compress-button" type="button" data-i18n="createPdf">Create PDF</button>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" id="merge-pdf-page">
+        <div class="container">
+          <div class="tool-page-header">
+            <button class="crumb-button" type="button" data-page-link="home" data-i18n="backToTools">← Back to all tools</button>
+            <h1 class="tool-title" data-i18n="toolMergePdf">Merge PDF</h1>
+            <p class="tool-subtitle" data-i18n="mergePdfSubtitle">
+              Combine multiple PDF files into one document. This prototype shows file order, merge settings, and the download result.
+            </p>
+          </div>
+
+          <div class="workspace">
+            <div>
+              <section class="work-panel">
+                <div class="dropzone">
+                  <div>
+                    <div class="drop-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M8 4h7l3 3v11H8z"></path>
+                        <path d="M15 4v4h3"></path>
+                        <path d="M5 8h3v12h11v-3"></path>
+                        <path d="M10 13h6"></path>
+                        <path d="M10 16h4"></path>
+                      </svg>
+                    </div>
+                    <h2 data-i18n="mergePdfDropTitle">Choose PDF files</h2>
+                    <p data-i18n="mergePdfDropCopy">Add multiple PDF files, arrange their order, and merge them into one file.</p>
+                    <button class="primary-button" type="button" data-i18n="choosePdfFiles">Choose PDF Files</button>
+                  </div>
+                </div>
+
+                <div class="notice">
+                  <strong data-i18n="localBadge">Local</strong>
+                  <span data-i18n="localNotice">Files are processed directly in your browser and are not uploaded to our server.</span>
+                </div>
+              </section>
+
+              <section class="result-panel is-visible" aria-live="polite">
+                <div class="result-head">
+                  <h2 data-i18n="pdfOrderTitle">PDF Order</h2>
+                  <span data-i18n="prototypeOnly">Prototype only</span>
+                </div>
+
+                <div class="mock-stack">
+                  <div class="mock-stack-item">
+                    <span class="mock-thumb">PDF</span>
+                    <div>
+                      <strong>contract.pdf</strong>
+                      <span data-i18n="mergePreviewOne">12 pages · first file</span>
+                    </div>
+                    <span class="saving">1</span>
+                  </div>
+                  <div class="mock-stack-item">
+                    <span class="mock-thumb">PDF</span>
+                    <div>
+                      <strong>appendix.pdf</strong>
+                      <span data-i18n="mergePreviewTwo">4 pages · second file</span>
+                    </div>
+                    <span class="saving">2</span>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="settings-panel">
+              <h2 data-i18n="mergeSettingsTitle">Merge Settings</h2>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span data-i18n="outputName">Output name</span>
+                </div>
+                <div class="option-row is-selected">merged.pdf</div>
+              </div>
+
+              <div class="control-group">
+                <div class="control-label">
+                  <span data-i18n="fileOrder">File order</span>
+                </div>
+                <div class="option-list">
+                  <button class="option-row is-selected" type="button" data-i18n="uploadOrder">Upload order</button>
+                  <button class="option-row" type="button" data-i18n="dragToReorder">Drag to reorder</button>
+                </div>
+              </div>
+
+              <button class="primary-button compress-button" type="button" data-i18n="mergePdfFiles">Merge PDF Files</button>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span data-i18n="footerPrototype">FilePilot Tools prototype</span>
+        <span data-i18n="footerCopy">Browser-first PDF and image tools</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const pages = {
+      home: document.querySelector("#home-page"),
+      compress: document.querySelector("#compress-page"),
+      convert: document.querySelector("#convert-page"),
+      imageToPdf: document.querySelector("#image-to-pdf-page"),
+      mergePdf: document.querySelector("#merge-pdf-page")
+    };
+    const navButtons = document.querySelectorAll(".nav-button");
+    const pageLinks = document.querySelectorAll("[data-page-link]");
+    const imageInput = document.querySelector("#image-input");
+    const qualityRange = document.querySelector("#quality-range");
+    const qualityValue = document.querySelector("#quality-value");
+    const compressButton = document.querySelector("#compress-button");
+    const resultPanel = document.querySelector("#result-panel");
+    const resultRows = document.querySelector("#result-rows");
+    const mobileResults = document.querySelector("#mobile-results");
+    const resultSummary = document.querySelector("#result-summary");
+    const formatOptions = document.querySelectorAll(".format-option");
+    const languageButtons = document.querySelectorAll("[data-lang]");
+
+    let selectedFiles = [];
+    let currentLanguage = "en";
+
+    const translations = {
+      en: {
+        pageTitle: "FilePilot Tools Prototype",
+        navHome: "Home",
+        navImageTools: "Image Tools",
+        navPdfTools: "PDF Tools",
+        navQrCode: "QR Code",
+        heroEyebrow: "Browser-first file tools",
+        heroTitle: "Free Online PDF & Image Tools",
+        heroCopy: "Process files directly in your browser. Compress images, convert formats, create PDFs, and finish common file tasks without installing extra software.",
+        quickTitle: "Fast image compression",
+        quickCopy: "Choose files, tune quality, download smaller images.",
+        localBadge: "Local",
+        miniUploadTitle: "Drop images here",
+        miniUploadCopy: "JPG, PNG, and WebP preview",
+        mockFileOneSize: "2.4 MB to 840 KB",
+        mockFileTwoSize: "1.2 MB to 480 KB",
+        popularTitle: "Popular Tools",
+        popularCopy: "Core tools are kept visible so visitors can start the task instead of reading a long marketing page.",
+        toolCompress: "Compress Image",
+        toolCompressCopy: "Reduce JPG, PNG, and WebP image size with a simple quality control.",
+        toolConvert: "Convert Image",
+        toolConvertCopy: "Convert between JPG, PNG, and WebP for common browser and sharing needs.",
+        toolImageToPdf: "Image to PDF",
+        toolImageToPdfCopy: "Create a PDF from one image or a batch of sorted images.",
+        toolMergePdf: "Merge PDF",
+        toolMergePdfCopy: "Put multiple PDF files together and control the final order.",
+        toolSplitPdf: "Split PDF",
+        toolSplitPdfCopy: "Extract selected pages from a PDF using a clear page range.",
+        toolResize: "Resize Image",
+        toolResizeCopy: "Change image width or height while keeping the original ratio.",
+        trustCopy: "Files are processed directly in your browser for supported tools. This prototype shows the intended product message and page structure before building the real processing logic.",
+        backToTools: "← Back to all tools",
+        compressSubtitle: "Reduce image file size directly in your browser. This prototype uses sample output to confirm the interface before real compression is added.",
+        dropTitle: "Drag and drop images here",
+        dropCopy: "Choose JPG, PNG, or WebP files. The prototype will show simulated compression results.",
+        chooseImages: "Choose Images",
+        localNotice: "Files are processed directly in your browser and are not uploaded to our server.",
+        resultTitle: "Result",
+        tableFile: "File",
+        tableOriginal: "Original",
+        tableNewSize: "New size",
+        tableSaved: "Saved",
+        tableAction: "Action",
+        settingsTitle: "Compression Settings",
+        qualityLabel: "Quality",
+        outputFormat: "Output format",
+        formatSame: "Same",
+        compressImages: "Compress Images",
+        relatedTitle: "Related Tools",
+        relatedCopy: "Keep the next common action close to the result area.",
+        relatedConvertCopy: "Change JPG, PNG, and WebP formats after compression.",
+        relatedImageToPdfCopy: "Turn selected images into a clean PDF document.",
+        relatedResizeCopy: "Adjust image dimensions for web, email, and documents.",
+        convertSubtitle: "Convert JPG, PNG, and WebP images in your browser. This prototype shows the final tool layout before real conversion is connected.",
+        convertDropTitle: "Choose images to convert",
+        convertDropCopy: "Select JPG, PNG, or WebP files. The result preview shows the target format and expected output.",
+        resultPreviewTitle: "Preview Result",
+        prototypeOnly: "Prototype only",
+        convertPreviewOne: "Will be converted to WebP",
+        convertPreviewTwo: "Transparent image keeps PNG when needed",
+        convertSettingsTitle: "Conversion Settings",
+        targetFormat: "Target format",
+        convertImages: "Convert Images",
+        imageToPdfSubtitle: "Turn selected images into one PDF. The prototype shows ordering, page settings, and the final download area.",
+        imageToPdfDropTitle: "Choose images for the PDF",
+        imageToPdfDropCopy: "Add multiple images, arrange their order, and export them as a single PDF.",
+        imageOrderTitle: "Image Order",
+        dragOrderHint: "Drag order preview",
+        pdfPageOne: "Page 1 · A4 portrait",
+        pdfPageTwo: "Page 2 · fit to page",
+        pdfSettingsTitle: "PDF Settings",
+        pageSize: "Page size",
+        orientation: "Orientation",
+        orientationAuto: "Auto",
+        orientationPortrait: "Portrait",
+        orientationLandscape: "Landscape",
+        createPdf: "Create PDF",
+        mergePdfSubtitle: "Combine multiple PDF files into one document. This prototype shows file order, merge settings, and the download result.",
+        mergePdfDropTitle: "Choose PDF files",
+        mergePdfDropCopy: "Add multiple PDF files, arrange their order, and merge them into one file.",
+        choosePdfFiles: "Choose PDF Files",
+        pdfOrderTitle: "PDF Order",
+        mergePreviewOne: "12 pages · first file",
+        mergePreviewTwo: "4 pages · second file",
+        mergeSettingsTitle: "Merge Settings",
+        outputName: "Output name",
+        fileOrder: "File order",
+        uploadOrder: "Upload order",
+        dragToReorder: "Drag to reorder",
+        mergePdfFiles: "Merge PDF Files",
+        footerPrototype: "FilePilot Tools prototype",
+        footerCopy: "Browser-first PDF and image tools",
+        filesReady: "files ready",
+        fileReady: "file ready",
+        download: "Download",
+        to: "to",
+        saved: "Saved"
+      },
+      zh: {
+        pageTitle: "FilePilot Tools 原型",
+        navHome: "首页",
+        navImageTools: "图片工具",
+        navPdfTools: "PDF 工具",
+        navQrCode: "二维码",
+        heroEyebrow: "优先在浏览器处理文件",
+        heroTitle: "免费在线 PDF 和图片工具",
+        heroCopy: "文件直接在浏览器里处理。你可以压缩图片、转换格式、创建 PDF，并快速完成常见文件处理任务，不需要安装额外软件。",
+        quickTitle: "快速图片压缩",
+        quickCopy: "选择文件，调整质量，下载更小的图片。",
+        localBadge: "本地处理",
+        miniUploadTitle: "把图片拖到这里",
+        miniUploadCopy: "支持 JPG、PNG、WebP 预览",
+        mockFileOneSize: "2.4 MB 变为 840 KB",
+        mockFileTwoSize: "1.2 MB 变为 480 KB",
+        popularTitle: "常用工具",
+        popularCopy: "核心工具直接展示出来，让用户先开始处理文件，而不是先阅读一大段介绍。",
+        toolCompress: "图片压缩",
+        toolCompressCopy: "通过简单的质量控制，减小 JPG、PNG、WebP 图片体积。",
+        toolConvert: "图片转换",
+        toolConvertCopy: "在 JPG、PNG、WebP 之间转换，适合浏览器、分享和文档场景。",
+        toolImageToPdf: "图片转 PDF",
+        toolImageToPdfCopy: "把一张或多张排序后的图片生成 PDF 文件。",
+        toolMergePdf: "PDF 合并",
+        toolMergePdfCopy: "把多个 PDF 合成一个文件，并控制最终顺序。",
+        toolSplitPdf: "PDF 拆分",
+        toolSplitPdfCopy: "用清晰的页码范围，从 PDF 中提取指定页面。",
+        toolResize: "图片尺寸调整",
+        toolResizeCopy: "调整图片宽度或高度，同时保持原始比例。",
+        trustCopy: "支持的工具会直接在浏览器中处理文件。这个原型先确认产品信息和页面结构，后面再接入真实处理逻辑。",
+        backToTools: "← 返回全部工具",
+        compressSubtitle: "直接在浏览器里减小图片体积。这个原型先用模拟结果确认界面，后面再加入真实压缩功能。",
+        dropTitle: "把图片拖到这里",
+        dropCopy: "选择 JPG、PNG 或 WebP 文件。原型会显示模拟压缩结果。",
+        chooseImages: "选择图片",
+        localNotice: "文件直接在浏览器中处理，不会上传到服务器。",
+        resultTitle: "处理结果",
+        tableFile: "文件",
+        tableOriginal: "原大小",
+        tableNewSize: "新大小",
+        tableSaved: "节省",
+        tableAction: "操作",
+        settingsTitle: "压缩设置",
+        qualityLabel: "质量",
+        outputFormat: "输出格式",
+        formatSame: "保持原格式",
+        compressImages: "压缩图片",
+        relatedTitle: "相关工具",
+        relatedCopy: "把用户下一步可能用到的工具放在结果区附近。",
+        relatedConvertCopy: "压缩后继续转换 JPG、PNG、WebP 格式。",
+        relatedImageToPdfCopy: "把选中的图片整理成一个 PDF 文档。",
+        relatedResizeCopy: "调整图片尺寸，适合网页、邮件和文档使用。",
+        convertSubtitle: "在浏览器里转换 JPG、PNG 和 WebP 图片。这个原型先展示最终工具布局，后面再接入真实转换功能。",
+        convertDropTitle: "选择要转换的图片",
+        convertDropCopy: "选择 JPG、PNG 或 WebP 文件。结果预览会展示目标格式和预期输出。",
+        resultPreviewTitle: "结果预览",
+        prototypeOnly: "仅原型展示",
+        convertPreviewOne: "将转换为 WebP",
+        convertPreviewTwo: "需要透明背景时保留 PNG",
+        convertSettingsTitle: "转换设置",
+        targetFormat: "目标格式",
+        convertImages: "转换图片",
+        imageToPdfSubtitle: "把选中的图片合成一个 PDF。这个原型展示排序、页面设置和最终下载区域。",
+        imageToPdfDropTitle: "选择要生成 PDF 的图片",
+        imageToPdfDropCopy: "添加多张图片，调整顺序，然后导出为一个 PDF 文件。",
+        imageOrderTitle: "图片顺序",
+        dragOrderHint: "拖拽排序预览",
+        pdfPageOne: "第 1 页 · A4 竖向",
+        pdfPageTwo: "第 2 页 · 适应页面",
+        pdfSettingsTitle: "PDF 设置",
+        pageSize: "页面尺寸",
+        orientation: "方向",
+        orientationAuto: "自动",
+        orientationPortrait: "竖向",
+        orientationLandscape: "横向",
+        createPdf: "生成 PDF",
+        mergePdfSubtitle: "把多个 PDF 文件合并成一个文档。这个原型展示文件顺序、合并设置和下载结果。",
+        mergePdfDropTitle: "选择 PDF 文件",
+        mergePdfDropCopy: "添加多个 PDF 文件，调整顺序，然后合并成一个文件。",
+        choosePdfFiles: "选择 PDF 文件",
+        pdfOrderTitle: "PDF 顺序",
+        mergePreviewOne: "12 页 · 第一个文件",
+        mergePreviewTwo: "4 页 · 第二个文件",
+        mergeSettingsTitle: "合并设置",
+        outputName: "输出文件名",
+        fileOrder: "文件顺序",
+        uploadOrder: "上传顺序",
+        dragToReorder: "拖拽调整顺序",
+        mergePdfFiles: "合并 PDF 文件",
+        footerPrototype: "FilePilot Tools 原型",
+        footerCopy: "优先在浏览器处理的 PDF 和图片工具",
+        filesReady: "个文件已准备好",
+        fileReady: "个文件已准备好",
+        download: "下载",
+        to: "变为",
+        saved: "已节省"
+      }
+    };
+
+    function t(key) {
+      return translations[currentLanguage][key] || translations.en[key] || key;
+    }
+
+    // 原型用同一个 HTML 展示多个页面状态，方便先确认页面结构和视觉方向。
+    // 后续正式项目拆成真实路由时，可以沿用这里确定的页面顺序和组件结构。
+    function showPage(pageName) {
+      const targetPage = pages[pageName] ? pageName : "home";
+
+      Object.entries(pages).forEach(([name, page]) => {
+        page.classList.toggle("is-visible", name === targetPage);
+      });
+
+      navButtons.forEach((button) => {
+        button.classList.toggle("is-active", targetPage === "home" && button.dataset.navKey === "home");
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function formatBytes(bytes) {
+      if (bytes < 1024 * 1024) {
+        return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+      }
+
+      return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
+    }
+
+    // 这里不做真实压缩，只根据质量值生成模拟结果，避免原型阶段把重点放到处理算法上。
+    function buildMockResult(file) {
+      const quality = Number(qualityRange.value);
+      const savedPercent = Math.max(12, Math.round((104 - quality) * 1.7));
+      const newSize = Math.round(file.size * (1 - savedPercent / 100));
+
+      return {
+        name: file.name,
+        original: formatBytes(file.size),
+        compressed: formatBytes(newSize),
+        saved: `${savedPercent}%`
+      };
+    }
+
+    function renderResults(files) {
+      const results = files.map(buildMockResult);
+      resultRows.innerHTML = "";
+      mobileResults.innerHTML = "";
+      resultSummary.textContent = currentLanguage === "zh"
+        ? `${results.length} ${t(results.length === 1 ? "fileReady" : "filesReady")}`
+        : `${results.length} ${t(results.length === 1 ? "fileReady" : "filesReady")}`;
+
+      results.forEach((result) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${result.name}</td>
+          <td>${result.original}</td>
+          <td>${result.compressed}</td>
+          <td><span class="saving">-${result.saved}</span></td>
+          <td><button class="download-button" type="button">${t("download")}</button></td>
+        `;
+        resultRows.appendChild(row);
+
+        const card = document.createElement("div");
+        card.className = "mobile-result-card";
+        card.innerHTML = `
+          <strong>${result.name}</strong>
+          <span>${result.original} ${t("to")} ${result.compressed}</span>
+          <span class="saving">${t("saved")} ${result.saved}</span>
+          <button class="download-button" type="button">${t("download")}</button>
+        `;
+        mobileResults.appendChild(card);
+      });
+
+      resultPanel.classList.add("is-visible");
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = language;
+      document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+      document.title = t("pageTitle");
+
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        node.textContent = t(node.dataset.i18n);
+      });
+
+      languageButtons.forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.lang === language);
+      });
+
+      if (selectedFiles.length > 0) {
+        renderResults(selectedFiles);
+      } else {
+        resultSummary.textContent = currentLanguage === "zh" ? `0 ${t("filesReady")}` : `0 ${t("filesReady")}`;
+      }
+    }
+
+    pageLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        showPage(link.dataset.pageLink);
+      });
+    });
+
+    qualityRange.addEventListener("input", () => {
+      qualityValue.textContent = `${qualityRange.value}%`;
+
+      if (selectedFiles.length > 0) {
+        renderResults(selectedFiles);
+      }
+    });
+
+    formatOptions.forEach((option) => {
+      option.addEventListener("click", () => {
+        formatOptions.forEach((item) => item.classList.remove("is-selected"));
+        option.classList.add("is-selected");
+      });
+    });
+
+    languageButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        applyLanguage(button.dataset.lang);
+      });
+    });
+
+    imageInput.addEventListener("change", () => {
+      selectedFiles = Array.from(imageInput.files);
+
+      if (selectedFiles.length > 0) {
+        renderResults(selectedFiles);
+      }
+    });
+
+    compressButton.addEventListener("click", () => {
+      if (selectedFiles.length > 0) {
+        renderResults(selectedFiles);
+      }
+    });
+
+    applyLanguage(currentLanguage);
+  </script>
+</body>
+</html>
