@@ -66,19 +66,27 @@
 </template>
 
 <script setup lang="ts">
-import type { ProcessedResult } from '~/types/tool'
+import type { ProcessedResult, ToolKey } from '~/types/tool'
 import { formatBytes } from '~/utils/fileSize'
-
-defineProps<{
-  results: ProcessedResult[]
-}>()
-
 
 const { t } = useLocale()
 const { downloadBlob } = useDownloadFile()
+const { trackToolEvent } = useToolAnalytics()
+
+const props = defineProps<{
+  results: ProcessedResult[]
+  toolKey?: ToolKey
+}>()
 
 function download(result: ProcessedResult) {
   if (result.blob) {
+    if (props.toolKey) {
+      trackToolEvent('tool_result_downloaded', {
+        tool_key: props.toolKey,
+        result_count: 1
+      })
+    }
+
     downloadBlob(result.blob, result.downloadName)
   }
 }

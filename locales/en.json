@@ -4,6 +4,7 @@
     "home": "Home",
     "imageTools": "Image Tools",
     "pdfTools": "PDF Tools",
+    "allTools": "All Tools",
     "qrCode": "QR Code",
     "language": "Language"
   },
@@ -19,6 +20,8 @@
     "localBadge": "Local",
     "dropImages": "Drop images here",
     "previewFormats": "JPG, PNG, and WebP preview",
+    "quickChooseImages": "Choose Images",
+    "quickUnsupported": "Choose JPG, PNG, or WebP images.",
     "popularTitle": "Popular Tools",
     "popularCopy": "Choose a tool, add your files, and start processing right away.",
     "trustCopy": "Files are processed directly in your browser. Set the options, process the file, and download the result."
@@ -27,8 +30,18 @@
     "imageTitle": "Image Tools",
     "imageCopy": "Compress, convert, resize, and create PDFs from local images.",
     "pdfTitle": "PDF Tools",
-    "pdfCopy": "Merge, split, and create PDF files directly in the browser.",
-    "backHome": "Back to home"
+    "pdfCopy": "Merge, split, compress, and export PDF pages directly in the browser.",
+    "backHome": "Back to home",
+    "backImage": "Back to image tools",
+    "backPdf": "Back to PDF tools"
+  },
+  "allTools": {
+    "title": "All Tools",
+    "copy": "Find every PDF, image, and QR tool by file type and continue to the next action quickly.",
+    "popular": "Popular Tools",
+    "image": "Image Tools",
+    "pdf": "PDF Tools",
+    "qr": "QR Tools"
   },
   "tool": {
     "back": "Back to all tools",
@@ -98,6 +111,18 @@
       "card": "Create a PDF from one image or a batch of sorted images.",
       "action": "Create PDF"
     },
+    "cropImage": {
+      "title": "Crop Image",
+      "description": "Crop extra areas from images for avatars, covers, and document uploads.",
+      "card": "Crop images with free, 1:1, 4:3, 16:9, and 3:4 ratios.",
+      "action": "Crop Image"
+    },
+    "rotateImage": {
+      "title": "Rotate Image",
+      "description": "Fix the direction of phone photos, scanned pages, and screenshots.",
+      "card": "Rotate left, rotate right, flip horizontally, or flip vertically in batches.",
+      "action": "Download Rotated Image"
+    },
     "mergePdf": {
       "title": "Merge PDF",
       "description": "Combine multiple PDF files into one document.",
@@ -109,6 +134,18 @@
       "description": "Extract selected pages from one PDF file.",
       "card": "Extract selected pages from a PDF using a clear page range.",
       "action": "Split PDF"
+    },
+    "compressPdf": {
+      "title": "Compress PDF",
+      "description": "Re-save a PDF in your browser and try to reduce its file size.",
+      "card": "Reduce PDF attachments for email, forms, and document uploads.",
+      "action": "Compress PDF"
+    },
+    "pdfToImages": {
+      "title": "PDF to Images",
+      "description": "Export PDF pages as JPG or PNG images.",
+      "card": "Convert PDF pages in order for previews, sharing, and documents.",
+      "action": "Convert PDF to Images"
     },
     "resizeImage": {
       "title": "Resize Image",
@@ -122,6 +159,24 @@
       "card": "Generate a QR code from a URL, short text, or image.",
       "action": "Generate QR Code"
     }
+  },
+  "crop": {
+    "ratio": "Crop ratio",
+    "free": "Free",
+    "size": "Crop area"
+  },
+  "rotate": {
+    "left": "Rotate left",
+    "right": "Rotate right",
+    "flipHorizontal": "Flip horizontal",
+    "flipVertical": "Flip vertical"
+  },
+  "pdfCompress": {
+    "level": "Compression level",
+    "low": "Low compression",
+    "medium": "Medium compression",
+    "high": "High compression",
+    "notice": "Compression depends on PDF content. If the PDF is already compressed, the file size may not change much."
   },
   "qr": {
     "inputModeLabel": "Input type",
@@ -157,7 +212,7 @@
     "tooLarge": "This file is too large for browser processing.",
     "imageRead": "Failed to read this image.",
     "pdfRead": "Failed to read this PDF file.",
-    "pageRange": "Enter a valid page range, such as 1-3 or 1,4,8.",
+    "pageRange": "Enter a valid page range, such as all, 1-3, or 1,4,8.",
     "processing": "Processing failed. Try again with another file."
   },
   "faq": {
@@ -176,16 +231,26 @@
     "imageCategoryDescription": "Compress, convert, resize, and create PDFs from images directly in your browser.",
     "pdfCategoryTitle": "PDF Tools - FilePilot Tools",
     "pdfCategoryDescription": "Merge, split, and create PDF files directly in your browser.",
+    "allToolsTitle": "All Tools - FilePilot Tools",
+    "allToolsDescription": "Browse every PDF, image, and QR tool and process files directly in your browser.",
     "compressTitle": "Compress Image Online - Reduce Image Size in Browser",
     "compressDescription": "Compress JPG, PNG, and WebP images online. Reduce image file size directly in your browser without uploading files.",
     "convertTitle": "Convert Image Online - JPG PNG WebP Converter",
     "convertDescription": "Convert JPG, PNG, and WebP images online. Change image format directly in your browser without uploading files.",
     "imageToPdfTitle": "Image to PDF Converter Online",
     "imageToPdfDescription": "Create a PDF from images online. Arrange JPG, PNG, and WebP files and generate a PDF directly in your browser.",
+    "cropImageTitle": "Crop Image Online - FilePilot Tools",
+    "cropImageDescription": "Crop JPG, PNG, and WebP images online. Remove extra areas directly in your browser.",
+    "rotateImageTitle": "Rotate Image Online - FilePilot Tools",
+    "rotateImageDescription": "Rotate and flip JPG, PNG, and WebP images online. Fix image direction and download the result.",
     "mergePdfTitle": "Merge PDF Online - Combine PDF Files",
     "mergePdfDescription": "Merge multiple PDF files into one PDF online. Reorder files and combine them directly in your browser.",
     "splitPdfTitle": "Split PDF Online - Extract PDF Pages",
     "splitPdfDescription": "Split one PDF online. Enter a page range and export selected pages directly in your browser.",
+    "compressPdfTitle": "Compress PDF Online for Free | FilePilot Tools",
+    "compressPdfDescription": "Compress PDF files directly in your browser. Reduce PDF size without uploading files to a server.",
+    "pdfToImagesTitle": "PDF to Images Online - FilePilot Tools",
+    "pdfToImagesDescription": "Convert PDF pages to JPG or PNG images directly in your browser.",
     "resizeImageTitle": "Resize Image Online - Change Image Size in Browser",
     "resizeImageDescription": "Resize JPG, PNG, and WebP images online. Change image dimensions directly in your browser.",
     "qrCodeTitle": "QR Code Generator Online",

@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="container tool-page-header">
-      <NuxtLink class="crumb-link" to="/">{{ t('tool.back') }}</NuxtLink>
+      <NuxtLink class="crumb-link" to="/image-tools">{{ t('category.backImage') }}</NuxtLink>
       <h1 class="tool-title">{{ t(tool.titleKey) }}</h1>
       <p class="tool-subtitle">{{ t(tool.descriptionKey) }}</p>
     </section>
@@ -14,28 +14,44 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
-          :tool-key="tool.key"
-          :title="t('tool.dropTitle')"
-          :description="t('tool.dropCopy')"
-          :button-text="t('tool.chooseFiles')"
           @select="addFiles"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
-        <ResultList :results="results" :tool-key="tool.key" />
+        <div class="preview-stage">
+          <div
+            class="image-canvas rotate-sample"
+            :style="{ transform: `rotate(${rotation}deg) scale(${flipHorizontal ? -1 : 1}, ${flipVertical ? -1 : 1})` }"
+          />
+        </div>
+        <ResultList :results="results" />
       </div>
 
       <aside class="settings-panel">
         <h2>{{ t('tool.settings') }}</h2>
         <div class="control-group">
-          <label class="control-label" for="quality">
-            <span>{{ t('tool.quality') }}</span>
-            <span class="control-value">{{ quality }}%</span>
-          </label>
-          <input id="quality" v-model.number="quality" class="range-input" type="range" min="30" max="100">
+          <div class="format-grid">
+            <button class="format-option" type="button" @click="rotateLeft">{{ t('rotate.left') }}</button>
+            <button class="format-option" type="button" @click="rotateRight">{{ t('rotate.right') }}</button>
+            <button
+              class="format-option"
+              :class="{ 'is-selected': flipHorizontal }"
+              type="button"
+              @click="flipHorizontal = !flipHorizontal"
+            >
+              {{ t('rotate.flipHorizontal') }}
+            </button>
+            <button
+              class="format-option"
+              :class="{ 'is-selected': flipVertical }"
+              type="button"
+              @click="flipVertical = !flipVertical"
+            >
+              {{ t('rotate.flipVertical') }}
+            </button>
+          </div>
         </div>
-
         <div class="control-group">
           <div class="control-label">{{ t('tool.outputFormat') }}</div>
           <div class="format-grid">
@@ -68,20 +84,19 @@
 import type { ProcessedResult, ToolKey } from '~/types/tool'
 import type { ImageOutputFormat } from '~/utils/image'
 
-
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
-const { processImages } = useImageCompressor()
-const { trackToolEvent } = useToolAnalytics()
-const tool = getTool('image-compressor')
+const { rotateImages } = useRotateImage()
+const tool = getTool('rotate-image')
 const files = ref<File[]>([])
-const quickCompressFiles = useState<File[]>('filepilot-home-compress-files', () => [])
 const results = ref<ProcessedResult[]>([])
-const quality = ref(80)
+const rotation = ref<0 | 90 | 180 | 270>(90)
+const flipHorizontal = ref(false)
+const flipVertical = ref(false)
 const outputFormat = ref<ImageOutputFormat>('same')
 const processing = ref(false)
 const error = ref('')
-const relatedKeys: ToolKey[] = ['resize-image', 'image-converter', 'image-to-pdf', 'crop-image']
+const relatedKeys: ToolKey[] = ['crop-image', 'resize-image', 'image-converter']
 
 const formats = computed(() => [
   { value: 'same' as const, label: t('tool.same') },
@@ -89,14 +104,6 @@ const formats = computed(() => [
   { value: 'png' as const, label: 'PNG' },
   { value: 'webp' as const, label: 'WebP' }
 ])
-
-onMounted(() => {
-  if (quickCompressFiles.value.length > 0) {
-    files.value = quickCompressFiles.value.slice(0, tool.maxFiles)
-    quickCompressFiles.value = []
-    error.value = ''
-  }
-})
 
 function addFiles(nextFiles: File[]) {
   files.value = [...files.value, ...nextFiles].slice(0, tool.maxFiles)
@@ -123,6 +130,14 @@ function moveFile(index: number, targetIndex: number) {
   files.value = nextFiles
 }
 
+function rotateLeft() {
+  rotation.value = ((rotation.value + 270) % 360) as typeof rotation.value
+}
+
+function rotateRight() {
+  rotation.value = ((rotation.value + 90) % 360) as typeof rotation.value
+}
+
 async function handleProcess() {
   if (files.value.length === 0) {
     error.value = t('error.chooseFile')
@@ -131,23 +146,17 @@ async function handleProcess() {
 
   processing.value = true
   error.value = ''
-  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
-    results.value = await processImages(files.value, {
-      quality: quality.value,
-      outputFormat: outputFormat.value
-    })
-    trackToolEvent('tool_process_succeeded', {
-      tool_key: tool.key,
-      result_count: results.value.length
+    results.value = await rotateImages(files.value, {
+      outputFormat: outputFormat.value,
+      quality: 92,
+      rotation: rotation.value,
+      flipHorizontal: flipHorizontal.value,
+      flipVertical: flipVertical.value
     })
   } catch {
     error.value = t('error.processing')
-    trackToolEvent('tool_process_failed', {
-      tool_key: tool.key,
-      error_type: 'processing'
-    })
   } finally {
     processing.value = false
   }

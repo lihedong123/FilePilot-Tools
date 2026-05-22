@@ -14,12 +14,13 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
+          :tool-key="tool.key"
           @select="addFiles"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
-        <ResultList :results="results" />
+        <ResultList :results="results" :tool-key="tool.key" />
       </div>
 
       <aside class="settings-panel">
@@ -60,18 +61,20 @@
       </aside>
     </section>
 
+    <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
     <ToolFaq class="container" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ProcessedResult } from '~/types/tool'
+import type { ProcessedResult, ToolKey } from '~/types/tool'
 import type { ImageOutputFormat } from '~/utils/image'
 
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { convertImages } = useImageConverter()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('image-converter')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
@@ -80,6 +83,7 @@ const quality = ref(90)
 const background = ref('#ffffff')
 const processing = ref(false)
 const error = ref('')
+const relatedKeys: ToolKey[] = ['image-compressor', 'resize-image', 'image-to-pdf']
 
 const formats = computed(() => [
   { value: 'same' as const, label: t('tool.same') },
@@ -121,6 +125,7 @@ async function handleProcess() {
 
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     results.value = await convertImages(files.value, {
@@ -128,8 +133,16 @@ async function handleProcess() {
       quality: quality.value,
       background: background.value
     })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: results.value.length
+    })
   } catch {
     error.value = t('error.processing')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: 'processing'
+    })
   } finally {
     processing.value = false
   }

@@ -14,12 +14,13 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
+          :tool-key="tool.key"
           @select="addFiles"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
-        <ResultList :results="results" />
+        <ResultList :results="results" :tool-key="tool.key" />
       </div>
 
       <aside class="settings-panel">
@@ -61,18 +62,20 @@
       </aside>
     </section>
 
+    <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
     <ToolFaq class="container" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ProcessedResult } from '~/types/tool'
+import type { ProcessedResult, ToolKey } from '~/types/tool'
 import type { ImageOutputFormat } from '~/utils/image'
 
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { resizeImages } = useResizeImage()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('resize-image')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
@@ -82,6 +85,7 @@ const keepAspectRatio = ref(true)
 const outputFormat = ref<ImageOutputFormat>('same')
 const processing = ref(false)
 const error = ref('')
+const relatedKeys: ToolKey[] = ['crop-image', 'rotate-image', 'image-compressor']
 
 const formats = computed(() => [
   { value: 'same' as const, label: t('tool.same') },
@@ -123,6 +127,7 @@ async function handleProcess() {
 
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     results.value = await resizeImages(files.value, {
@@ -132,8 +137,16 @@ async function handleProcess() {
       outputFormat: outputFormat.value,
       quality: 90
     })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: results.value.length
+    })
   } catch {
     error.value = t('error.processing')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: 'processing'
+    })
   } finally {
     processing.value = false
   }

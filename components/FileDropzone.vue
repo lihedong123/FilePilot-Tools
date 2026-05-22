@@ -96,6 +96,7 @@
 
 <script setup lang="ts">
 import { ArrowDown, ArrowUp, FolderOpen, GripVertical, Trash2, UploadCloud } from 'lucide-vue-next'
+import type { ToolKey } from '~/types/tool'
 import { formatBytes } from '~/utils/fileSize'
 import { getPdfPageCount } from '~/utils/pdf'
 
@@ -105,6 +106,7 @@ const props = defineProps<{
   multiple: boolean
   maxFiles: number
   maxFileSize: number
+  toolKey?: ToolKey
   title?: string
   description?: string
   buttonText?: string
@@ -119,6 +121,7 @@ const emit = defineEmits<{
 
 
 const { t } = useLocale()
+const { getFileTypeGroup, trackToolEvent } = useToolAnalytics()
 const inputRef = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
 const error = ref('')
@@ -185,6 +188,14 @@ function filterFiles(fileList: FileList | File[]) {
   const nextFiles = props.multiple ? filtered.slice(0, props.maxFiles) : filtered.slice(0, 1)
 
   if (nextFiles.length > 0) {
+    if (props.toolKey) {
+      trackToolEvent('tool_file_selected', {
+        tool_key: props.toolKey,
+        file_count: nextFiles.length,
+        file_type_group: getFileTypeGroup(nextFiles)
+      })
+    }
+
     emit('select', nextFiles)
   }
 }

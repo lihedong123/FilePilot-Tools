@@ -29,10 +29,30 @@
           </div>
           <span class="privacy-badge">{{ t('home.localBadge') }}</span>
         </div>
-        <div class="mini-upload">
+        <div
+          class="mini-upload"
+          :class="{ 'is-dragging': isDragging }"
+          role="button"
+          tabindex="0"
+          @click="quickInputRef?.click()"
+          @keydown.enter.prevent="quickInputRef?.click()"
+          @keydown.space.prevent="quickInputRef?.click()"
+          @dragover.prevent="isDragging = true"
+          @dragleave.prevent="isDragging = false"
+          @drop.prevent="handleQuickDrop"
+        >
           <div>
             <strong>{{ t('home.dropImages') }}</strong>
             <span>{{ t('home.previewFormats') }}</span>
+            <input
+              ref="quickInputRef"
+              class="file-input"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              @change="handleQuickInput"
+            >
+            <p v-if="quickError" class="error-text">{{ quickError }}</p>
           </div>
         </div>
         <div class="mock-file-list">
@@ -70,9 +90,47 @@
 </template>
 
 <script setup lang="ts">
-
 const { t } = useLocale()
 const { tools } = useToolCatalog()
+const router = useRouter()
+const quickInputRef = ref<HTMLInputElement | null>(null)
+const isDragging = ref(false)
+const quickError = ref('')
+const quickCompressFiles = useState<File[]>('filepilot-home-compress-files', () => [])
+const acceptedImageTypes = ['image/jpeg', 'image/png', 'image/webp']
+
+function openCompressorWithFiles(fileList: FileList | File[]) {
+  const files = Array.from(fileList)
+  const imageFiles = files.filter((file) => acceptedImageTypes.includes(file.type))
+
+  if (imageFiles.length === 0) {
+    quickError.value = t('home.quickUnsupported')
+    return
+  }
+
+  // 首页这个区域现在保留为真实入口：文件先暂存在客户端状态里，
+  // 再跳到图片压缩页，避免用户拖入图片后没有任何反馈。
+  quickCompressFiles.value = imageFiles.slice(0, 20)
+  quickError.value = ''
+  router.push('/image-compressor')
+}
+
+function handleQuickDrop(event: DragEvent) {
+  isDragging.value = false
+
+  if (event.dataTransfer?.files) {
+    openCompressorWithFiles(event.dataTransfer.files)
+  }
+}
+
+function handleQuickInput(event: Event) {
+  const target = event.target as HTMLInputElement
+
+  if (target.files) {
+    openCompressorWithFiles(target.files)
+    target.value = ''
+  }
+}
 
 useHead(() => ({
   title: t('seo.homeTitle'),

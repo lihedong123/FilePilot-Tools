@@ -4,8 +4,12 @@ export type ToolKey =
   | 'image-compressor'
   | 'image-converter'
   | 'image-to-pdf'
+  | 'crop-image'
+  | 'rotate-image'
   | 'merge-pdf'
   | 'split-pdf'
+  | 'compress-pdf'
+  | 'pdf-to-images'
   | 'resize-image'
   | 'qr-code-generator'
 

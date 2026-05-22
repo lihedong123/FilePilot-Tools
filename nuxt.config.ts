@@ -18,7 +18,18 @@ export default defineNuxtConfig({
           type: 'image/svg+xml',
           href: '/favicon.svg'
         }
-      ]
+      ],
+      script: process.env.NUXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
+        ? [
+            {
+              src: 'https://static.cloudflareinsights.com/beacon.min.js',
+              defer: true,
+              'data-cf-beacon': JSON.stringify({
+                token: process.env.NUXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
+              })
+            }
+          ]
+        : []
     }
   },
   typescript: {

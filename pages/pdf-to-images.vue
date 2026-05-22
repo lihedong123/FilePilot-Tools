@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="container tool-page-header">
-      <NuxtLink class="crumb-link" to="/">{{ t('tool.back') }}</NuxtLink>
+      <NuxtLink class="crumb-link" to="/pdf-tools">{{ t('category.backPdf') }}</NuxtLink>
       <h1 class="tool-title">{{ t(tool.titleKey) }}</h1>
       <p class="tool-subtitle">{{ t(tool.descriptionKey) }}</p>
     </section>
@@ -14,28 +14,16 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
-          :tool-key="tool.key"
-          :title="t('tool.dropTitle')"
-          :description="t('tool.dropCopy')"
-          :button-text="t('tool.chooseFiles')"
-          @select="addFiles"
+          @select="setFile"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
-        <ResultList :results="results" :tool-key="tool.key" />
+        <ResultList :results="results" />
       </div>
 
       <aside class="settings-panel">
         <h2>{{ t('tool.settings') }}</h2>
-        <div class="control-group">
-          <label class="control-label" for="quality">
-            <span>{{ t('tool.quality') }}</span>
-            <span class="control-value">{{ quality }}%</span>
-          </label>
-          <input id="quality" v-model.number="quality" class="range-input" type="range" min="30" max="100">
-        </div>
-
         <div class="control-group">
           <div class="control-label">{{ t('tool.outputFormat') }}</div>
           <div class="format-grid">
@@ -50,6 +38,17 @@
               {{ format.label }}
             </button>
           </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="page-range">{{ t('tool.pageRange') }}</label>
+          <input id="page-range" v-model="pageRange" class="text-input" type="text" placeholder="all or 1-3,5">
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="quality">
+            <span>{{ t('tool.quality') }}</span>
+            <span class="control-value">{{ quality }}%</span>
+          </label>
+          <input id="quality" v-model.number="quality" class="range-input" type="range" min="60" max="100">
         </div>
 
         <p v-if="error" class="error-text">{{ error }}</p>
@@ -66,40 +65,27 @@
 
 <script setup lang="ts">
 import type { ProcessedResult, ToolKey } from '~/types/tool'
-import type { ImageOutputFormat } from '~/utils/image'
-
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
-const { processImages } = useImageCompressor()
-const { trackToolEvent } = useToolAnalytics()
-const tool = getTool('image-compressor')
+const { convertPdfToImages } = usePdfToImages()
+const tool = getTool('pdf-to-images')
 const files = ref<File[]>([])
-const quickCompressFiles = useState<File[]>('filepilot-home-compress-files', () => [])
 const results = ref<ProcessedResult[]>([])
-const quality = ref(80)
-const outputFormat = ref<ImageOutputFormat>('same')
+const outputFormat = ref<'jpg' | 'png'>('jpg')
+const pageRange = ref('all')
+const quality = ref(90)
 const processing = ref(false)
 const error = ref('')
-const relatedKeys: ToolKey[] = ['resize-image', 'image-converter', 'image-to-pdf', 'crop-image']
+const relatedKeys: ToolKey[] = ['image-to-pdf', 'split-pdf', 'compress-pdf']
 
-const formats = computed(() => [
-  { value: 'same' as const, label: t('tool.same') },
+const formats = [
   { value: 'jpg' as const, label: 'JPG' },
-  { value: 'png' as const, label: 'PNG' },
-  { value: 'webp' as const, label: 'WebP' }
-])
+  { value: 'png' as const, label: 'PNG' }
+]
 
-onMounted(() => {
-  if (quickCompressFiles.value.length > 0) {
-    files.value = quickCompressFiles.value.slice(0, tool.maxFiles)
-    quickCompressFiles.value = []
-    error.value = ''
-  }
-})
-
-function addFiles(nextFiles: File[]) {
-  files.value = [...files.value, ...nextFiles].slice(0, tool.maxFiles)
+function setFile(nextFiles: File[]) {
+  files.value = nextFiles.slice(0, 1)
   error.value = ''
 }
 
@@ -112,42 +98,27 @@ function clearFiles() {
   results.value = []
 }
 
-function moveFile(index: number, targetIndex: number) {
-  if (targetIndex < 0 || targetIndex >= files.value.length) {
-    return
-  }
-
-  const nextFiles = [...files.value]
-  const [file] = nextFiles.splice(index, 1)
-  nextFiles.splice(targetIndex, 0, file)
-  files.value = nextFiles
+function moveFile() {
+  // PDF 转图片只处理一个 PDF，保留空函数是为了让页面继续使用同一个文件选择组件。
 }
 
 async function handleProcess() {
   if (files.value.length === 0) {
-    error.value = t('error.chooseFile')
+    error.value = t('error.chooseOnePdf')
     return
   }
 
   processing.value = true
   error.value = ''
-  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
-    results.value = await processImages(files.value, {
+    results.value = await convertPdfToImages(files.value[0], {
+      outputFormat: outputFormat.value,
       quality: quality.value,
-      outputFormat: outputFormat.value
-    })
-    trackToolEvent('tool_process_succeeded', {
-      tool_key: tool.key,
-      result_count: results.value.length
+      pageRange: pageRange.value
     })
   } catch {
-    error.value = t('error.processing')
-    trackToolEvent('tool_process_failed', {
-      tool_key: tool.key,
-      error_type: 'processing'
-    })
+    error.value = t('error.pageRange')
   } finally {
     processing.value = false
   }

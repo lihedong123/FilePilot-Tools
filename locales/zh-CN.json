@@ -4,31 +4,44 @@
     "home": "首页",
     "imageTools": "图片工具",
     "pdfTools": "PDF 工具",
+    "allTools": "全部工具",
     "qrCode": "二维码",
     "language": "语言"
   },
   "home": {
     "eyebrow": "优先在浏览器处理文件",
     "title": "免费在线 PDF 和图片工具",
-    "copy": "文件直接在浏览器里处理。你可以压缩图片、转换格式、创建 PDF，并快速完成常见文件处理任务，不需要安装额外软件。",
-    "compressCta": "图片压缩",
-    "convertCta": "图片转换",
+    "copy": "文件直接在浏览器中处理。你可以压缩图片、转换格式、创建 PDF，并快速完成常见文件处理任务，不需要安装额外软件。",
+    "compressCta": "压缩图片",
+    "convertCta": "转换图片",
     "imageToPdfCta": "图片转 PDF",
     "quickTitle": "快速图片压缩",
     "quickCopy": "选择文件，调整质量，下载更小的图片。",
     "localBadge": "本地处理",
     "dropImages": "把图片拖到这里",
-    "previewFormats": "JPG、PNG、WebP 预览",
+    "previewFormats": "JPG、PNG 和 WebP 预览",
+    "quickChooseImages": "选择图片",
+    "quickUnsupported": "请选择 JPG、PNG 或 WebP 图片。",
     "popularTitle": "常用工具",
     "popularCopy": "选择需要的工具，添加文件后就可以开始处理。",
     "trustCopy": "文件会直接在浏览器中处理，按页面设置完成处理后即可下载结果。"
   },
   "category": {
     "imageTitle": "图片工具",
-    "imageCopy": "在本地压缩、转换、调整图片，并把图片生成 PDF。",
+    "imageCopy": "在本地压缩、转换、裁剪、旋转和调整图片，并把图片生成 PDF。",
     "pdfTitle": "PDF 工具",
-    "pdfCopy": "直接在浏览器中合并、拆分和创建 PDF 文件。",
-    "backHome": "返回首页"
+    "pdfCopy": "直接在浏览器中合并、拆分、压缩 PDF，并把 PDF 页面导出为图片。",
+    "backHome": "返回首页",
+    "backImage": "返回图片工具",
+    "backPdf": "返回 PDF 工具"
+  },
+  "allTools": {
+    "title": "全部工具",
+    "copy": "这里列出所有 PDF、图片和二维码工具，方便按文件类型找到下一步操作。",
+    "popular": "常用工具",
+    "image": "图片工具",
+    "pdf": "PDF 工具",
+    "qr": "二维码工具"
   },
   "tool": {
     "back": "返回全部工具",
@@ -81,13 +94,13 @@
   },
   "tools": {
     "imageCompressor": {
-      "title": "图片压缩",
+      "title": "压缩图片",
       "description": "直接在浏览器里减小图片体积。",
       "card": "通过简单的质量控制，减小 JPG、PNG、WebP 图片体积。",
       "action": "压缩图片"
     },
     "imageConverter": {
-      "title": "图片转换",
+      "title": "转换图片",
       "description": "在浏览器里转换 JPG、PNG 和 WebP 图片。",
       "card": "在 JPG、PNG、WebP 之间转换，适合浏览器、分享和文档场景。",
       "action": "转换图片"
@@ -98,20 +111,44 @@
       "card": "把一张或多张排序后的图片生成 PDF 文件。",
       "action": "生成 PDF"
     },
+    "cropImage": {
+      "title": "裁剪图片",
+      "description": "裁掉图片多余区域，适合头像、封面图和证件照预处理。",
+      "card": "按自由比例、1:1、4:3、16:9 或 3:4 裁剪图片。",
+      "action": "裁剪图片"
+    },
+    "rotateImage": {
+      "title": "旋转图片",
+      "description": "修正手机照片、扫描件和截图方向。",
+      "card": "支持左转、右转、水平翻转和垂直翻转，可批量处理。",
+      "action": "下载旋转后的图片"
+    },
     "mergePdf": {
-      "title": "PDF 合并",
+      "title": "合并 PDF",
       "description": "把多个 PDF 文件合并成一个文档。",
       "card": "把多个 PDF 合成一个文件，并控制最终顺序。",
       "action": "合并 PDF 文件"
     },
     "splitPdf": {
-      "title": "PDF 拆分",
+      "title": "拆分 PDF",
       "description": "从一个 PDF 文件中导出指定页面。",
       "card": "用清晰的页码范围，从 PDF 中提取指定页面。",
       "action": "拆分 PDF"
     },
+    "compressPdf": {
+      "title": "压缩 PDF",
+      "description": "在浏览器中重新保存 PDF，尽量减小文件体积。",
+      "card": "压缩 PDF 附件，适合邮件、报名系统和资料上传。",
+      "action": "压缩 PDF"
+    },
+    "pdfToImages": {
+      "title": "PDF 转图片",
+      "description": "把 PDF 页面导出为 JPG 或 PNG 图片。",
+      "card": "按页码顺序导出 PDF 页面，适合预览、发送和插入文档。",
+      "action": "转换 PDF 为图片"
+    },
     "resizeImage": {
-      "title": "图片尺寸调整",
+      "title": "调整图片尺寸",
       "description": "调整图片宽度或高度，同时保持原始比例。",
       "card": "调整图片尺寸，适合网页、邮件和文档使用。",
       "action": "调整图片尺寸"
@@ -122,6 +159,24 @@
       "card": "把链接、短文本或图片生成二维码。",
       "action": "生成二维码"
     }
+  },
+  "crop": {
+    "ratio": "裁剪比例",
+    "free": "自由",
+    "size": "裁剪区域"
+  },
+  "rotate": {
+    "left": "左转",
+    "right": "右转",
+    "flipHorizontal": "水平翻转",
+    "flipVertical": "垂直翻转"
+  },
+  "pdfCompress": {
+    "level": "压缩等级",
+    "low": "低压缩",
+    "medium": "中等压缩",
+    "high": "高压缩",
+    "notice": "压缩效果取决于 PDF 内容。如果 PDF 已经被压缩过，文件大小可能不会明显变小。"
   },
   "qr": {
     "inputModeLabel": "输入方式",
@@ -157,13 +212,13 @@
     "tooLarge": "这个文件太大，浏览器处理可能较慢。",
     "imageRead": "图片读取失败。",
     "pdfRead": "PDF 文件读取失败。",
-    "pageRange": "请输入正确的页码范围，例如 1-3 或 1,4,8。",
+    "pageRange": "请输入正确的页码范围，例如 all、1-3 或 1,4,8。",
     "processing": "处理失败，请换一个文件重试。"
   },
   "faq": {
     "title": "常见问题",
-    "uploadedQuestion": "我的文件会被上传吗？",
-    "uploadedAnswer": "不会。支持的工具会在浏览器里处理文件，不会把文件上传到这个服务器。",
+    "uploadedQuestion": "我的文件会上传吗？",
+    "uploadedAnswer": "不会。支持本地处理的工具会在浏览器里处理文件，不会把文件上传到这个服务器。",
     "freeQuestion": "这个工具免费吗？",
     "freeAnswer": "是免费的。不需要登录、付款或开通会员。",
     "mobileQuestion": "手机上可以用吗？",
@@ -173,19 +228,29 @@
     "homeTitle": "免费在线 PDF 和图片工具",
     "homeDescription": "免费在线 PDF 和图片工具，文件直接在浏览器里处理。",
     "imageCategoryTitle": "图片工具 - FilePilot Tools",
-    "imageCategoryDescription": "直接在浏览器中压缩、转换、调整图片，并把图片生成 PDF。",
+    "imageCategoryDescription": "直接在浏览器中压缩、转换、裁剪、旋转和调整图片，并把图片生成 PDF。",
     "pdfCategoryTitle": "PDF 工具 - FilePilot Tools",
-    "pdfCategoryDescription": "直接在浏览器中合并、拆分和创建 PDF 文件。",
+    "pdfCategoryDescription": "直接在浏览器中合并、拆分、压缩 PDF，并把 PDF 页面导出为图片。",
+    "allToolsTitle": "全部工具 - FilePilot Tools",
+    "allToolsDescription": "查看所有 PDF、图片和二维码工具，直接在浏览器中处理文件。",
     "compressTitle": "在线压缩图片 - 在浏览器中减小图片体积",
     "compressDescription": "在线压缩 JPG、PNG 和 WebP 图片。文件直接在浏览器中处理，不会上传。",
     "convertTitle": "在线图片转换 - JPG PNG WebP 转换器",
     "convertDescription": "在线转换 JPG、PNG 和 WebP 图片。直接在浏览器中改变图片格式，不会上传文件。",
     "imageToPdfTitle": "在线图片转 PDF 工具",
     "imageToPdfDescription": "在线把图片生成 PDF。排列 JPG、PNG、WebP 文件，并直接在浏览器中生成 PDF。",
+    "cropImageTitle": "在线裁剪图片 - FilePilot Tools",
+    "cropImageDescription": "在线裁剪 JPG、PNG 和 WebP 图片。按常用比例裁掉多余区域，文件直接在浏览器中处理。",
+    "rotateImageTitle": "在线旋转图片 - FilePilot Tools",
+    "rotateImageDescription": "在线旋转和翻转 JPG、PNG、WebP 图片。修正图片方向并直接下载结果。",
     "mergePdfTitle": "在线合并 PDF - 合并多个 PDF 文件",
     "mergePdfDescription": "在线把多个 PDF 合并成一个 PDF。调整顺序并直接在浏览器中合并文件。",
     "splitPdfTitle": "在线拆分 PDF - 导出 PDF 页面",
     "splitPdfDescription": "在线拆分一个 PDF。输入页码范围，并直接在浏览器中导出指定页面。",
+    "compressPdfTitle": "免费在线压缩 PDF - FilePilot Tools",
+    "compressPdfDescription": "直接在浏览器中压缩 PDF 文件。减小 PDF 大小，不把文件上传到服务器。",
+    "pdfToImagesTitle": "PDF 转图片在线工具 - FilePilot Tools",
+    "pdfToImagesDescription": "把 PDF 页面在线导出为 JPG 或 PNG 图片。文件直接在浏览器中处理。",
     "resizeImageTitle": "在线调整图片尺寸 - 在浏览器中修改图片大小",
     "resizeImageDescription": "在线调整 JPG、PNG、WebP 图片尺寸。直接在浏览器中修改宽高。",
     "qrCodeTitle": "在线二维码生成工具",

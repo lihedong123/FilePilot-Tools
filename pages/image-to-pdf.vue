@@ -14,13 +14,14 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
+          :tool-key="tool.key"
           @select="addFiles"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
         <p v-if="files.length > 1" class="notice">{{ t('tool.dragHint') }}</p>
-        <ResultList :results="results" />
+        <ResultList :results="results" :tool-key="tool.key" />
       </div>
 
       <aside class="settings-panel">
@@ -64,18 +65,20 @@
       </aside>
     </section>
 
+    <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
     <ToolFaq class="container" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ProcessedResult } from '~/types/tool'
+import type { ProcessedResult, ToolKey } from '~/types/tool'
 import type { PdfPageSizeName } from '~/utils/pdf'
 
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { createPdf } = useImageToPdf()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('image-to-pdf')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
@@ -84,6 +87,7 @@ const orientation = ref<'auto' | 'portrait' | 'landscape'>('auto')
 const margin = ref(10)
 const processing = ref(false)
 const error = ref('')
+const relatedKeys: ToolKey[] = ['pdf-to-images', 'merge-pdf', 'compress-pdf']
 
 const orientations = computed(() => [
   { value: 'auto' as const, label: t('tool.orientationAuto') },
@@ -124,6 +128,7 @@ async function handleProcess() {
 
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     results.value = await createPdf(files.value, {
@@ -131,8 +136,16 @@ async function handleProcess() {
       orientation: orientation.value,
       margin: margin.value
     })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: results.value.length
+    })
   } catch {
     error.value = t('error.processing')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: 'processing'
+    })
   } finally {
     processing.value = false
   }
