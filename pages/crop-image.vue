@@ -14,20 +14,29 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
+          :tool-key="tool.key"
           @select="setFile"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
         <div class="preview-stage">
-          <div class="image-canvas">
-            <div class="crop-box" :style="cropBoxStyle">
+          <div ref="previewRef" class="image-canvas crop-preview" @pointermove="handleCropPointerMove" @pointerup="stopCropDrag" @pointerleave="stopCropDrag">
+            <img v-if="previewUrl" class="crop-preview-image" :src="previewUrl" :alt="files[0]?.name || t(tool.titleKey)">
+            <div v-else class="crop-preview-empty">
+              {{ t('crop.previewEmpty') }}
+            </div>
+            <div
+              class="crop-box"
+              :style="cropBoxStyle"
+              @pointerdown.stop="startCropDrag"
+            >
               <span class="crop-grid-line" />
               <span class="crop-grid-line" />
             </div>
           </div>
         </div>
-        <ResultList :results="results" />
+        <ResultList :results="results" :tool-key="tool.key" />
       </div>
 
       <aside class="settings-panel">
@@ -41,7 +50,7 @@
               class="format-option"
               :class="{ 'is-selected': ratio === ratioItem.value }"
               type="button"
-              @click="ratio = ratioItem.value"
+              @click="setRatio(ratioItem.value)"
             >
               {{ ratioItem.label }}
             </button>
@@ -52,7 +61,7 @@
             <span>{{ t('crop.size') }}</span>
             <span class="control-value">{{ cropSize }}%</span>
           </label>
-          <input id="crop-size" v-model.number="cropSize" class="range-input" type="range" min="30" max="100">
+          <input id="crop-size" v-model.number="cropSize" class="range-input" type="range" min="30" max="100" @input="applyCropSize">
         </div>
         <div class="control-group">
           <div class="control-label">{{ t('tool.outputFormat') }}</div>
@@ -86,17 +95,35 @@
 import type { ProcessedResult, ToolKey } from '~/types/tool'
 import type { ImageOutputFormat } from '~/utils/image'
 
+type CropRatio = 'free' | '1:1' | '4:3' | '16:9' | '3:4'
+
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { cropImage } = useCropImage()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('crop-image')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
-const ratio = ref<'free' | '1:1' | '4:3' | '16:9' | '3:4'>('free')
+const ratio = ref<CropRatio>('free')
 const cropSize = ref(72)
 const outputFormat = ref<ImageOutputFormat>('same')
 const processing = ref(false)
 const error = ref('')
+const previewUrl = ref('')
+const previewRef = ref<HTMLElement | null>(null)
+const cropRect = ref({
+  x: 14,
+  y: 14,
+  width: 72,
+  height: 50.4
+})
+const dragState = ref<{
+  pointerId: number
+  startX: number
+  startY: number
+  startRectX: number
+  startRectY: number
+} | null>(null)
 const relatedKeys: ToolKey[] = ['resize-image', 'rotate-image', 'image-compressor']
 
 const ratios = computed(() => [
@@ -112,21 +139,14 @@ const formats = computed(() => [
   { value: 'png' as const, label: 'PNG' },
   { value: 'webp' as const, label: 'WebP' }
 ])
-const cropBoxStyle = computed(() => {
-  const width = cropSize.value
-  const height = ratio.value === 'free'
-    ? cropSize.value * 0.7
-    : Math.min(86, width / getRatioValue(ratio.value))
+const cropBoxStyle = computed(() => ({
+  left: `${cropRect.value.x}%`,
+  top: `${cropRect.value.y}%`,
+  width: `${cropRect.value.width}%`,
+  height: `${cropRect.value.height}%`
+}))
 
-  return {
-    width: `${width}%`,
-    height: `${height}%`,
-    left: `${(100 - width) / 2}%`,
-    top: `${(100 - height) / 2}%`
-  }
-})
-
-function getRatioValue(value: typeof ratio.value) {
+function getRatioValue(value: CropRatio) {
   if (value === '1:1') return 1
   if (value === '4:3') return 4 / 3
   if (value === '16:9') return 16 / 9
@@ -136,11 +156,13 @@ function getRatioValue(value: typeof ratio.value) {
 
 function setFile(nextFiles: File[]) {
   files.value = nextFiles.slice(0, 1)
+  results.value = []
   error.value = ''
 }
 
 function removeFile(index: number) {
   files.value.splice(index, 1)
+  results.value = []
 }
 
 function clearFiles() {
@@ -152,33 +174,129 @@ function moveFile() {
   // 图片裁剪只处理一张图片，不需要排序；保留这个接口用于复用 FileDropzone。
 }
 
+function setRatio(value: CropRatio) {
+  ratio.value = value
+  applyCropSize()
+}
+
+function applyCropSize() {
+  const width = cropSize.value
+  const height = ratio.value === 'free'
+    ? cropSize.value * 0.7
+    : Math.min(86, width / getRatioValue(ratio.value))
+
+  cropRect.value = constrainCropRect({
+    ...cropRect.value,
+    width,
+    height
+  })
+}
+
+function constrainCropRect(rect: typeof cropRect.value) {
+  const width = Math.min(100, Math.max(10, rect.width))
+  const height = Math.min(100, Math.max(10, rect.height))
+  const x = Math.min(100 - width, Math.max(0, rect.x))
+  const y = Math.min(100 - height, Math.max(0, rect.y))
+
+  return {
+    x,
+    y,
+    width,
+    height
+  }
+}
+
+function startCropDrag(event: PointerEvent) {
+  const target = event.currentTarget as HTMLElement
+  target.setPointerCapture(event.pointerId)
+  dragState.value = {
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    startRectX: cropRect.value.x,
+    startRectY: cropRect.value.y
+  }
+}
+
+function handleCropPointerMove(event: PointerEvent) {
+  if (!dragState.value || !previewRef.value) {
+    return
+  }
+
+  const bounds = previewRef.value.getBoundingClientRect()
+  const deltaX = ((event.clientX - dragState.value.startX) / bounds.width) * 100
+  const deltaY = ((event.clientY - dragState.value.startY) / bounds.height) * 100
+
+  cropRect.value = constrainCropRect({
+    ...cropRect.value,
+    x: dragState.value.startRectX + deltaX,
+    y: dragState.value.startRectY + deltaY
+  })
+}
+
+function stopCropDrag() {
+  dragState.value = null
+}
+
 async function handleProcess() {
   if (files.value.length === 0) {
     error.value = t('error.chooseFile')
     return
   }
 
-  const widthPercent = Number.parseFloat(cropBoxStyle.value.width) / 100
-  const heightPercent = Number.parseFloat(cropBoxStyle.value.height) / 100
-
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     results.value = await cropImage(files.value[0], {
       outputFormat: outputFormat.value,
       quality: 92,
-      cropXPercent: (1 - widthPercent) / 2,
-      cropYPercent: (1 - heightPercent) / 2,
-      cropWidthPercent: widthPercent,
-      cropHeightPercent: heightPercent
+      cropXPercent: cropRect.value.x / 100,
+      cropYPercent: cropRect.value.y / 100,
+      cropWidthPercent: cropRect.value.width / 100,
+      cropHeightPercent: cropRect.value.height / 100
+    })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: results.value.length
     })
   } catch {
     error.value = t('error.processing')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: 'processing'
+    })
   } finally {
     processing.value = false
   }
 }
+
+watch(
+  () => files.value[0],
+  (file, previousFile) => {
+    if (previewUrl.value) {
+      URL.revokeObjectURL(previewUrl.value)
+      previewUrl.value = ''
+    }
+
+    if (file) {
+      previewUrl.value = URL.createObjectURL(file)
+      cropSize.value = 72
+      setRatio(ratio.value)
+    }
+
+    if (previousFile && previousFile !== file) {
+      results.value = []
+    }
+  }
+)
+
+onBeforeUnmount(() => {
+  if (previewUrl.value) {
+    URL.revokeObjectURL(previewUrl.value)
+  }
+})
 
 useHead(() => ({
   title: t(tool.seoTitleKey),

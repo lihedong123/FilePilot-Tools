@@ -8,6 +8,7 @@ const dictionaries = {
 }
 
 export function useLocale() {
+  const { trackToolEvent } = useToolAnalytics()
   const localeCookie = useCookie<LocaleCode>('filepilot-locale', {
     default: () => 'en',
     sameSite: 'lax'
@@ -21,6 +22,7 @@ export function useLocale() {
     if (import.meta.client) {
       document.documentElement.lang = value
       window.localStorage.setItem('filepilot-locale', value)
+      trackToolEvent('language_changed', { language: value })
     }
   }
 

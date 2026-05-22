@@ -163,13 +163,17 @@
   "crop": {
     "ratio": "Crop ratio",
     "free": "Free",
-    "size": "Crop area"
+    "size": "Crop area",
+    "previewEmpty": "Choose an image to preview and adjust the crop area."
   },
   "rotate": {
     "left": "Rotate left",
     "right": "Rotate right",
     "flipHorizontal": "Flip horizontal",
-    "flipVertical": "Flip vertical"
+    "flipVertical": "Flip vertical",
+    "perFileTitle": "Per-image rotation",
+    "perFileCopy": "Adjust each selected image separately before processing.",
+    "settingsCopy": "Rotation and flip controls are now shown on each selected image."
   },
   "pdfCompress": {
     "level": "Compression level",

@@ -92,6 +92,7 @@
 <script setup lang="ts">
 const { t } = useLocale()
 const { tools } = useToolCatalog()
+const { getFileTypeGroup, trackToolEvent } = useToolAnalytics()
 const router = useRouter()
 const quickInputRef = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
@@ -108,9 +109,13 @@ function openCompressorWithFiles(fileList: FileList | File[]) {
     return
   }
 
-  // 首页这个区域现在保留为真实入口：文件先暂存在客户端状态里，
-  // 再跳到图片压缩页，避免用户拖入图片后没有任何反馈。
+  // 首页快速入口只负责接住文件并跳到压缩页，真正的压缩逻辑仍然在图片压缩页执行。
   quickCompressFiles.value = imageFiles.slice(0, 20)
+  trackToolEvent('tool_file_selected', {
+    tool_key: 'image-compressor',
+    file_count: quickCompressFiles.value.length,
+    file_type_group: getFileTypeGroup(quickCompressFiles.value)
+  })
   quickError.value = ''
   router.push('/image-compressor')
 }

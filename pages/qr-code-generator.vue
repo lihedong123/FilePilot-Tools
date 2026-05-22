@@ -158,6 +158,7 @@ const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { generateQrCode } = useQrCodeGenerator()
 const { downloadBlob } = useDownloadFile()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('qr-code-generator')
 const inputMode = ref<'text' | 'image'>('text')
 const content = ref('https://filepilot.tools')
@@ -271,6 +272,11 @@ async function handleImageSelect(event: Event) {
   try {
     imageFile.value = file
     imageContent.value = await createImageQrContent(file)
+    trackToolEvent('tool_file_selected', {
+      tool_key: tool.key,
+      file_count: 1,
+      file_type_group: 'image'
+    })
     result.value = null
     error.value = ''
   } catch {
@@ -297,6 +303,7 @@ async function handleGenerate() {
 
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     result.value = await generateQrCode(value, {
@@ -306,8 +313,16 @@ async function handleGenerate() {
       margin: margin.value,
       errorCorrectionLevel: inputMode.value === 'image' ? 'L' : 'M'
     })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: 1
+    })
   } catch {
     error.value = inputMode.value === 'image' ? t('qr.imageGenerateFailed') : t('qr.generateFailed')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: inputMode.value === 'image' ? 'image_generate' : 'text_generate'
+    })
   } finally {
     processing.value = false
   }
@@ -316,6 +331,7 @@ async function handleGenerate() {
 function handleDownload() {
   if (result.value) {
     downloadBlob(result.value.blob, result.value.fileName)
+    trackToolEvent('tool_result_downloaded', { tool_key: tool.key })
   }
 }
 

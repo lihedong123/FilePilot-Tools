@@ -14,12 +14,13 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
+          :tool-key="tool.key"
           @select="setFile"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
-        <ResultList :results="results" />
+        <ResultList :results="results" :tool-key="tool.key" />
       </div>
 
       <aside class="settings-panel">
@@ -59,6 +60,7 @@ import type { ProcessedResult, ToolKey } from '~/types/tool'
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { compressPdf } = useCompressPdf()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('compress-pdf')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
@@ -99,13 +101,22 @@ async function handleProcess() {
 
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     results.value = await compressPdf(files.value[0], {
       level: level.value
     })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: results.value.length
+    })
   } catch {
     error.value = t('error.processing')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: 'processing'
+    })
   } finally {
     processing.value = false
   }

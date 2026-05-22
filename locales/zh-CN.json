@@ -163,13 +163,17 @@
   "crop": {
     "ratio": "裁剪比例",
     "free": "自由",
-    "size": "裁剪区域"
+    "size": "裁剪区域",
+    "previewEmpty": "选择图片后可以预览并调整裁剪区域。"
   },
   "rotate": {
     "left": "左转",
     "right": "右转",
     "flipHorizontal": "水平翻转",
-    "flipVertical": "垂直翻转"
+    "flipVertical": "垂直翻转",
+    "perFileTitle": "单张图片设置",
+    "perFileCopy": "每张图片都可以单独设置旋转和翻转。",
+    "settingsCopy": "旋转和翻转按钮已经放到每张图片上，右侧只保留输出格式。"
   },
   "pdfCompress": {
     "level": "压缩等级",

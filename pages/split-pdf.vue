@@ -14,12 +14,13 @@
           :multiple="tool.multiple"
           :max-files="tool.maxFiles"
           :max-file-size="tool.maxFileSize"
+          :tool-key="tool.key"
           @select="setFile"
           @remove="removeFile"
           @move="moveFile"
           @clear="clearFiles"
         />
-        <ResultList :results="results" />
+        <ResultList :results="results" :tool-key="tool.key" />
       </div>
 
       <aside class="settings-panel">
@@ -40,17 +41,18 @@
       </aside>
     </section>
 
+    <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
     <ToolFaq class="container" />
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ProcessedResult } from '~/types/tool'
-
+import type { ProcessedResult, ToolKey } from '~/types/tool'
 
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { splitPdf } = useSplitPdf()
+const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('split-pdf')
 const files = ref<File[]>([])
 const results = ref<ProcessedResult[]>([])
@@ -58,6 +60,7 @@ const pageRange = ref('all')
 const outputName = ref('split.pdf')
 const processing = ref(false)
 const error = ref('')
+const relatedKeys: ToolKey[] = ['merge-pdf', 'pdf-to-images', 'compress-pdf']
 
 function setFile(nextFiles: File[]) {
   files.value = nextFiles.slice(0, 1)
@@ -74,7 +77,7 @@ function clearFiles() {
 }
 
 function moveFile() {
-  // 单文件工具不需要调整顺序；保留这个事件处理，是为了复用 FileDropzone 的统一组件接口。
+  // 单文件工具不需要调整顺序；保留这个事件处理是为了复用 FileDropzone 的统一组件接口。
 }
 
 async function handleProcess() {
@@ -85,14 +88,23 @@ async function handleProcess() {
 
   processing.value = true
   error.value = ''
+  trackToolEvent('tool_process_started', { tool_key: tool.key })
 
   try {
     results.value = await splitPdf(files.value[0], {
       pageRange: pageRange.value,
       outputName: outputName.value
     })
+    trackToolEvent('tool_process_succeeded', {
+      tool_key: tool.key,
+      result_count: results.value.length
+    })
   } catch {
     error.value = t('error.pageRange')
+    trackToolEvent('tool_process_failed', {
+      tool_key: tool.key,
+      error_type: 'page_range'
+    })
   } finally {
     processing.value = false
   }

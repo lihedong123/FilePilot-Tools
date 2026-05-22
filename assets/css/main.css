@@ -968,11 +968,33 @@ button:disabled {
   overflow: hidden;
 }
 
+.crop-preview {
+  touch-action: none;
+}
+
+.crop-preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  pointer-events: none;
+}
+
+.crop-preview-empty {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .crop-box {
   position: absolute;
   border: 2px solid #ffffff;
   outline: 999px solid rgba(16, 24, 39, 0.28);
   box-shadow: 0 0 0 1px var(--primary);
+  cursor: move;
 }
 
 .crop-box::before,
@@ -1001,6 +1023,80 @@ button:disabled {
 
 .rotate-sample {
   transition: transform 180ms ease;
+}
+
+.per-file-panel {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+}
+
+.per-file-list {
+  display: grid;
+  gap: 12px;
+}
+
+.per-file-item {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdff;
+}
+
+.per-file-preview {
+  display: grid;
+  width: 112px;
+  aspect-ratio: 4 / 3;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(45deg, rgba(220, 227, 238, 0.48) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(220, 227, 238, 0.48) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(220, 227, 238, 0.48) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(220, 227, 238, 0.48) 75%);
+  background-color: #ffffff;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  background-size: 16px 16px;
+  overflow: hidden;
+}
+
+.per-file-image {
+  max-width: 86%;
+  max-height: 86%;
+  object-fit: contain;
+  transition: transform 180ms ease;
+}
+
+.per-file-main {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.per-file-main strong,
+.per-file-main span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.per-file-main span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.per-file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .qr-input-panel {
@@ -1232,6 +1328,14 @@ button:disabled {
 
   .selected-item {
     grid-template-columns: auto 1fr;
+  }
+
+  .per-file-item {
+    grid-template-columns: 1fr;
+  }
+
+  .per-file-preview {
+    width: 100%;
   }
 
   .file-actions {
