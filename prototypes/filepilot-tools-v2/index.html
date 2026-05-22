@@ -1,0 +1,3009 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FilePilot Tools - 免费 PDF 和图片工具</title>
+  <style>
+    :root {
+      --page: #f7f9fc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --text: #101827;
+      --muted: #667085;
+      --line: #dce3ee;
+      --primary: #1d64f2;
+      --primary-dark: #164fc4;
+      --primary-soft: #e8f0ff;
+      --success: #11845b;
+      --danger: #dc2626;
+      --warning: #b76e00;
+      --shadow: 0 20px 60px rgba(16, 24, 39, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      background: var(--page);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, #ffffff 0, var(--page) 360px),
+        var(--page);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    svg {
+      display: block;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(220, 227, 238, 0.88);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(18px);
+    }
+
+    .header-inner,
+    .container,
+    .footer-inner {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      gap: 24px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--text);
+      color: #ffffff;
+      font-size: 15px;
+      letter-spacing: 0;
+    }
+
+    .desktop-nav,
+    .screen-switcher,
+    .header-actions,
+    .hero-actions,
+    .tool-pill-row,
+    .result-actions,
+    .inline-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .desktop-nav {
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .nav-link,
+    .screen-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link.is-active,
+    .screen-tab:hover,
+    .screen-tab.is-active {
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    .header-actions {
+      gap: 10px;
+    }
+
+    .language-switcher {
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+    }
+
+    .language-button {
+      min-width: 46px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .language-button.is-active {
+      background: var(--text);
+      color: #ffffff;
+    }
+
+    .product-note {
+      border-bottom: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    .product-note .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 12px 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .product-note strong {
+      color: var(--text);
+    }
+
+    .screen-switcher {
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.is-active {
+      display: block;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      align-items: center;
+      min-height: calc(100vh - 112px);
+      padding: 62px 0 42px;
+      gap: 44px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      margin: 0 0 18px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.78);
+      color: var(--primary-dark);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(17, 132, 91, 0.12);
+    }
+
+    .hero-title {
+      max-width: 710px;
+      margin: 0;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 590px;
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .ghost-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 8px;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .primary-button {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 16px 28px rgba(29, 100, 242, 0.2);
+    }
+
+    .primary-button:hover {
+      background: var(--primary-dark);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .secondary-button:hover,
+    .ghost-button:hover {
+      border-color: #c5d1e2;
+      background: #f8fbff;
+    }
+
+    .ghost-button {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .compact-button {
+      min-height: 36px;
+      padding: 0 12px;
+      font-size: 13px;
+    }
+
+    .quick-panel,
+    .work-panel,
+    .settings-panel,
+    .selected-panel,
+    .result-panel,
+    .search-panel,
+    .faq-panel,
+    .related-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 16px 40px rgba(16, 24, 39, 0.06);
+    }
+
+    .quick-panel {
+      position: relative;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .quick-panel::before {
+      position: absolute;
+      inset: 16px auto auto -10px;
+      width: 20px;
+      height: 112px;
+      border-radius: 8px;
+      background: var(--primary);
+      content: "";
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .panel-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .privacy-badge,
+    .priority-badge {
+      flex: 0 0 auto;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #e9f8f1;
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 760;
+    }
+
+    .priority-badge {
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .mini-upload {
+      display: grid;
+      min-height: 210px;
+      margin-top: 18px;
+      place-items: center;
+      border: 1px dashed #aebbd0;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(232, 240, 255, 0.72), rgba(255, 255, 255, 0.9)),
+        repeating-linear-gradient(135deg, rgba(29, 100, 242, 0.05) 0, rgba(29, 100, 242, 0.05) 8px, transparent 8px, transparent 18px);
+      text-align: center;
+    }
+
+    .mini-upload strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .mini-upload span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .mock-file-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .mock-file {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .mock-file strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .mock-file span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .saving {
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .section {
+      padding: 54px 0;
+    }
+
+    .section-title-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+
+    .section-title-row h1,
+    .section-title-row h2 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+    }
+
+    .section-title-row p {
+      max-width: 560px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .tool-card {
+      position: relative;
+      min-height: 164px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      text-align: left;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+
+    .tool-card:hover,
+    .tool-card.is-emphasis {
+      border-color: #b6c5da;
+      box-shadow: 0 16px 36px rgba(16, 24, 39, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .tool-icon {
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      margin-bottom: 18px;
+      border: 1px solid #d6e4ff;
+      border-radius: 8px;
+      background: #f7fbff;
+      color: #175cd3;
+    }
+
+    .tool-card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .tool-card p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .trust-strip,
+    .analytics-strip {
+      margin: 30px 0 70px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .analytics-strip {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+
+    .metric {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--text);
+      font-size: 19px;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tool-page-header {
+      padding: 56px 0 28px;
+    }
+
+    .crumb-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 22px;
+      color: var(--primary-dark);
+      font-weight: 760;
+    }
+
+    .tool-title {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .tool-subtitle {
+      max-width: 680px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      align-items: start;
+      gap: 18px;
+      padding-bottom: 54px;
+    }
+
+    .work-panel,
+    .settings-panel,
+    .selected-panel,
+    .result-panel,
+    .search-panel,
+    .faq-panel,
+    .related-panel {
+      padding: 18px;
+    }
+
+    .work-panel {
+      display: grid;
+      gap: 16px;
+    }
+
+    .dropzone {
+      display: grid;
+      min-height: 288px;
+      padding: 26px;
+      place-items: center;
+      border: 1px dashed #9fb0c9;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(248, 251, 255, 0.94), rgba(255, 255, 255, 0.96)),
+        radial-gradient(circle at 30% 22%, rgba(29, 100, 242, 0.11), transparent 34%);
+      text-align: center;
+    }
+
+    .drop-icon {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 16px;
+      color: #175cd3;
+    }
+
+    .dropzone h2 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .dropzone p {
+      max-width: 460px;
+      margin: 10px auto 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .support-line {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 13px 14px;
+      border-radius: var(--radius);
+      background: #edf9f3;
+      color: #155f45;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .selected-head,
+    .result-head,
+    .category-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .selected-head h2,
+    .result-head h2,
+    .settings-panel h2,
+    .faq-panel h2,
+    .related-panel h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .selected-head p,
+    .result-head p,
+    .settings-panel p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .selected-list,
+    .result-list,
+    .faq-list,
+    .related-list,
+    .category-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .selected-item,
+    .result-item,
+    .related-item,
+    .category-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fbfdff;
+    }
+
+    .file-chip {
+      display: grid;
+      min-width: 48px;
+      height: 36px;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .selected-file-main strong,
+    .result-main strong,
+    .related-item strong,
+    .category-row strong {
+      display: block;
+      overflow: hidden;
+      margin-bottom: 4px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .selected-file-main span,
+    .result-main span,
+    .related-item span,
+    .category-row span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .control-group {
+      display: grid;
+      gap: 10px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .control-group:last-child {
+      border-bottom: 0;
+    }
+
+    .control-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .control-value {
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+
+    .range-input {
+      width: 100%;
+      accent-color: var(--primary);
+    }
+
+    .format-grid,
+    .level-grid,
+    .ratio-grid,
+    .angle-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .format-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .level-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ratio-grid,
+    .angle-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .format-option,
+    .level-option,
+    .ratio-option,
+    .angle-option {
+      min-height: 38px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--text);
+      font-weight: 760;
+    }
+
+    .format-option.is-selected,
+    .level-option.is-selected,
+    .ratio-option.is-selected,
+    .angle-option.is-selected {
+      border-color: #b7cdf8;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .process-button {
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .preview-stage {
+      display: grid;
+      min-height: 320px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(45deg, rgba(220, 227, 238, 0.36) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(220, 227, 238, 0.36) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(220, 227, 238, 0.36) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(220, 227, 238, 0.36) 75%);
+      background-color: #ffffff;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+      background-size: 24px 24px;
+    }
+
+    .image-canvas {
+      position: relative;
+      width: min(420px, 86%);
+      aspect-ratio: 4 / 3;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, #dbeafe, #ffffff 54%, #d1fae5),
+        #ffffff;
+      box-shadow: 0 18px 48px rgba(16, 24, 39, 0.18);
+      overflow: hidden;
+    }
+
+    .crop-box {
+      position: absolute;
+      inset: 14% 18% 18% 18%;
+      border: 2px solid #ffffff;
+      outline: 999px solid rgba(16, 24, 39, 0.28);
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .crop-box::before,
+    .crop-box::after {
+      position: absolute;
+      inset: 33.33% 0 auto;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.72);
+      content: "";
+    }
+
+    .crop-box::after {
+      inset: 66.66% 0 auto;
+    }
+
+    .crop-grid-line {
+      position: absolute;
+      inset: 0 auto 0 33.33%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .crop-grid-line + .crop-grid-line {
+      left: 66.66%;
+    }
+
+    .rotate-preview {
+      transform: rotate(90deg);
+      transform-origin: center;
+    }
+
+    .pdf-page-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .pdf-page {
+      min-height: 150px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      box-shadow: 0 10px 24px rgba(16, 24, 39, 0.06);
+    }
+
+    .pdf-page div {
+      display: grid;
+      height: 104px;
+      place-items: center;
+      border-radius: 6px;
+      background: linear-gradient(180deg, #f8fbff, #e8f0ff);
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+
+    .pdf-page span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .faq-panel,
+    .related-panel {
+      margin-bottom: 18px;
+    }
+
+    .faq-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .faq-item:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .faq-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .faq-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .search-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: #fbfdff;
+    }
+
+    .tool-pill-row {
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tool-pill {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .tool-pill.is-active {
+      border-color: #b7cdf8;
+      background: var(--primary-soft);
+      color: var(--primary-dark);
+    }
+
+    .category-block {
+      margin-bottom: 34px;
+    }
+
+    .category-head h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .category-head p {
+      max-width: 520px;
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .site-footer {
+      margin-top: auto;
+      border-top: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      min-height: 76px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .desktop-nav {
+        display: none;
+      }
+
+      .product-note .container {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .tool-grid,
+      .analytics-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .pdf-page-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      .header-inner,
+      .container,
+      .footer-inner {
+        width: min(100% - 28px, 1120px);
+      }
+
+      .header-inner {
+        flex-wrap: wrap;
+        padding: 12px 0;
+      }
+
+      .hero {
+        padding-top: 42px;
+        gap: 28px;
+      }
+
+      .hero-title {
+        font-size: 42px;
+      }
+
+      .section-title-row,
+      .selected-head,
+      .result-head,
+      .category-head,
+      .footer-inner {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .tool-grid,
+      .analytics-strip,
+      .format-grid,
+      .ratio-grid,
+      .angle-grid,
+      .search-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .selected-item,
+      .result-item,
+      .related-item,
+      .category-row {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .selected-item .inline-actions,
+      .result-item .inline-actions,
+      .related-item .inline-actions,
+      .category-row .inline-actions {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <svg class="hidden" aria-hidden="true">
+    <symbol id="icon-upload" viewBox="0 0 24 24">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+      <path d="m17 8-5-5-5 5"></path>
+      <path d="M12 3v12"></path>
+    </symbol>
+    <symbol id="icon-folder" viewBox="0 0 24 24">
+      <path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7l-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2Z"></path>
+    </symbol>
+    <symbol id="icon-compress" viewBox="0 0 24 24">
+      <path d="M4 14h6v6"></path>
+      <path d="m10 14-7 7"></path>
+      <path d="M20 10h-6V4"></path>
+      <path d="m14 10 7-7"></path>
+    </symbol>
+    <symbol id="icon-images" viewBox="0 0 24 24">
+      <rect width="16" height="16" x="6" y="4" rx="2"></rect>
+      <path d="M4 8v12a2 2 0 0 0 2 2h12"></path>
+      <path d="m9 15 2-2 3 3 2-2 3 3"></path>
+      <circle cx="11" cy="9" r="1.5"></circle>
+    </symbol>
+    <symbol id="icon-crop" viewBox="0 0 24 24">
+      <path d="M6 2v14a2 2 0 0 0 2 2h14"></path>
+      <path d="M18 22V8a2 2 0 0 0-2-2H2"></path>
+    </symbol>
+    <symbol id="icon-rotate" viewBox="0 0 24 24">
+      <path d="M21 12a9 9 0 1 1-3-6.7"></path>
+      <path d="M21 3v6h-6"></path>
+    </symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path>
+      <path d="M14 2v6h6"></path>
+      <path d="M8 13h8"></path>
+      <path d="M8 17h5"></path>
+    </symbol>
+    <symbol id="icon-merge" viewBox="0 0 24 24">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+      <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+      <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
+      <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+      <path d="M8 12h8"></path>
+      <path d="m13 9 3 3-3 3"></path>
+    </symbol>
+    <symbol id="icon-split" viewBox="0 0 24 24">
+      <path d="M4 7h16"></path>
+      <path d="M4 17h16"></path>
+      <path d="M8 7v10"></path>
+      <path d="M16 7v10"></path>
+    </symbol>
+    <symbol id="icon-resize" viewBox="0 0 24 24">
+      <path d="M15 3h6v6"></path>
+      <path d="m21 3-7 7"></path>
+      <path d="M9 21H3v-6"></path>
+      <path d="m3 21 7-7"></path>
+    </symbol>
+    <symbol id="icon-convert" viewBox="0 0 24 24">
+      <path d="M17 1l4 4-4 4"></path>
+      <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+      <path d="m7 23-4-4 4-4"></path>
+      <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+    </symbol>
+    <symbol id="icon-qr" viewBox="0 0 24 24">
+      <rect width="5" height="5" x="3" y="3" rx="1"></rect>
+      <rect width="5" height="5" x="16" y="3" rx="1"></rect>
+      <rect width="5" height="5" x="3" y="16" rx="1"></rect>
+      <path d="M16 16h2v2h-2z"></path>
+      <path d="M20 16h1v5h-5v-1"></path>
+      <path d="M11 3h2v7h-2z"></path>
+      <path d="M11 14h3v3h-3z"></path>
+    </symbol>
+    <symbol id="icon-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.3-4.3"></path>
+    </symbol>
+    <symbol id="icon-home" viewBox="0 0 24 24">
+      <path d="m3 11 9-8 9 8"></path>
+      <path d="M5 10v10h14V10"></path>
+      <path d="M9 20v-6h6v6"></path>
+    </symbol>
+    <symbol id="icon-shield" viewBox="0 0 24 24">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path>
+    </symbol>
+    <symbol id="icon-lock" viewBox="0 0 24 24">
+      <rect width="16" height="11" x="4" y="11" rx="2"></rect>
+      <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+    </symbol>
+    <symbol id="icon-unlock" viewBox="0 0 24 24">
+      <rect width="16" height="11" x="4" y="11" rx="2"></rect>
+      <path d="M8 11V7a4 4 0 0 1 7.5-2"></path>
+    </symbol>
+    <symbol id="icon-pen" viewBox="0 0 24 24">
+      <path d="M12 20h9"></path>
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"></path>
+    </symbol>
+    <symbol id="icon-code" viewBox="0 0 24 24">
+      <path d="m8 18-6-6 6-6"></path>
+      <path d="m16 6 6 6-6 6"></path>
+      <path d="m14 4-4 16"></path>
+    </symbol>
+    <symbol id="icon-watermark" viewBox="0 0 24 24">
+      <path d="M4 19h16"></path>
+      <path d="M7 16 12 5l5 11"></path>
+      <path d="M9 12h6"></path>
+    </symbol>
+    <symbol id="icon-eraser" viewBox="0 0 24 24">
+      <path d="m7 21-4-4L14 6a2.8 2.8 0 0 1 4 0l2 2a2.8 2.8 0 0 1 0 4L11 21Z"></path>
+      <path d="m12 10 6 6"></path>
+      <path d="M3 21h18"></path>
+    </symbol>
+    <symbol id="icon-pages" viewBox="0 0 24 24">
+      <path d="M7 3h10a2 2 0 0 1 2 2v12"></path>
+      <path d="M5 7h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z"></path>
+      <path d="M7 12h6"></path>
+      <path d="M7 16h4"></path>
+    </symbol>
+    <symbol id="icon-number" viewBox="0 0 24 24">
+      <path d="M4 9h16"></path>
+      <path d="M4 15h16"></path>
+      <path d="M10 4 8 20"></path>
+      <path d="m16 4-2 16"></path>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </symbol>
+  </svg>
+
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="header-inner">
+        <button class="brand-link" type="button" data-screen-link="home" aria-label="FilePilot Tools">
+          <span class="brand-mark"><svg class="icon"><use href="#icon-file"></use></svg></span>
+          <span>FilePilot Tools</span>
+        </button>
+
+        <nav class="desktop-nav" aria-label="Main navigation">
+          <button class="nav-link is-active" type="button" data-screen-link="home">
+            <svg class="icon"><use href="#icon-home"></use></svg>
+            <span data-i18n="nav.home">首页</span>
+          </button>
+          <button class="nav-link" type="button" data-screen-link="imageTools">
+            <svg class="icon"><use href="#icon-images"></use></svg>
+            <span data-i18n="nav.imageTools">图片工具</span>
+          </button>
+          <button class="nav-link" type="button" data-screen-link="pdfTools">
+            <svg class="icon"><use href="#icon-file"></use></svg>
+            <span data-i18n="nav.pdfTools">PDF 工具</span>
+          </button>
+          <button class="nav-link" type="button" data-screen-link="qrCode">
+            <svg class="icon"><use href="#icon-qr"></use></svg>
+            <span data-i18n="nav.qrCode">二维码</span>
+          </button>
+        </nav>
+
+        <div class="header-actions">
+          <div class="language-switcher" aria-label="Language">
+            <button class="language-button is-active" type="button" data-language="zh">中文</button>
+            <button class="language-button" type="button" data-language="en">EN</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="screen is-active" data-screen="home">
+        <div class="container hero">
+          <div>
+            <p class="eyebrow">
+              <span class="status-dot"></span>
+              <span data-i18n="home.eyebrow">优先在浏览器处理文件</span>
+            </p>
+            <h1 class="hero-title" data-i18n="home.title">免费在线 PDF 和图片工具</h1>
+            <p class="hero-copy" data-i18n="home.copy">文件直接在浏览器里处理。你可以压缩图片、转换格式、创建 PDF，并快速完成常见文件处理任务，不需要安装额外软件。</p>
+            <div class="hero-actions">
+              <button class="primary-button" type="button" data-screen-link="imageTools">
+                <svg class="icon"><use href="#icon-compress"></use></svg>
+                <span data-i18n="home.primaryCta">图片压缩</span>
+              </button>
+              <button class="secondary-button" type="button" data-screen-link="imageTools">
+                <svg class="icon"><use href="#icon-convert"></use></svg>
+                <span data-i18n="home.imageToolsCta">图片转换</span>
+              </button>
+              <button class="secondary-button" type="button" data-screen-link="imageTools">
+                <svg class="icon"><use href="#icon-file"></use></svg>
+                <span data-i18n="home.pdfToolsCta">图片转 PDF</span>
+              </button>
+            </div>
+          </div>
+
+          <aside class="quick-panel">
+            <div class="panel-head">
+              <div>
+                <h2 data-i18n="home.quickTitle">快速开始</h2>
+                <p data-i18n="home.quickCopy">选择文件、选择处理方式，然后下载完成后的结果。</p>
+              </div>
+              <span class="privacy-badge" data-i18n="home.localBadge">本地处理</span>
+            </div>
+            <div class="mini-upload">
+              <div>
+                <svg class="drop-icon" style="margin-inline:auto"><use href="#icon-upload"></use></svg>
+                <strong data-i18n="home.dropTitle">拖入 PDF 或图片</strong>
+                <span data-i18n="home.dropCopy">PDF、JPG、PNG、WebP</span>
+              </div>
+            </div>
+            <div class="mock-file-list">
+              <div class="mock-file">
+                <div>
+                  <strong>contract-large.pdf</strong>
+                  <span>12.4 MB -> 5.8 MB</span>
+                </div>
+                <span class="saving">53%</span>
+              </div>
+              <div class="mock-file">
+                <div>
+                  <strong>product-shot.webp</strong>
+                  <span data-i18n="home.mockImageState">裁剪 1:1，向右旋转</span>
+                </div>
+                <span class="saving" data-i18n="tool.ready">就绪</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="container section">
+          <div class="section-title-row">
+            <h2 data-i18n="home.popularToolsTitle">常用工具</h2>
+            <p data-i18n="home.popularToolsCopy">选择需要的工具，添加文件后就可以开始处理。</p>
+          </div>
+          <div class="tool-grid">
+            <button class="tool-card is-emphasis" type="button" data-screen-link="imageTools">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-compress"></use></svg></span>
+              <h3 data-i18n="tools.compressImage.title">图片压缩</h3>
+              <p data-i18n="tools.compressImage.card">通过质量控制压缩 JPG、PNG 和 WebP 图片。</p>
+            </button>
+            <button class="tool-card is-emphasis" type="button" data-screen-link="imageTools">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-convert"></use></svg></span>
+              <h3 data-i18n="tools.convertImage.title">图片格式转换</h3>
+              <p data-i18n="tools.convertImage.card">把图片转换为 JPG、PNG 或 WebP 格式。</p>
+            </button>
+            <button class="tool-card is-emphasis" type="button" data-screen-link="imageTools">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span>
+              <h3 data-i18n="tools.imageToPdf.title">图片转 PDF</h3>
+              <p data-i18n="tools.imageToPdf.card">把选中的图片按顺序生成 PDF。</p>
+            </button>
+            <button class="tool-card" type="button" data-screen-link="pdfTools">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-merge"></use></svg></span>
+              <h3 data-i18n="tools.mergePdf.title">PDF 合并</h3>
+              <p data-i18n="tools.mergePdf.card">把多个 PDF 文件合并为一个浏览器生成的文档。</p>
+            </button>
+            <button class="tool-card" type="button" data-screen-link="compressPdf">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-compress"></use></svg></span>
+              <h3 data-i18n="tools.compressPdf.title">PDF 压缩</h3>
+              <p data-i18n="tools.compressPdf.card">在浏览器里减小 PDF 体积，并显示原始大小、输出大小和节省比例。</p>
+            </button>
+            <button class="tool-card" type="button" data-screen-link="pdfToImages">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-images"></use></svg></span>
+              <h3 data-i18n="tools.pdfToImages.title">PDF 转图片</h3>
+              <p data-i18n="tools.pdfToImages.card">按 PDF 页码顺序导出图片，支持单张下载和全部下载。</p>
+            </button>
+          </div>
+          <div class="trust-strip" data-i18n="home.popularTrust">在支持本地处理的功能中，文件会直接在浏览器里处理。选择工具、设置参数，然后下载结果。</div>
+
+          <div class="section-title-row">
+            <h2 data-i18n="siteCapability.title">站点能力</h2>
+            <p data-i18n="siteCapability.copy">工具数量增加后，页面要让用户能找到工具，也要让搜索引擎和基础统计能理解页面。</p>
+          </div>
+          <div class="tool-grid">
+            <button class="tool-card" type="button" data-screen-link="toolsIndex">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-search"></use></svg></span>
+              <h3 data-i18n="siteCapability.toolsIndex.title">工具索引</h3>
+              <p data-i18n="siteCapability.toolsIndex.card">把图片、PDF、二维码和文档转换工具集中到一个可浏览的入口。</p>
+            </button>
+            <article class="tool-card">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-pages"></use></svg></span>
+              <h3 data-i18n="siteCapability.seo.title">搜索引擎发现</h3>
+              <p data-i18n="siteCapability.seo.card">为工具页准备 sitemap、robots、标题、描述和结构化 FAQ。</p>
+            </article>
+            <article class="tool-card">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-shield"></use></svg></span>
+              <h3 data-i18n="siteCapability.analytics.title">基础访问统计</h3>
+              <p data-i18n="siteCapability.analytics.card">只记录页面访问和工具处理事件，不记录文件内容、文件名或用户输入原文。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="imageTools">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="home">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backHome">返回首页</span>
+          </button>
+          <h1 class="tool-title" data-i18n="imageCategory.title">图片工具</h1>
+          <p class="tool-subtitle" data-i18n="imageCategory.copy">在浏览器里完成图片压缩、格式转换、裁剪、旋转、尺寸调整和图片转 PDF。</p>
+        </div>
+
+        <div class="container section" style="padding-top: 0">
+          <div class="category-block">
+            <div class="category-head">
+              <div>
+                <h2 data-i18n="imageCategory.popularTitle">常用图片工具</h2>
+                <p data-i18n="imageCategory.popularCopy">先放最常用的图片处理任务：压缩、转换、图片转 PDF、尺寸调整、裁剪和旋转。</p>
+              </div>
+              <span class="priority-badge" data-i18n="imageCategory.badge">图片文件</span>
+            </div>
+            <div class="tool-grid">
+              <article class="tool-card">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-compress"></use></svg></span>
+                <h3 data-i18n="tools.compressImage.title">图片压缩</h3>
+                <p data-i18n="tools.compressImage.card">通过质量控制压缩 JPG、PNG 和 WebP 图片。</p>
+              </article>
+              <article class="tool-card">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-convert"></use></svg></span>
+                <h3 data-i18n="tools.convertImage.title">图片格式转换</h3>
+                <p data-i18n="tools.convertImage.card">把图片转换为 JPG、PNG 或 WebP 格式。</p>
+              </article>
+              <article class="tool-card">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span>
+                <h3 data-i18n="tools.imageToPdf.title">图片转 PDF</h3>
+                <p data-i18n="tools.imageToPdf.card">把选中的图片按顺序生成 PDF。</p>
+              </article>
+              <article class="tool-card">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-resize"></use></svg></span>
+                <h3 data-i18n="tools.resizeImage.title">图片尺寸调整</h3>
+                <p data-i18n="tools.resizeImage.card">调整图片宽高，同时保留当前简洁操作流程。</p>
+              </article>
+              <button class="tool-card is-emphasis" type="button" data-screen-link="cropImage">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-crop"></use></svg></span>
+                <h3 data-i18n="tools.cropImage.title">图片裁剪</h3>
+                <p data-i18n="tools.cropImage.card">增加清晰的裁剪工作区，支持自由、正方形和常见比例。</p>
+              </button>
+              <button class="tool-card is-emphasis" type="button" data-screen-link="rotateImage">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-rotate"></use></svg></span>
+                <h3 data-i18n="tools.rotateImage.title">图片旋转</h3>
+                <p data-i18n="tools.rotateImage.card">支持左转、右转和 180 度旋转，可以处理单张或多张图片。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="watermarkImage">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-watermark"></use></svg></span>
+                <h3 data-i18n="tools.watermarkImage.title">图片加水印</h3>
+                <p data-i18n="tools.watermarkImage.card">给图片添加文字或标识水印，适合内容发布和电商图片保护。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="removeBackground">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-eraser"></use></svg></span>
+                <h3 data-i18n="tools.removeBackground.title">图片去背景</h3>
+                <p data-i18n="tools.removeBackground.card">为商品图、头像和素材图预留去背景入口，并明确处理方式。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="imageToBase64">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-code"></use></svg></span>
+                <h3 data-i18n="tools.imageToBase64.title">图片转 Base64</h3>
+                <p data-i18n="tools.imageToBase64.card">把图片转换成 Base64 文本，方便嵌入网页、样式和配置。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="base64ToImage">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-images"></use></svg></span>
+                <h3 data-i18n="tools.base64ToImage.title">Base64 转图片</h3>
+                <p data-i18n="tools.base64ToImage.card">粘贴 Base64 内容后预览并下载为图片文件。</p>
+              </button>
+            </div>
+          </div>
+          <div class="trust-strip" data-i18n="imageCategory.trust">在支持本地处理的功能中，图片文件会留在浏览器里处理。</div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="pdfTools">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="home">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backHome">返回首页</span>
+          </button>
+          <h1 class="tool-title" data-i18n="pdfCategory.title">PDF 工具</h1>
+          <p class="tool-subtitle" data-i18n="pdfCategory.copy">在一个位置完成 PDF 压缩、转换、合并和拆分。</p>
+        </div>
+
+        <div class="container section" style="padding-top: 0">
+          <div class="category-block">
+            <div class="category-head">
+              <div>
+                <h2 data-i18n="pdfCategory.popularTitle">常用 PDF 工具</h2>
+                <p data-i18n="pdfCategory.popularCopy">不用在多个网站之间切换，就能完成常见 PDF 处理任务。</p>
+              </div>
+              <span class="priority-badge" data-i18n="pdfCategory.badge">PDF 文件</span>
+            </div>
+            <div class="tool-grid">
+              <button class="tool-card is-emphasis" type="button" data-screen-link="compressPdf">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-compress"></use></svg></span>
+                <h3 data-i18n="tools.compressPdf.title">PDF 压缩</h3>
+                <p data-i18n="tools.compressPdf.card">在浏览器里减小 PDF 体积，并显示原始大小、输出大小和节省比例。</p>
+              </button>
+              <button class="tool-card is-emphasis" type="button" data-screen-link="pdfToImages">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-images"></use></svg></span>
+                <h3 data-i18n="tools.pdfToImages.title">PDF 转图片</h3>
+                <p data-i18n="tools.pdfToImages.card">按 PDF 页码顺序导出图片，支持单张下载和全部下载。</p>
+              </button>
+              <article class="tool-card">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-merge"></use></svg></span>
+                <h3 data-i18n="tools.mergePdf.title">PDF 合并</h3>
+                <p data-i18n="tools.mergePdf.card">把多个 PDF 文件合并为一个浏览器生成的文档。</p>
+              </article>
+              <article class="tool-card">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-split"></use></svg></span>
+                <h3 data-i18n="tools.splitPdf.title">PDF 拆分</h3>
+                <p data-i18n="tools.splitPdf.card">从一个 PDF 中提取指定页码范围并下载结果。</p>
+              </article>
+              <button class="tool-card" type="button" data-tool-link="rotatePdf">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-rotate"></use></svg></span>
+                <h3 data-i18n="tools.rotatePdf.title">PDF 旋转页面</h3>
+                <p data-i18n="tools.rotatePdf.card">按页面旋转 PDF，适合扫描件方向不一致的办公场景。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="extractPdfPages">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-pages"></use></svg></span>
+                <h3 data-i18n="tools.extractPdfPages.title">PDF 提取页面</h3>
+                <p data-i18n="tools.extractPdfPages.card">从 PDF 中导出指定页面，和拆分工具形成更清晰的文档整理流程。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="addPageNumbers">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-number"></use></svg></span>
+                <h3 data-i18n="tools.addPageNumbers.title">PDF 添加页码</h3>
+                <p data-i18n="tools.addPageNumbers.card">给文档添加页码，适合打印、归档和正式提交前整理。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="signPdf">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-pen"></use></svg></span>
+                <h3 data-i18n="tools.signPdf.title">PDF 签名</h3>
+                <p data-i18n="tools.signPdf.card">在 PDF 上添加签名区域，保留后续手写或图片签名交互空间。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="protectPdf">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-lock"></use></svg></span>
+                <h3 data-i18n="tools.protectPdf.title">PDF 加密</h3>
+                <p data-i18n="tools.protectPdf.card">为 PDF 设置打开密码，并说明密码只在当前浏览器中处理。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="unlockPdf">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-unlock"></use></svg></span>
+                <h3 data-i18n="tools.unlockPdf.title">PDF 解密</h3>
+                <p data-i18n="tools.unlockPdf.card">仅处理用户知道密码的 PDF 文件，不提供破解或绕过密码能力。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="pdfToWord">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span>
+                <h3 data-i18n="tools.pdfToWord.title">PDF 转 Word</h3>
+                <p data-i18n="tools.pdfToWord.card">为需要编辑 PDF 内容的用户预留转换入口，标明高质量转换需要后续评估。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="wordToPdf">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span>
+                <h3 data-i18n="tools.wordToPdf.title">Word 转 PDF</h3>
+                <p data-i18n="tools.wordToPdf.card">把文档转换为 PDF，适合提交、打印和跨设备查看。</p>
+              </button>
+              <button class="tool-card" type="button" data-tool-link="moreConvert">
+                <span class="tool-icon"><svg class="icon"><use href="#icon-convert"></use></svg></span>
+                <h3 data-i18n="tools.moreConvert.title">更多格式转换</h3>
+                <p data-i18n="tools.moreConvert.card">为更多文件格式组合预留统一入口，后续可扩展成长尾转换页面。</p>
+              </button>
+            </div>
+          </div>
+          <div class="trust-strip" data-i18n="pdfCategory.trust">PDF 工具保持同一套简单流程：添加文件、选择设置、开始处理、下载结果。</div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="qrCode">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="home">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backHome">返回首页</span>
+          </button>
+          <h1 class="tool-title" data-i18n="qrCategory.title">二维码生成器</h1>
+          <p class="tool-subtitle" data-i18n="qrCategory.copy">输入文本或链接生成二维码，然后下载为图片。</p>
+        </div>
+
+        <div class="container section" style="padding-top: 0">
+          <div class="tool-grid">
+            <article class="tool-card is-emphasis">
+              <span class="tool-icon"><svg class="icon"><use href="#icon-qr"></use></svg></span>
+              <h3 data-i18n="tools.qrCode.title">二维码生成</h3>
+              <p data-i18n="tools.qrCode.card">根据文本或链接生成二维码，可见内容仍然保留在本地。</p>
+            </article>
+          </div>
+          <div class="trust-strip" data-i18n="qrCategory.trust">可用于链接、短文本、联系方式和快速分享。</div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="toolsIndex">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="home">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backHome">返回首页</span>
+          </button>
+          <h1 class="tool-title" data-i18n="toolsIndex.title">全部工具</h1>
+          <p class="tool-subtitle" data-i18n="toolsIndex.copy">按文件类型查找 PDF、图片、文档转换和二维码工具。</p>
+        </div>
+
+        <div class="container section" style="padding-top: 0">
+          <div class="category-block">
+            <div class="category-head">
+              <div>
+                <h2 data-i18n="toolsIndex.imageTitle">图片工具</h2>
+                <p data-i18n="toolsIndex.imageCopy">覆盖压缩、转换、裁剪、旋转、水印、去背景和 Base64 场景。</p>
+              </div>
+              <span class="priority-badge" data-i18n="imageCategory.badge">图片文件</span>
+            </div>
+            <div class="tool-grid">
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-compress"></use></svg></span><h3 data-i18n="tools.compressImage.title">图片压缩</h3><p data-i18n="tools.compressImage.card">通过质量控制压缩 JPG、PNG 和 WebP 图片。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-convert"></use></svg></span><h3 data-i18n="tools.convertImage.title">图片格式转换</h3><p data-i18n="tools.convertImage.card">把图片转换为 JPG、PNG 或 WebP 格式。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span><h3 data-i18n="tools.imageToPdf.title">图片转 PDF</h3><p data-i18n="tools.imageToPdf.card">把选中的图片按顺序生成 PDF。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-resize"></use></svg></span><h3 data-i18n="tools.resizeImage.title">图片尺寸调整</h3><p data-i18n="tools.resizeImage.card">调整图片宽高，同时保留当前简洁操作流程。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-crop"></use></svg></span><h3 data-i18n="tools.cropImage.title">图片裁剪</h3><p data-i18n="tools.cropImage.card">增加清晰的裁剪工作区，支持自由、正方形和常见比例。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-rotate"></use></svg></span><h3 data-i18n="tools.rotateImage.title">图片旋转</h3><p data-i18n="tools.rotateImage.card">支持左转、右转和 180 度旋转，可以处理单张或多张图片。</p></article>
+              <button class="tool-card" type="button" data-tool-link="watermarkImage"><span class="tool-icon"><svg class="icon"><use href="#icon-watermark"></use></svg></span><h3 data-i18n="tools.watermarkImage.title">图片加水印</h3><p data-i18n="tools.watermarkImage.card">给图片添加文字或标识水印，适合内容发布和电商图片保护。</p></button>
+              <button class="tool-card" type="button" data-tool-link="removeBackground"><span class="tool-icon"><svg class="icon"><use href="#icon-eraser"></use></svg></span><h3 data-i18n="tools.removeBackground.title">图片去背景</h3><p data-i18n="tools.removeBackground.card">为商品图、头像和素材图预留去背景入口，并明确处理方式。</p></button>
+              <button class="tool-card" type="button" data-tool-link="imageToBase64"><span class="tool-icon"><svg class="icon"><use href="#icon-code"></use></svg></span><h3 data-i18n="tools.imageToBase64.title">图片转 Base64</h3><p data-i18n="tools.imageToBase64.card">把图片转换成 Base64 文本，方便嵌入网页、样式和配置。</p></button>
+              <button class="tool-card" type="button" data-tool-link="base64ToImage"><span class="tool-icon"><svg class="icon"><use href="#icon-images"></use></svg></span><h3 data-i18n="tools.base64ToImage.title">Base64 转图片</h3><p data-i18n="tools.base64ToImage.card">粘贴 Base64 内容后预览并下载为图片文件。</p></button>
+            </div>
+          </div>
+
+          <div class="category-block">
+            <div class="category-head">
+              <div>
+                <h2 data-i18n="toolsIndex.pdfTitle">PDF 工具</h2>
+                <p data-i18n="toolsIndex.pdfCopy">覆盖压缩、转换、合并、拆分、旋转、页码、签名和密码处理。</p>
+              </div>
+              <span class="priority-badge" data-i18n="pdfCategory.badge">PDF 文件</span>
+            </div>
+            <div class="tool-grid">
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-compress"></use></svg></span><h3 data-i18n="tools.compressPdf.title">PDF 压缩</h3><p data-i18n="tools.compressPdf.card">在浏览器里减小 PDF 体积，并显示原始大小、输出大小和节省比例。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-images"></use></svg></span><h3 data-i18n="tools.pdfToImages.title">PDF 转图片</h3><p data-i18n="tools.pdfToImages.card">按 PDF 页码顺序导出图片，支持单张下载和全部下载。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-merge"></use></svg></span><h3 data-i18n="tools.mergePdf.title">PDF 合并</h3><p data-i18n="tools.mergePdf.card">把多个 PDF 文件合并为一个浏览器生成的文档。</p></article>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-split"></use></svg></span><h3 data-i18n="tools.splitPdf.title">PDF 拆分</h3><p data-i18n="tools.splitPdf.card">从一个 PDF 中提取指定页码范围并下载结果。</p></article>
+              <button class="tool-card" type="button" data-tool-link="rotatePdf"><span class="tool-icon"><svg class="icon"><use href="#icon-rotate"></use></svg></span><h3 data-i18n="tools.rotatePdf.title">PDF 旋转页面</h3><p data-i18n="tools.rotatePdf.card">按页面旋转 PDF，适合扫描件方向不一致的办公场景。</p></button>
+              <button class="tool-card" type="button" data-tool-link="extractPdfPages"><span class="tool-icon"><svg class="icon"><use href="#icon-pages"></use></svg></span><h3 data-i18n="tools.extractPdfPages.title">PDF 提取页面</h3><p data-i18n="tools.extractPdfPages.card">从 PDF 中导出指定页面，和拆分工具形成更清晰的文档整理流程。</p></button>
+              <button class="tool-card" type="button" data-tool-link="addPageNumbers"><span class="tool-icon"><svg class="icon"><use href="#icon-number"></use></svg></span><h3 data-i18n="tools.addPageNumbers.title">PDF 添加页码</h3><p data-i18n="tools.addPageNumbers.card">给文档添加页码，适合打印、归档和正式提交前整理。</p></button>
+              <button class="tool-card" type="button" data-tool-link="signPdf"><span class="tool-icon"><svg class="icon"><use href="#icon-pen"></use></svg></span><h3 data-i18n="tools.signPdf.title">PDF 签名</h3><p data-i18n="tools.signPdf.card">在 PDF 上添加签名区域，保留后续手写或图片签名交互空间。</p></button>
+              <button class="tool-card" type="button" data-tool-link="protectPdf"><span class="tool-icon"><svg class="icon"><use href="#icon-lock"></use></svg></span><h3 data-i18n="tools.protectPdf.title">PDF 加密</h3><p data-i18n="tools.protectPdf.card">为 PDF 设置打开密码，并说明密码只在当前浏览器中处理。</p></button>
+              <button class="tool-card" type="button" data-tool-link="unlockPdf"><span class="tool-icon"><svg class="icon"><use href="#icon-unlock"></use></svg></span><h3 data-i18n="tools.unlockPdf.title">PDF 解密</h3><p data-i18n="tools.unlockPdf.card">仅处理用户知道密码的 PDF 文件，不提供破解或绕过密码能力。</p></button>
+              <button class="tool-card" type="button" data-tool-link="pdfToWord"><span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span><h3 data-i18n="tools.pdfToWord.title">PDF 转 Word</h3><p data-i18n="tools.pdfToWord.card">为需要编辑 PDF 内容的用户预留转换入口，标明高质量转换需要后续评估。</p></button>
+            </div>
+          </div>
+
+          <div class="category-block">
+            <div class="category-head">
+              <div>
+                <h2 data-i18n="toolsIndex.documentTitle">文档和二维码</h2>
+                <p data-i18n="toolsIndex.documentCopy">把文档转换和二维码生成放在工具索引中，方便后续继续扩展。</p>
+              </div>
+            </div>
+            <div class="tool-grid">
+              <button class="tool-card" type="button" data-tool-link="wordToPdf"><span class="tool-icon"><svg class="icon"><use href="#icon-file"></use></svg></span><h3 data-i18n="tools.wordToPdf.title">Word 转 PDF</h3><p data-i18n="tools.wordToPdf.card">把文档转换为 PDF，适合提交、打印和跨设备查看。</p></button>
+              <button class="tool-card" type="button" data-tool-link="moreConvert"><span class="tool-icon"><svg class="icon"><use href="#icon-convert"></use></svg></span><h3 data-i18n="tools.moreConvert.title">更多格式转换</h3><p data-i18n="tools.moreConvert.card">为更多文件格式组合预留统一入口，后续可扩展成长尾转换页面。</p></button>
+              <article class="tool-card"><span class="tool-icon"><svg class="icon"><use href="#icon-qr"></use></svg></span><h3 data-i18n="tools.qrCode.title">二维码生成</h3><p data-i18n="tools.qrCode.card">根据文本或链接生成二维码，可见内容仍然保留在本地。</p></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="plannedTool">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="toolsIndex">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backTools">返回全部工具</span>
+          </button>
+          <h1 class="tool-title" data-planned-title>PDF 签名</h1>
+          <p class="tool-subtitle" data-planned-subtitle>在 PDF 上添加签名区域，保留后续手写或图片签名交互空间。</p>
+        </div>
+
+        <div class="container workspace">
+          <div class="work-panel">
+            <div class="dropzone">
+              <div>
+                <svg class="drop-icon" style="margin-inline:auto"><use href="#icon-upload"></use></svg>
+                <h2 data-planned-drop>拖入文件</h2>
+                <p data-planned-drop-copy>选择文件后，页面会按当前工具要求展示处理设置和结果。</p>
+                <button class="secondary-button" type="button">
+                  <svg class="icon"><use href="#icon-folder"></use></svg>
+                  <span data-planned-choose>选择文件</span>
+                </button>
+                <p class="support-line" data-planned-support>支持格式：PDF</p>
+              </div>
+            </div>
+            <div class="notice">
+              <svg class="icon"><use href="#icon-shield"></use></svg>
+              <span data-planned-privacy>在支持本地处理的功能中，文件会在当前浏览器里处理；涉及模型或高质量转换的工具会在页面中明确说明处理方式。</span>
+            </div>
+            <div class="result-panel">
+              <div class="result-head">
+                <div>
+                  <h2 data-i18n="tool.results">处理结果</h2>
+                  <p data-planned-result>结果区会显示输出文件、处理状态和下载操作。</p>
+                </div>
+                <span class="privacy-badge" data-i18n="tool.ready">就绪</span>
+              </div>
+              <ul class="result-list">
+                <li class="result-item">
+                  <span class="file-chip" data-planned-chip>PDF</span>
+                  <div class="result-main">
+                    <strong data-planned-file>signed-document.pdf</strong>
+                    <span data-planned-result-meta>页面已准备好处理流程</span>
+                  </div>
+                  <button class="primary-button compact-button" type="button" data-i18n="tool.download">下载</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <aside class="settings-panel">
+            <h2 data-i18n="tool.settings">设置</h2>
+            <p data-planned-settings>设置区会根据工具类型展示对应选项。</p>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-planned-primary-label>处理方式</span>
+                <span class="control-value" data-planned-primary-value>本地优先</span>
+              </div>
+              <div class="level-grid">
+                <button class="level-option is-selected" type="button" data-planned-option-one>保留原文件结构</button>
+                <button class="level-option" type="button" data-planned-option-two>输出可下载结果</button>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="compressPdf.processInfo">处理状态</span>
+              </div>
+              <p data-planned-status>页面会显示已就绪、处理中、处理成功或文件不支持。</p>
+            </div>
+            <button class="primary-button process-button" type="button" data-planned-action>开始处理</button>
+          </aside>
+        </div>
+
+        <div class="container workspace">
+          <section class="faq-panel">
+            <h2 data-i18n="tool.faq">常见问题</h2>
+            <div class="faq-list">
+              <div class="faq-item">
+                <strong data-planned-faq-one-q>文件会上传吗？</strong>
+                <p data-planned-faq-one-a>支持本地处理的工具会直接在浏览器里完成。</p>
+              </div>
+              <div class="faq-item">
+                <strong data-planned-faq-two-q>支持什么文件？</strong>
+                <p data-planned-faq-two-a>当前工具页会在上传区显示支持格式。</p>
+              </div>
+              <div class="faq-item">
+                <strong data-planned-faq-three-q>处理失败怎么办？</strong>
+                <p data-planned-faq-three-a>页面会显示失败状态，并保留原文件不变。</p>
+              </div>
+            </div>
+          </section>
+          <aside class="related-panel">
+            <h2 data-i18n="tool.related">相关工具</h2>
+            <ul class="related-list">
+              <li class="related-item"><span class="file-chip">PDF</span><div><strong data-i18n="tools.compressPdf.title">PDF 压缩</strong><span data-i18n="related.pdfPlanning">继续处理 PDF 文件。</span></div><button class="ghost-button compact-button" type="button" data-screen-link="compressPdf" data-i18n="tool.open">打开</button></li>
+              <li class="related-item"><span class="file-chip">IMG</span><div><strong data-i18n="tools.cropImage.title">图片裁剪</strong><span data-i18n="related.imagePlanning">切换到图片处理工具。</span></div><button class="ghost-button compact-button" type="button" data-screen-link="cropImage" data-i18n="tool.open">打开</button></li>
+              <li class="related-item"><span class="file-chip">ALL</span><div><strong data-i18n="toolsIndex.title">全部工具</strong><span data-i18n="related.allTools">返回工具索引继续查找。</span></div><button class="ghost-button compact-button" type="button" data-screen-link="toolsIndex" data-i18n="tool.open">打开</button></li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="compressPdf">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="pdfTools">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backPdfTools">返回 PDF 工具</span>
+          </button>
+          <h1 class="tool-title" data-i18n="tools.compressPdf.title">PDF 压缩</h1>
+          <p class="tool-subtitle" data-i18n="compressPdf.subtitle">直接在浏览器里减小 PDF 文件体积。压缩效果取决于 PDF 内部内容。</p>
+        </div>
+
+        <div class="container workspace">
+          <div class="work-panel">
+            <div class="dropzone">
+              <div>
+                <svg class="drop-icon" style="margin-inline:auto"><use href="#icon-upload"></use></svg>
+                <h2 data-i18n="tool.dropPdf">拖入 PDF 文件</h2>
+                <p data-i18n="compressPdf.dropCopy">选择一个 PDF 文件，减小体积后下载压缩副本。</p>
+                <button class="secondary-button" type="button">
+                  <svg class="icon"><use href="#icon-folder"></use></svg>
+                  <span data-i18n="tool.choosePdf">选择 PDF</span>
+                </button>
+                <p class="support-line" data-i18n="tool.supportPdf">支持格式：PDF</p>
+              </div>
+            </div>
+            <div class="notice">
+              <svg class="icon"><use href="#icon-shield"></use></svg>
+              <span data-i18n="tool.localNotice">在支持本地处理的功能中，文件会在当前浏览器里处理，你可以不用上传私密文档。</span>
+            </div>
+            <div class="selected-panel">
+              <div class="selected-head">
+                <div>
+                  <h2 data-i18n="tool.selectedFiles">已选文件</h2>
+                  <p data-i18n="compressPdf.selectedCopy">当前选择了一个 PDF 用于压缩</p>
+                </div>
+                <button class="ghost-button compact-button" type="button" data-i18n="tool.clear">清空</button>
+              </div>
+              <ul class="selected-list">
+                <li class="selected-item">
+                  <span class="file-chip">PDF</span>
+                  <div class="selected-file-main">
+                    <strong>school-application.pdf</strong>
+                    <span data-i18n="compressPdf.selectedMeta">18.2 MB · 24 页</span>
+                  </div>
+                  <span class="saving" data-i18n="tool.ready">就绪</span>
+                </li>
+              </ul>
+            </div>
+            <div class="result-panel">
+              <div class="result-head">
+                <div>
+                  <h2 data-i18n="tool.results">处理结果</h2>
+                  <p data-i18n="compressPdf.resultCopy">下载前可以先查看压缩后的文件大小。</p>
+                </div>
+                <span class="privacy-badge" data-i18n="tool.success">成功</span>
+              </div>
+              <ul class="result-list">
+                <li class="result-item">
+                  <span class="file-chip">PDF</span>
+                  <div class="result-main">
+                    <strong>school-application-compressed.pdf</strong>
+                    <span data-i18n="compressPdf.resultMeta">18.2 MB -> 7.6 MB · 节省 58%</span>
+                  </div>
+                  <button class="primary-button compact-button" type="button" data-i18n="tool.download">下载</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <aside class="settings-panel">
+            <h2 data-i18n="tool.settings">设置</h2>
+            <p data-i18n="compressPdf.settingsCopy">压缩等级使用单选控制，让流程保持简短。</p>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="compressPdf.level">压缩等级</span>
+                <span class="control-value" data-i18n="compressPdf.levelValue">均衡</span>
+              </div>
+              <div class="level-grid">
+                <button class="level-option" type="button" data-i18n="compressPdf.levelLow">低质量损失</button>
+                <button class="level-option is-selected" type="button" data-i18n="compressPdf.levelBalanced">均衡</button>
+                <button class="level-option" type="button" data-i18n="compressPdf.levelHigh">更小文件</button>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="compressPdf.processInfo">处理状态</span>
+              </div>
+              <p data-i18n="compressPdf.processInfoCopy">页面会显示压缩是否已就绪、处理中、处理成功，或是否因为文件格式不支持而无法处理。</p>
+            </div>
+            <button class="primary-button process-button" type="button" data-i18n="compressPdf.action">压缩 PDF</button>
+          </aside>
+        </div>
+
+        <div class="container workspace">
+          <div>
+            <section class="faq-panel">
+              <h2 data-i18n="tool.faq">常见问题</h2>
+              <div class="faq-list">
+                <div class="faq-item">
+                  <strong data-i18n="compressPdf.faqOneQ">PDF 会被上传吗？</strong>
+                  <p data-i18n="compressPdf.faqOneA">不会。页面应当把支持的压缩处理留在浏览器里完成。</p>
+                </div>
+                <div class="faq-item">
+                  <strong data-i18n="compressPdf.faqTwoQ">为什么有的文件压缩不明显？</strong>
+                  <p data-i18n="compressPdf.faqTwoA">已经优化过的 PDF 可能缩小不多，所以界面要说明压缩效果取决于 PDF 内容。</p>
+                </div>
+                <div class="faq-item">
+                  <strong data-i18n="compressPdf.faqThreeQ">支持什么文件？</strong>
+                  <p data-i18n="compressPdf.faqThreeA">PDF 压缩只接受 PDF 文件。</p>
+                </div>
+              </div>
+            </section>
+          </div>
+          <aside class="related-panel">
+            <h2 data-i18n="tool.related">相关工具</h2>
+            <ul class="related-list">
+              <li class="related-item"><span class="file-chip">PDF</span><div><strong data-i18n="tools.mergePdf.title">PDF 合并</strong><span data-i18n="related.mergePdf">压缩后继续合并文档。</span></div><button class="ghost-button compact-button" type="button" data-i18n="tool.open">打开</button></li>
+              <li class="related-item"><span class="file-chip">PDF</span><div><strong data-i18n="tools.splitPdf.title">PDF 拆分</strong><span data-i18n="related.splitPdf">只保留需要的页面。</span></div><button class="ghost-button compact-button" type="button" data-i18n="tool.open">打开</button></li>
+              <li class="related-item"><span class="file-chip">IMG</span><div><strong data-i18n="tools.pdfToImages.title">PDF 转图片</strong><span data-i18n="related.pdfImages">把页面导出为图片。</span></div><button class="ghost-button compact-button" type="button" data-screen-link="pdfToImages" data-i18n="tool.open">打开</button></li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="pdfToImages">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="pdfTools">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backPdfTools">返回 PDF 工具</span>
+          </button>
+          <h1 class="tool-title" data-i18n="tools.pdfToImages.title">PDF 转图片</h1>
+          <p class="tool-subtitle" data-i18n="pdfToImages.subtitle">把 PDF 每一页转换为按顺序排列的图片，并提供页面预览和下载操作。</p>
+        </div>
+
+        <div class="container workspace">
+          <div class="work-panel">
+            <div class="dropzone">
+              <div>
+                <svg class="drop-icon" style="margin-inline:auto"><use href="#icon-upload"></use></svg>
+                <h2 data-i18n="tool.dropPdf">拖入 PDF 文件</h2>
+                <p data-i18n="pdfToImages.dropCopy">选择一个 PDF，设置输出格式，然后导出全部页面或指定页码范围。</p>
+                <button class="secondary-button" type="button">
+                  <svg class="icon"><use href="#icon-folder"></use></svg>
+                  <span data-i18n="tool.choosePdf">选择 PDF</span>
+                </button>
+                <p class="support-line" data-i18n="tool.supportPdf">支持格式：PDF</p>
+              </div>
+            </div>
+            <div class="notice">
+              <svg class="icon"><use href="#icon-shield"></use></svg>
+              <span data-i18n="tool.localNotice">在支持本地处理的功能中，文件会在当前浏览器里处理，你可以不用上传私密文档。</span>
+            </div>
+            <div class="result-panel">
+              <div class="result-head">
+                <div>
+                  <h2 data-i18n="pdfToImages.previewTitle">页面输出预览</h2>
+                  <p data-i18n="pdfToImages.previewCopy">输出图片顺序和原 PDF 页码一致。</p>
+                </div>
+                <button class="primary-button compact-button" type="button" data-i18n="pdfToImages.downloadAll">全部下载</button>
+              </div>
+              <div class="pdf-page-grid">
+                <div class="pdf-page"><div>1</div><span>page-001.jpg</span></div>
+                <div class="pdf-page"><div>2</div><span>page-002.jpg</span></div>
+                <div class="pdf-page"><div>3</div><span>page-003.jpg</span></div>
+                <div class="pdf-page"><div>4</div><span>page-004.jpg</span></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="settings-panel">
+            <h2 data-i18n="tool.settings">设置</h2>
+            <p data-i18n="pdfToImages.settingsCopy">格式、质量、页码范围仍放在右侧设置面板，和当前工具页一致。</p>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="tool.outputFormat">输出格式</span>
+              </div>
+              <div class="format-grid">
+                <button class="format-option is-selected" type="button">JPG</button>
+                <button class="format-option" type="button">PNG</button>
+                <button class="format-option" type="button">WebP</button>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="quality">
+                <span data-i18n="tool.quality">质量</span>
+                <span class="control-value">92%</span>
+              </label>
+              <input id="quality" class="range-input" type="range" value="92" min="30" max="100">
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="pdfToImages.range">页码范围</span>
+                <span class="control-value" data-i18n="pdfToImages.rangeValue">全部页面</span>
+              </div>
+              <div class="level-grid">
+                <button class="level-option is-selected" type="button" data-i18n="pdfToImages.allPages">全部页面</button>
+                <button class="level-option" type="button">1-3</button>
+                <button class="level-option" type="button">4-8</button>
+              </div>
+            </div>
+            <button class="primary-button process-button" type="button" data-i18n="pdfToImages.action">转换为图片</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="cropImage">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="imageTools">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backImageTools">返回图片工具</span>
+          </button>
+          <h1 class="tool-title" data-i18n="tools.cropImage.title">图片裁剪</h1>
+          <p class="tool-subtitle" data-i18n="cropImage.subtitle">用当前图片工具一致的直接工作台完成图片裁剪。</p>
+        </div>
+
+        <div class="container workspace">
+          <div class="work-panel">
+            <div class="dropzone">
+              <div>
+                <svg class="drop-icon" style="margin-inline:auto"><use href="#icon-upload"></use></svg>
+                <h2 data-i18n="tool.dropImages">拖入图片文件</h2>
+                <p data-i18n="cropImage.dropCopy">选择图片并调整裁剪区域。裁剪需要直接操作，所以主预览区比文件列表更重要。</p>
+                <button class="secondary-button" type="button">
+                  <svg class="icon"><use href="#icon-folder"></use></svg>
+                  <span data-i18n="tool.chooseImages">选择图片</span>
+                </button>
+                <p class="support-line" data-i18n="tool.supportImages">支持格式：JPG、PNG、WebP</p>
+              </div>
+            </div>
+            <div class="preview-stage">
+              <div class="image-canvas">
+                <div class="crop-box">
+                  <span class="crop-grid-line"></span>
+                  <span class="crop-grid-line"></span>
+                </div>
+              </div>
+            </div>
+            <div class="result-panel">
+              <div class="result-head">
+                <div>
+                  <h2 data-i18n="tool.results">处理结果</h2>
+                  <p data-i18n="cropImage.resultCopy">结果区确认裁剪后的输出尺寸。</p>
+                </div>
+                <span class="privacy-badge" data-i18n="tool.ready">就绪</span>
+              </div>
+              <ul class="result-list">
+                <li class="result-item">
+                  <span class="file-chip">JPG</span>
+                  <div class="result-main">
+                    <strong>product-photo-cropped.jpg</strong>
+                    <span>1600 × 1600 · 1:1</span>
+                  </div>
+                  <button class="primary-button compact-button" type="button" data-i18n="tool.download">下载</button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <aside class="settings-panel">
+            <h2 data-i18n="tool.settings">设置</h2>
+            <p data-i18n="cropImage.settingsCopy">裁剪比例沿用当前格式选择控件的分段按钮样式。</p>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="cropImage.ratio">裁剪比例</span>
+                <span class="control-value" data-i18n="cropImage.free">自由</span>
+              </div>
+              <div class="ratio-grid">
+                <button class="ratio-option is-selected" type="button" data-i18n="cropImage.free">自由</button>
+                <button class="ratio-option" type="button">1:1</button>
+                <button class="ratio-option" type="button">4:3</button>
+                <button class="ratio-option" type="button">16:9</button>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="tool.outputFormat">输出格式</span>
+              </div>
+              <div class="format-grid">
+                <button class="format-option is-selected" type="button" data-i18n="tool.same">保持原格式</button>
+                <button class="format-option" type="button">JPG</button>
+                <button class="format-option" type="button">PNG</button>
+              </div>
+            </div>
+            <button class="primary-button process-button" type="button" data-i18n="cropImage.action">裁剪图片</button>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" data-screen="rotateImage">
+        <div class="container tool-page-header">
+          <button class="crumb-link" type="button" data-screen-link="imageTools">
+            <svg class="icon"><use href="#icon-arrow"></use></svg>
+            <span data-i18n="tool.backImageTools">返回图片工具</span>
+          </button>
+          <h1 class="tool-title" data-i18n="tools.rotateImage.title">图片旋转</h1>
+          <p class="tool-subtitle" data-i18n="rotateImage.subtitle">旋转单张或多张图片，每张图片都可以保留自己的旋转方向。</p>
+        </div>
+
+        <div class="container workspace">
+          <div class="work-panel">
+            <div class="dropzone">
+              <div>
+                <svg class="drop-icon" style="margin-inline:auto"><use href="#icon-upload"></use></svg>
+                <h2 data-i18n="tool.dropImages">拖入图片文件</h2>
+                <p data-i18n="rotateImage.dropCopy">批量图片旋转要保留文件列表，因为用户可能给每张图片设置不同方向。</p>
+                <button class="secondary-button" type="button">
+                  <svg class="icon"><use href="#icon-folder"></use></svg>
+                  <span data-i18n="tool.chooseImages">选择图片</span>
+                </button>
+                <p class="support-line" data-i18n="tool.supportImages">支持格式：JPG、PNG、WebP</p>
+              </div>
+            </div>
+            <div class="selected-panel">
+              <div class="selected-head">
+                <div>
+                  <h2 data-i18n="tool.selectedFiles">已选文件</h2>
+                  <p data-i18n="rotateImage.selectedCopy">每一行都显示当前选择的旋转方向。</p>
+                </div>
+                <button class="ghost-button compact-button" type="button" data-i18n="tool.clear">清空</button>
+              </div>
+              <ul class="selected-list">
+                <li class="selected-item">
+                  <span class="file-chip">JPG</span>
+                  <div class="selected-file-main">
+                    <strong>receipt-left.jpg</strong>
+                    <span data-i18n="rotateImage.rowOneMeta">2.1 MB · 向右旋转</span>
+                  </div>
+                  <div class="inline-actions"><button class="ghost-button compact-button" type="button">90°</button></div>
+                </li>
+                <li class="selected-item">
+                  <span class="file-chip">PNG</span>
+                  <div class="selected-file-main">
+                    <strong>whiteboard.png</strong>
+                    <span data-i18n="rotateImage.rowTwoMeta">3.6 MB · 旋转 180°</span>
+                  </div>
+                  <div class="inline-actions"><button class="ghost-button compact-button" type="button">180°</button></div>
+                </li>
+              </ul>
+            </div>
+            <div class="preview-stage">
+              <div class="image-canvas rotate-preview"></div>
+            </div>
+          </div>
+
+          <aside class="settings-panel">
+            <h2 data-i18n="tool.settings">设置</h2>
+            <p data-i18n="rotateImage.settingsCopy">全局操作可以先给所有文件应用同一个角度，之后再单独调整每行。</p>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="rotateImage.angle">旋转角度</span>
+                <span class="control-value">90°</span>
+              </div>
+              <div class="angle-grid">
+                <button class="angle-option" type="button" data-i18n="rotateImage.left">左转 90°</button>
+                <button class="angle-option is-selected" type="button" data-i18n="rotateImage.right">右转 90°</button>
+                <button class="angle-option" type="button">180°</button>
+                <button class="angle-option" type="button" data-i18n="rotateImage.reset">重置</button>
+              </div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">
+                <span data-i18n="tool.outputFormat">输出格式</span>
+              </div>
+              <div class="format-grid">
+                <button class="format-option is-selected" type="button" data-i18n="tool.same">保持原格式</button>
+                <button class="format-option" type="button">JPG</button>
+                <button class="format-option" type="button">PNG</button>
+              </div>
+            </div>
+            <button class="primary-button process-button" type="button" data-i18n="rotateImage.action">旋转图片</button>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <span>FilePilot Tools</span>
+        <span data-i18n="footer.copy">免费 PDF 和图片工具，在支持本地处理的功能中让文件留在浏览器里。</span>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const translations = {
+            "en": {
+                    "nav.home": "Home",
+                    "productNote.title": "Private file tools",
+                    "productNote.copy": "PDF and image files are handled in your browser whenever local processing is supported. No account is needed.",
+                    "home.eyebrow": "Process files in your browser first",
+                    "home.title": "Free online PDF and image tools",
+                    "home.copy": "Files are processed directly in your browser. Compress images, convert formats, create PDFs, and finish common file tasks without installing extra software.",
+                    "home.primaryCta": "Compress Image",
+                    "home.quickTitle": "Quick start",
+                    "home.quickCopy": "Start with a file, choose an action, and download the finished result.",
+                    "home.localBadge": "Local",
+                    "home.dropTitle": "Drop a PDF or image",
+                    "home.dropCopy": "PDF, JPG, PNG, WebP",
+                    "home.mockImageState": "Crop 1:1, rotate right",
+                    "tools.compressPdf.title": "Compress PDF",
+                    "tools.compressPdf.card": "Reduce PDF size in the browser and show original size, output size, and savings.",
+                    "tools.pdfToImages.title": "PDF to Images",
+                    "tools.pdfToImages.card": "Export each PDF page as an ordered image with single and batch download actions.",
+                    "tools.cropImage.title": "Crop Image",
+                    "tools.cropImage.card": "Add a clear crop workspace with free, square, and common aspect ratios.",
+                    "tools.rotateImage.title": "Rotate Image",
+                    "tools.rotateImage.card": "Support left, right, and 180 degree rotation for one or many images.",
+                    "tools.allTools.title": "All Tools",
+                    "tools.allTools.card": "A searchable index groups PDF, image, and QR tools in one place.",
+                    "tools.privacyFaq.title": "Privacy and help",
+                    "tools.privacyFaq.card": "Clear help text explains supported files, local processing, and download results.",
+                    "tools.mergePdf.title": "Merge PDF",
+                    "tools.mergePdf.card": "Combine multiple PDF files into one browser-generated document.",
+                    "tools.splitPdf.title": "Split PDF",
+                    "tools.splitPdf.card": "Extract page ranges from one PDF and download the result.",
+                    "tools.compressImage.title": "Compress Image",
+                    "tools.compressImage.card": "Compress JPG, PNG, and WebP images with quality control.",
+                    "tools.convertImage.title": "Convert Image",
+                    "tools.convertImage.card": "Convert image files to JPG, PNG, or WebP.",
+                    "tools.resizeImage.title": "Resize Image",
+                    "tools.resizeImage.card": "Change image width and height while keeping the current simple workflow.",
+                    "tools.imageToPdf.title": "Image to PDF",
+                    "tools.imageToPdf.card": "Create a PDF from selected images in the chosen order.",
+                    "tools.qrCode.title": "QR Code Generator",
+                    "tools.qrCode.card": "Generate QR codes from text or links while keeping visible content local.",
+                    "tools.watermarkImage.title": "Watermark Image",
+                    "tools.watermarkImage.card": "Add text or logo watermarks for publishing, ecommerce, and image protection.",
+                    "tools.removeBackground.title": "Remove Background",
+                    "tools.removeBackground.card": "Prepare a background removal entry for product photos, portraits, and design assets.",
+                    "tools.imageToBase64.title": "Image to Base64",
+                    "tools.imageToBase64.card": "Convert images into Base64 text for pages, stylesheets, and configuration.",
+                    "tools.base64ToImage.title": "Base64 to Image",
+                    "tools.base64ToImage.card": "Paste Base64 content, preview it, and download it as an image file.",
+                    "tools.rotatePdf.title": "Rotate PDF Pages",
+                    "tools.rotatePdf.card": "Rotate PDF pages for scanned files and documents with mixed page directions.",
+                    "tools.extractPdfPages.title": "Extract PDF Pages",
+                    "tools.extractPdfPages.card": "Export selected pages from a PDF and keep document cleanup separate from splitting.",
+                    "tools.addPageNumbers.title": "Add Page Numbers to PDF",
+                    "tools.addPageNumbers.card": "Add page numbers before printing, archiving, or submitting a document.",
+                    "tools.signPdf.title": "Sign PDF",
+                    "tools.signPdf.card": "Reserve a signature workflow for typed, drawn, or image-based signatures.",
+                    "tools.protectPdf.title": "Protect PDF",
+                    "tools.protectPdf.card": "Set an open password and explain that the password stays in the browser.",
+                    "tools.unlockPdf.title": "Unlock PDF",
+                    "tools.unlockPdf.card": "Handle PDFs when the user already knows the password, without offering password bypass.",
+                    "tools.pdfToWord.title": "PDF to Word",
+                    "tools.pdfToWord.card": "Prepare a conversion entry for users who need editable document content.",
+                    "tools.wordToPdf.title": "Word to PDF",
+                    "tools.wordToPdf.card": "Convert documents into PDF for submission, printing, and cross-device viewing.",
+                    "tools.moreConvert.title": "More Format Conversion",
+                    "tools.moreConvert.card": "Reserve one entry for more file conversion pairs and future long-tail pages.",
+                    "tool.backHome": "Back to home",
+                    "tool.backTools": "Back to all tools",
+                    "tool.dropPdf": "Drop PDF here",
+                    "tool.dropImages": "Drop images here",
+                    "tool.choosePdf": "Choose PDF",
+                    "tool.chooseImages": "Choose images",
+                    "tool.localNotice": "Your file is processed in this browser whenever local processing is supported, so you can work without uploading private documents.",
+                    "tool.selectedFiles": "Selected files",
+                    "tool.clear": "Clear",
+                    "tool.results": "Results",
+                    "tool.success": "Success",
+                    "tool.ready": "Ready",
+                    "tool.download": "Download",
+                    "tool.settings": "Settings",
+                    "tool.outputFormat": "Output format",
+                    "tool.quality": "Quality",
+                    "tool.same": "Same",
+                    "tool.related": "Related tools",
+                    "tool.faq": "FAQ",
+                    "tool.open": "Open",
+                    "tool.supportPdf": "Supported formats: PDF",
+                    "tool.supportImages": "Supported formats: JPG, PNG, WebP",
+                    "compressPdf.subtitle": "Reduce PDF file size directly in your browser. Compression results depend on the content inside the PDF.",
+                    "compressPdf.dropCopy": "Choose one PDF file and reduce its size before downloading the compressed copy.",
+                    "compressPdf.selectedCopy": "Single PDF selected for compression",
+                    "compressPdf.selectedMeta": "18.2 MB · 24 pages",
+                    "compressPdf.resultCopy": "Review the compressed file size before downloading the result.",
+                    "compressPdf.resultMeta": "18.2 MB -> 7.6 MB · Saved 58%",
+                    "compressPdf.settingsCopy": "Compression level uses a single-choice control so the flow stays short.",
+                    "compressPdf.level": "Compression level",
+                    "compressPdf.levelValue": "Balanced",
+                    "compressPdf.levelLow": "Low quality loss",
+                    "compressPdf.levelBalanced": "Balanced",
+                    "compressPdf.levelHigh": "Smaller file",
+                    "compressPdf.processInfo": "Processing status",
+                    "compressPdf.processInfoCopy": "The page shows whether compression is ready, running, successful, or blocked by an unsupported file.",
+                    "compressPdf.action": "Compress PDF",
+                    "compressPdf.faqOneQ": "Are my PDFs uploaded?",
+                    "compressPdf.faqOneA": "No. The page should keep supported compression work inside the browser.",
+                    "compressPdf.faqTwoQ": "Why is some compression small?",
+                    "compressPdf.faqTwoA": "PDFs that are already optimized may not shrink much, so the UI says the result depends on PDF content.",
+                    "compressPdf.faqThreeQ": "What file type is supported?",
+                    "compressPdf.faqThreeA": "PDF compression accepts PDF files only.",
+                    "pdfToImages.subtitle": "Convert each PDF page to an ordered image output with page previews and separate download actions.",
+                    "pdfToImages.dropCopy": "Choose one PDF, select output format, and export all pages or a page range.",
+                    "pdfToImages.previewTitle": "Page output preview",
+                    "pdfToImages.previewCopy": "The output order follows the original PDF page order.",
+                    "pdfToImages.downloadAll": "Download all",
+                    "pdfToImages.settingsCopy": "Format, quality, and page range stay in the right panel, matching current tool pages.",
+                    "pdfToImages.range": "Page range",
+                    "pdfToImages.rangeValue": "All pages",
+                    "pdfToImages.allPages": "All pages",
+                    "pdfToImages.action": "Convert PDF to Images",
+                    "cropImage.subtitle": "Crop images with the same direct workspace pattern used by current image tools.",
+                    "cropImage.dropCopy": "Choose an image and adjust the crop area. The main preview is larger than the file list because cropping needs direct manipulation.",
+                    "cropImage.resultCopy": "The result confirms the cropped output dimensions.",
+                    "cropImage.settingsCopy": "Aspect ratio controls use the same segmented button style as current format controls.",
+                    "cropImage.ratio": "Crop ratio",
+                    "cropImage.free": "Free",
+                    "cropImage.action": "Crop Image",
+                    "rotateImage.subtitle": "Rotate one or many images, with each image able to keep its own rotation direction.",
+                    "rotateImage.dropCopy": "Batch image rotation keeps the file list visible because users may set a different direction for each file.",
+                    "rotateImage.selectedCopy": "Each row exposes the selected rotation direction.",
+                    "rotateImage.rowOneMeta": "2.1 MB · rotate right",
+                    "rotateImage.rowTwoMeta": "3.6 MB · rotate 180°",
+                    "rotateImage.settingsCopy": "The global action can apply one angle to all files, then individual rows can be adjusted later.",
+                    "rotateImage.angle": "Rotation",
+                    "rotateImage.left": "Left 90°",
+                    "rotateImage.right": "Right 90°",
+                    "rotateImage.reset": "Reset",
+                    "rotateImage.action": "Rotate Images",
+                    "related.mergePdf": "Combine documents after compression.",
+                    "related.splitPdf": "Keep only the pages you need.",
+                    "related.pdfImages": "Export pages as images.",
+                    "related.pdfPlanning": "Continue working with PDF files.",
+                    "related.imagePlanning": "Switch to image processing tools.",
+                    "related.allTools": "Return to the tool index.",
+                    "planned.dropCopy": "After choosing a file, the page shows settings and a result area for this tool.",
+                    "planned.imageDrop": "Drop images here",
+                    "planned.base64Drop": "Paste Base64 content",
+                    "planned.wordDrop": "Drop Word document here",
+                    "planned.convertDrop": "Drop file here",
+                    "planned.pasteBase64": "Paste Base64",
+                    "planned.chooseWord": "Choose Word file",
+                    "planned.chooseFile": "Choose file",
+                    "planned.supportBase64": "Supported input: Base64 text",
+                    "planned.supportWord": "Supported formats: DOC, DOCX",
+                    "planned.supportConvert": "Supported formats depend on the selected conversion.",
+                    "planned.privacy": "Files stay in the current browser whenever local processing is supported. Tools that require models or high-quality conversion must clearly explain how processing works.",
+                    "planned.result": "The result area shows the output file, status, and download action.",
+                    "planned.resultMeta": "Processing flow is ready",
+                    "planned.status": "The page shows ready, processing, success, or unsupported-file states.",
+                    "planned.faqOneQ": "Are files uploaded?",
+                    "planned.faqOneA": "Tools that support local processing run in the browser.",
+                    "planned.faqTwoQ": "What files are supported?",
+                    "planned.faqThreeQ": "What happens if processing fails?",
+                    "planned.faqThreeA": "The page shows a failed state and keeps the original file unchanged.",
+                    "planned.watermark.action": "Add Watermark",
+                    "planned.watermark.settings": "Watermark settings include text, opacity, position, and output format.",
+                    "planned.watermark.primaryLabel": "Watermark type",
+                    "planned.watermark.primaryValue": "Text",
+                    "planned.watermark.optionOne": "Text watermark",
+                    "planned.watermark.optionTwo": "Logo watermark",
+                    "planned.removeBackground.action": "Remove Background",
+                    "planned.removeBackground.settings": "The page must explain whether background removal is local, model-based, or connected to a third-party service.",
+                    "planned.removeBackground.primaryLabel": "Output",
+                    "planned.removeBackground.primaryValue": "Transparent PNG",
+                    "planned.removeBackground.optionOne": "Transparent background",
+                    "planned.removeBackground.optionTwo": "Solid background",
+                    "planned.imageToBase64.action": "Convert to Base64",
+                    "planned.imageToBase64.settings": "Output can keep only the Base64 body or include the full data URL prefix.",
+                    "planned.imageToBase64.primaryLabel": "Output text",
+                    "planned.imageToBase64.primaryValue": "Data URL",
+                    "planned.imageToBase64.optionOne": "Full data URL",
+                    "planned.imageToBase64.optionTwo": "Base64 only",
+                    "planned.base64ToImage.action": "Create Image",
+                    "planned.base64ToImage.settings": "Input accepts Base64 text and previews the decoded image before download.",
+                    "planned.base64ToImage.primaryLabel": "Output format",
+                    "planned.base64ToImage.primaryValue": "PNG",
+                    "planned.base64ToImage.optionOne": "PNG",
+                    "planned.base64ToImage.optionTwo": "JPG",
+                    "planned.rotatePdf.action": "Rotate PDF",
+                    "planned.rotatePdf.settings": "Rotation can apply to all pages or selected page ranges.",
+                    "planned.rotatePdf.primaryLabel": "Rotation",
+                    "planned.rotatePdf.primaryValue": "Right 90°",
+                    "planned.rotatePdf.optionOne": "All pages",
+                    "planned.rotatePdf.optionTwo": "Selected pages",
+                    "planned.extractPdfPages.action": "Extract Pages",
+                    "planned.extractPdfPages.settings": "Users can type page ranges and download a new PDF containing only those pages.",
+                    "planned.extractPdfPages.primaryLabel": "Page range",
+                    "planned.extractPdfPages.primaryValue": "1-3",
+                    "planned.extractPdfPages.optionOne": "Single range",
+                    "planned.extractPdfPages.optionTwo": "Multiple ranges",
+                    "planned.addPageNumbers.action": "Add Page Numbers",
+                    "planned.addPageNumbers.settings": "Page number controls include position, first number, and font size.",
+                    "planned.addPageNumbers.primaryLabel": "Position",
+                    "planned.addPageNumbers.primaryValue": "Bottom center",
+                    "planned.addPageNumbers.optionOne": "Bottom center",
+                    "planned.addPageNumbers.optionTwo": "Bottom right",
+                    "planned.signPdf.action": "Sign PDF",
+                    "planned.signPdf.settings": "Signature settings include typed signature, drawn signature, and image signature.",
+                    "planned.signPdf.primaryLabel": "Signature type",
+                    "planned.signPdf.primaryValue": "Draw",
+                    "planned.signPdf.optionOne": "Draw signature",
+                    "planned.signPdf.optionTwo": "Upload signature image",
+                    "planned.protectPdf.action": "Protect PDF",
+                    "planned.protectPdf.settings": "Password controls must make clear that the password is handled in the current browser.",
+                    "planned.protectPdf.primaryLabel": "Password",
+                    "planned.protectPdf.primaryValue": "Required",
+                    "planned.protectPdf.optionOne": "Open password",
+                    "planned.protectPdf.optionTwo": "Confirm password",
+                    "planned.unlockPdf.action": "Unlock PDF",
+                    "planned.unlockPdf.settings": "Unlocking only works when the user already knows the password.",
+                    "planned.unlockPdf.primaryLabel": "Password",
+                    "planned.unlockPdf.primaryValue": "User provided",
+                    "planned.unlockPdf.optionOne": "Enter password",
+                    "planned.unlockPdf.optionTwo": "Keep original file",
+                    "planned.pdfToWord.action": "Convert to Word",
+                    "planned.pdfToWord.settings": "High-quality PDF to Word conversion is marked as a later evaluation item.",
+                    "planned.pdfToWord.primaryLabel": "Output",
+                    "planned.pdfToWord.primaryValue": "DOCX",
+                    "planned.pdfToWord.optionOne": "Editable DOCX",
+                    "planned.pdfToWord.optionTwo": "Keep layout",
+                    "planned.wordToPdf.action": "Convert to PDF",
+                    "planned.wordToPdf.settings": "Word conversion needs document parsing support and should keep the short upload, process, download flow.",
+                    "planned.wordToPdf.primaryLabel": "Output",
+                    "planned.wordToPdf.primaryValue": "PDF",
+                    "planned.wordToPdf.optionOne": "Preserve layout",
+                    "planned.wordToPdf.optionTwo": "Print ready",
+                    "planned.moreConvert.action": "Choose Conversion",
+                    "planned.moreConvert.settings": "More conversion pages can be expanded by file type and source-to-target format pair.",
+                    "planned.moreConvert.primaryLabel": "Conversion type",
+                    "planned.moreConvert.primaryValue": "File pair",
+                    "planned.moreConvert.optionOne": "Document conversion",
+                    "planned.moreConvert.optionTwo": "Image conversion",
+                    "footer.copy": "Free PDF and image tools that keep supported file processing in your browser.",
+                    "nav.imageTools": "Image Tools",
+                    "nav.pdfTools": "PDF Tools",
+                    "nav.qrCode": "QR Code",
+                    "home.imageToolsCta": "Convert Image",
+                    "home.pdfToolsCta": "Image to PDF",
+                    "home.popularToolsTitle": "Popular tools",
+                    "home.popularToolsCopy": "Choose the tool you need, add files, and start processing.",
+                    "home.popularTrust": "Files are handled directly in the browser whenever local processing is supported. Choose a tool, set options, and download the result.",
+                    "siteCapability.title": "Site capabilities",
+                    "siteCapability.copy": "As the tool set grows, the site should help users find tools and help search engines and analytics understand the pages.",
+                    "siteCapability.toolsIndex.title": "Tools index",
+                    "siteCapability.toolsIndex.card": "Put image, PDF, QR, and document conversion tools in one browsable entry.",
+                    "siteCapability.seo.title": "Search discovery",
+                    "siteCapability.seo.card": "Prepare sitemap, robots, titles, descriptions, and structured FAQ for tool pages.",
+                    "siteCapability.analytics.title": "Basic analytics",
+                    "siteCapability.analytics.card": "Record only page views and tool events, not file content, file names, or raw user input.",
+                    "imageCategory.title": "Image Tools",
+                    "imageCategory.copy": "Compress, convert, crop, rotate, resize, and create PDFs from images in your browser.",
+                    "imageCategory.popularTitle": "Popular image tools",
+                    "imageCategory.popularCopy": "Start with the image tasks most users need: compression, conversion, PDF creation, resize, crop, and rotation.",
+                    "imageCategory.badge": "Image files",
+                    "imageCategory.trust": "Image files stay in the browser whenever local processing is supported.",
+                    "pdfCategory.title": "PDF Tools",
+                    "pdfCategory.copy": "Compress, convert, merge, and split PDF files from one place.",
+                    "pdfCategory.popularTitle": "Popular PDF tools",
+                    "pdfCategory.popularCopy": "Handle common PDF tasks without switching between separate sites.",
+                    "pdfCategory.badge": "PDF files",
+                    "pdfCategory.trust": "PDF tools keep the same simple flow: add a file, choose settings, process, and download.",
+                    "qrCategory.title": "QR Code Generator",
+                    "qrCategory.copy": "Create a QR code from text or a link, then download it as an image.",
+                    "qrCategory.trust": "Create QR codes for links, short text, contact notes, and quick sharing.",
+                    "toolsIndex.title": "All Tools",
+                    "toolsIndex.copy": "Find PDF, image, document conversion, and QR tools by file type.",
+                    "toolsIndex.imageTitle": "Image Tools",
+                    "toolsIndex.imageCopy": "Cover compression, conversion, crop, rotate, watermark, background removal, and Base64 tasks.",
+                    "toolsIndex.pdfTitle": "PDF Tools",
+                    "toolsIndex.pdfCopy": "Cover compression, conversion, merge, split, rotation, page numbers, signatures, and password handling.",
+                    "toolsIndex.documentTitle": "Documents and QR",
+                    "toolsIndex.documentCopy": "Keep document conversion and QR generation in the index so future tools can be added cleanly.",
+                    "tool.backPdfTools": "Back to PDF tools",
+                    "tool.backImageTools": "Back to image tools"
+            },
+            "zh": {
+                    "nav.home": "首页",
+                    "nav.imageTools": "图片工具",
+                    "nav.pdfTools": "PDF 工具",
+                    "nav.qrCode": "二维码",
+                    "home.eyebrow": "优先在浏览器处理文件",
+                    "home.title": "免费在线 PDF 和图片工具",
+                    "home.copy": "文件直接在浏览器里处理。你可以压缩图片、转换格式、创建 PDF，并快速完成常见文件处理任务，不需要安装额外软件。",
+                    "home.primaryCta": "图片压缩",
+                    "home.imageToolsCta": "图片转换",
+                    "home.pdfToolsCta": "图片转 PDF",
+                    "home.quickTitle": "快速开始",
+                    "home.quickCopy": "选择文件、选择处理方式，然后下载完成后的结果。",
+                    "home.localBadge": "本地处理",
+                    "home.dropTitle": "拖入 PDF 或图片",
+                    "home.dropCopy": "PDF、JPG、PNG、WebP",
+                    "home.mockImageState": "裁剪 1:1，向右旋转",
+                    "home.popularToolsTitle": "常用工具",
+                    "home.popularToolsCopy": "选择需要的工具，添加文件后就可以开始处理。",
+                    "home.popularTrust": "在支持本地处理的功能中，文件会直接在浏览器里处理。选择工具、设置参数，然后下载结果。",
+                    "tools.compressPdf.title": "PDF 压缩",
+                    "tools.compressPdf.card": "在浏览器里减小 PDF 体积，并显示原始大小、输出大小和节省比例。",
+                    "tools.pdfToImages.title": "PDF 转图片",
+                    "tools.pdfToImages.card": "按 PDF 页码顺序导出图片，支持单张下载和全部下载。",
+                    "tools.cropImage.title": "图片裁剪",
+                    "tools.cropImage.card": "增加清晰的裁剪工作区，支持自由、正方形和常见比例。",
+                    "tools.rotateImage.title": "图片旋转",
+                    "tools.rotateImage.card": "支持左转、右转和 180 度旋转，可以处理单张或多张图片。",
+                    "tools.mergePdf.title": "PDF 合并",
+                    "tools.mergePdf.card": "把多个 PDF 文件合并为一个浏览器生成的文档。",
+                    "tools.splitPdf.title": "PDF 拆分",
+                    "tools.splitPdf.card": "从一个 PDF 中提取指定页码范围并下载结果。",
+                    "tools.compressImage.title": "图片压缩",
+                    "tools.compressImage.card": "通过质量控制压缩 JPG、PNG 和 WebP 图片。",
+                    "tools.convertImage.title": "图片格式转换",
+                    "tools.convertImage.card": "把图片转换为 JPG、PNG 或 WebP 格式。",
+                    "tools.resizeImage.title": "图片尺寸调整",
+                    "tools.resizeImage.card": "调整图片宽高，同时保留当前简洁操作流程。",
+                    "tools.imageToPdf.title": "图片转 PDF",
+                    "tools.imageToPdf.card": "把选中的图片按顺序生成 PDF。",
+                    "tools.qrCode.title": "二维码生成",
+                    "tools.qrCode.card": "根据文本或链接生成二维码，可见内容仍然保留在本地。",
+                    "tools.watermarkImage.title": "图片加水印",
+                    "tools.watermarkImage.card": "给图片添加文字或标识水印，适合内容发布和电商图片保护。",
+                    "tools.removeBackground.title": "图片去背景",
+                    "tools.removeBackground.card": "为商品图、头像和素材图预留去背景入口，并明确处理方式。",
+                    "tools.imageToBase64.title": "图片转 Base64",
+                    "tools.imageToBase64.card": "把图片转换成 Base64 文本，方便嵌入网页、样式和配置。",
+                    "tools.base64ToImage.title": "Base64 转图片",
+                    "tools.base64ToImage.card": "粘贴 Base64 内容后预览并下载为图片文件。",
+                    "tools.rotatePdf.title": "PDF 旋转页面",
+                    "tools.rotatePdf.card": "按页面旋转 PDF，适合扫描件方向不一致的办公场景。",
+                    "tools.extractPdfPages.title": "PDF 提取页面",
+                    "tools.extractPdfPages.card": "从 PDF 中导出指定页面，和拆分工具形成更清晰的文档整理流程。",
+                    "tools.addPageNumbers.title": "PDF 添加页码",
+                    "tools.addPageNumbers.card": "给文档添加页码，适合打印、归档和正式提交前整理。",
+                    "tools.signPdf.title": "PDF 签名",
+                    "tools.signPdf.card": "在 PDF 上添加签名区域，保留后续手写或图片签名交互空间。",
+                    "tools.protectPdf.title": "PDF 加密",
+                    "tools.protectPdf.card": "为 PDF 设置打开密码，并说明密码只在当前浏览器中处理。",
+                    "tools.unlockPdf.title": "PDF 解密",
+                    "tools.unlockPdf.card": "仅处理用户知道密码的 PDF 文件，不提供破解或绕过密码能力。",
+                    "tools.pdfToWord.title": "PDF 转 Word",
+                    "tools.pdfToWord.card": "为需要编辑 PDF 内容的用户预留转换入口，标明高质量转换需要后续评估。",
+                    "tools.wordToPdf.title": "Word 转 PDF",
+                    "tools.wordToPdf.card": "把文档转换为 PDF，适合提交、打印和跨设备查看。",
+                    "tools.moreConvert.title": "更多格式转换",
+                    "tools.moreConvert.card": "为更多文件格式组合预留统一入口，后续可扩展成长尾转换页面。",
+                    "imageCategory.title": "图片工具",
+                    "imageCategory.copy": "在浏览器里完成图片压缩、格式转换、裁剪、旋转、尺寸调整和图片转 PDF。",
+                    "imageCategory.popularTitle": "常用图片工具",
+                    "imageCategory.popularCopy": "先放最常用的图片处理任务：压缩、转换、图片转 PDF、尺寸调整、裁剪和旋转。",
+                    "imageCategory.badge": "图片文件",
+                    "imageCategory.trust": "在支持本地处理的功能中，图片文件会留在浏览器里处理。",
+                    "pdfCategory.title": "PDF 工具",
+                    "pdfCategory.copy": "在一个位置完成 PDF 压缩、转换、合并和拆分。",
+                    "pdfCategory.popularTitle": "常用 PDF 工具",
+                    "pdfCategory.popularCopy": "不用在多个网站之间切换，就能完成常见 PDF 处理任务。",
+                    "pdfCategory.badge": "PDF 文件",
+                    "pdfCategory.trust": "PDF 工具保持同一套简单流程：添加文件、选择设置、开始处理、下载结果。",
+                    "qrCategory.title": "二维码生成器",
+                    "qrCategory.copy": "输入文本或链接生成二维码，然后下载为图片。",
+                    "qrCategory.trust": "可用于链接、短文本、联系方式和快速分享。",
+                    "siteCapability.title": "站点能力",
+                    "siteCapability.copy": "工具数量增加后，页面要让用户能找到工具，也要让搜索引擎和基础统计能理解页面。",
+                    "siteCapability.toolsIndex.title": "工具索引",
+                    "siteCapability.toolsIndex.card": "把图片、PDF、二维码和文档转换工具集中到一个可浏览的入口。",
+                    "siteCapability.seo.title": "搜索引擎发现",
+                    "siteCapability.seo.card": "为工具页准备 sitemap、robots、标题、描述和结构化 FAQ。",
+                    "siteCapability.analytics.title": "基础访问统计",
+                    "siteCapability.analytics.card": "只记录页面访问和工具处理事件，不记录文件内容、文件名或用户输入原文。",
+                    "toolsIndex.title": "全部工具",
+                    "toolsIndex.copy": "按文件类型查找 PDF、图片、文档转换和二维码工具。",
+                    "toolsIndex.imageTitle": "图片工具",
+                    "toolsIndex.imageCopy": "覆盖压缩、转换、裁剪、旋转、水印、去背景和 Base64 场景。",
+                    "toolsIndex.pdfTitle": "PDF 工具",
+                    "toolsIndex.pdfCopy": "覆盖压缩、转换、合并、拆分、旋转、页码、签名和密码处理。",
+                    "toolsIndex.documentTitle": "文档和二维码",
+                    "toolsIndex.documentCopy": "把文档转换和二维码生成放在工具索引中，方便后续继续扩展。",
+                    "tool.backHome": "返回首页",
+                    "tool.backTools": "返回全部工具",
+                    "tool.backPdfTools": "返回 PDF 工具",
+                    "tool.backImageTools": "返回图片工具",
+                    "tool.dropPdf": "拖入 PDF 文件",
+                    "tool.dropImages": "拖入图片文件",
+                    "tool.choosePdf": "选择 PDF",
+                    "tool.chooseImages": "选择图片",
+                    "tool.localNotice": "在支持本地处理的功能中，文件会在当前浏览器里处理，你可以不用上传私密文档。",
+                    "tool.selectedFiles": "已选文件",
+                    "tool.clear": "清空",
+                    "tool.results": "处理结果",
+                    "tool.success": "成功",
+                    "tool.ready": "就绪",
+                    "tool.download": "下载",
+                    "tool.settings": "设置",
+                    "tool.outputFormat": "输出格式",
+                    "tool.quality": "质量",
+                    "tool.same": "保持原格式",
+                    "tool.related": "相关工具",
+                    "tool.faq": "常见问题",
+                    "tool.open": "打开",
+                    "tool.supportPdf": "支持格式：PDF",
+                    "tool.supportImages": "支持格式：JPG、PNG、WebP",
+                    "compressPdf.subtitle": "直接在浏览器里减小 PDF 文件体积。压缩效果取决于 PDF 内部内容。",
+                    "compressPdf.dropCopy": "选择一个 PDF 文件，减小体积后下载压缩副本。",
+                    "compressPdf.selectedCopy": "当前选择了一个 PDF 用于压缩",
+                    "compressPdf.selectedMeta": "18.2 MB · 24 页",
+                    "compressPdf.resultCopy": "下载前可以先查看压缩后的文件大小。",
+                    "compressPdf.resultMeta": "18.2 MB -> 7.6 MB · 节省 58%",
+                    "compressPdf.settingsCopy": "压缩等级使用单选控制，让流程保持简短。",
+                    "compressPdf.level": "压缩等级",
+                    "compressPdf.levelValue": "均衡",
+                    "compressPdf.levelLow": "低质量损失",
+                    "compressPdf.levelBalanced": "均衡",
+                    "compressPdf.levelHigh": "更小文件",
+                    "compressPdf.processInfo": "处理状态",
+                    "compressPdf.processInfoCopy": "页面会显示压缩是否已就绪、处理中、处理成功，或是否因为文件格式不支持而无法处理。",
+                    "compressPdf.action": "压缩 PDF",
+                    "compressPdf.faqOneQ": "PDF 会被上传吗？",
+                    "compressPdf.faqOneA": "不会。页面应当把支持的压缩处理留在浏览器里完成。",
+                    "compressPdf.faqTwoQ": "为什么有的文件压缩不明显？",
+                    "compressPdf.faqTwoA": "已经优化过的 PDF 可能缩小不多，所以界面要说明压缩效果取决于 PDF 内容。",
+                    "compressPdf.faqThreeQ": "支持什么文件？",
+                    "compressPdf.faqThreeA": "PDF 压缩只接受 PDF 文件。",
+                    "pdfToImages.subtitle": "把 PDF 每一页转换为按顺序排列的图片，并提供页面预览和下载操作。",
+                    "pdfToImages.dropCopy": "选择一个 PDF，设置输出格式，然后导出全部页面或指定页码范围。",
+                    "pdfToImages.previewTitle": "页面输出预览",
+                    "pdfToImages.previewCopy": "输出图片顺序和原 PDF 页码一致。",
+                    "pdfToImages.downloadAll": "全部下载",
+                    "pdfToImages.settingsCopy": "格式、质量、页码范围仍放在右侧设置面板，和当前工具页一致。",
+                    "pdfToImages.range": "页码范围",
+                    "pdfToImages.rangeValue": "全部页面",
+                    "pdfToImages.allPages": "全部页面",
+                    "pdfToImages.action": "转换为图片",
+                    "cropImage.subtitle": "用当前图片工具一致的直接工作台完成图片裁剪。",
+                    "cropImage.dropCopy": "选择图片并调整裁剪区域。裁剪需要直接操作，所以主预览区比文件列表更重要。",
+                    "cropImage.resultCopy": "结果区确认裁剪后的输出尺寸。",
+                    "cropImage.settingsCopy": "裁剪比例沿用当前格式选择控件的分段按钮样式。",
+                    "cropImage.ratio": "裁剪比例",
+                    "cropImage.free": "自由",
+                    "cropImage.action": "裁剪图片",
+                    "rotateImage.subtitle": "旋转单张或多张图片，每张图片都可以保留自己的旋转方向。",
+                    "rotateImage.dropCopy": "批量图片旋转要保留文件列表，因为用户可能给每张图片设置不同方向。",
+                    "rotateImage.selectedCopy": "每一行都显示当前选择的旋转方向。",
+                    "rotateImage.rowOneMeta": "2.1 MB · 向右旋转",
+                    "rotateImage.rowTwoMeta": "3.6 MB · 旋转 180°",
+                    "rotateImage.settingsCopy": "全局操作可以先给所有文件应用同一个角度，之后再单独调整每行。",
+                    "rotateImage.angle": "旋转角度",
+                    "rotateImage.left": "左转 90°",
+                    "rotateImage.right": "右转 90°",
+                    "rotateImage.reset": "重置",
+                    "rotateImage.action": "旋转图片",
+                    "related.mergePdf": "压缩后继续合并文档。",
+                    "related.splitPdf": "只保留需要的页面。",
+                    "related.pdfImages": "把页面导出为图片。",
+                    "related.pdfPlanning": "继续处理 PDF 文件。",
+                    "related.imagePlanning": "切换到图片处理工具。",
+                    "related.allTools": "返回工具索引继续查找。",
+                    "planned.dropCopy": "选择文件后，页面会按当前工具要求展示处理设置和结果。",
+                    "planned.imageDrop": "拖入图片文件",
+                    "planned.base64Drop": "粘贴 Base64 内容",
+                    "planned.wordDrop": "拖入 Word 文档",
+                    "planned.convertDrop": "拖入文件",
+                    "planned.pasteBase64": "粘贴 Base64",
+                    "planned.chooseWord": "选择 Word 文件",
+                    "planned.chooseFile": "选择文件",
+                    "planned.supportBase64": "支持输入：Base64 文本",
+                    "planned.supportWord": "支持格式：DOC、DOCX",
+                    "planned.supportConvert": "支持格式取决于选择的转换类型。",
+                    "planned.privacy": "在支持本地处理的功能中，文件会在当前浏览器里处理；涉及模型或高质量转换的工具必须明确说明处理方式。",
+                    "planned.result": "结果区会显示输出文件、处理状态和下载操作。",
+                    "planned.resultMeta": "页面已准备好处理流程",
+                    "planned.status": "页面会显示已就绪、处理中、处理成功或文件不支持。",
+                    "planned.faqOneQ": "文件会上传吗？",
+                    "planned.faqOneA": "支持本地处理的工具会直接在浏览器里完成。",
+                    "planned.faqTwoQ": "支持什么文件？",
+                    "planned.faqThreeQ": "处理失败怎么办？",
+                    "planned.faqThreeA": "页面会显示失败状态，并保留原文件不变。",
+                    "planned.watermark.action": "添加水印",
+                    "planned.watermark.settings": "水印设置包含文字、透明度、位置和输出格式。",
+                    "planned.watermark.primaryLabel": "水印类型",
+                    "planned.watermark.primaryValue": "文字",
+                    "planned.watermark.optionOne": "文字水印",
+                    "planned.watermark.optionTwo": "标识水印",
+                    "planned.removeBackground.action": "去除背景",
+                    "planned.removeBackground.settings": "页面必须说明去背景是本地处理、模型处理，还是接入第三方服务。",
+                    "planned.removeBackground.primaryLabel": "输出",
+                    "planned.removeBackground.primaryValue": "透明 PNG",
+                    "planned.removeBackground.optionOne": "透明背景",
+                    "planned.removeBackground.optionTwo": "纯色背景",
+                    "planned.imageToBase64.action": "转换为 Base64",
+                    "planned.imageToBase64.settings": "输出可以只保留 Base64 正文，也可以包含完整 data URL 前缀。",
+                    "planned.imageToBase64.primaryLabel": "输出文本",
+                    "planned.imageToBase64.primaryValue": "Data URL",
+                    "planned.imageToBase64.optionOne": "完整 Data URL",
+                    "planned.imageToBase64.optionTwo": "仅 Base64",
+                    "planned.base64ToImage.action": "生成图片",
+                    "planned.base64ToImage.settings": "输入 Base64 文本后，先预览解码图片，再下载结果。",
+                    "planned.base64ToImage.primaryLabel": "输出格式",
+                    "planned.base64ToImage.primaryValue": "PNG",
+                    "planned.base64ToImage.optionOne": "PNG",
+                    "planned.base64ToImage.optionTwo": "JPG",
+                    "planned.rotatePdf.action": "旋转 PDF",
+                    "planned.rotatePdf.settings": "旋转可以应用到全部页面，也可以只应用到指定页码范围。",
+                    "planned.rotatePdf.primaryLabel": "旋转方向",
+                    "planned.rotatePdf.primaryValue": "右转 90°",
+                    "planned.rotatePdf.optionOne": "全部页面",
+                    "planned.rotatePdf.optionTwo": "指定页面",
+                    "planned.extractPdfPages.action": "提取页面",
+                    "planned.extractPdfPages.settings": "用户可以输入页码范围，并下载只包含这些页面的新 PDF。",
+                    "planned.extractPdfPages.primaryLabel": "页码范围",
+                    "planned.extractPdfPages.primaryValue": "1-3",
+                    "planned.extractPdfPages.optionOne": "单个范围",
+                    "planned.extractPdfPages.optionTwo": "多个范围",
+                    "planned.addPageNumbers.action": "添加页码",
+                    "planned.addPageNumbers.settings": "页码设置包含位置、起始页码和字号。",
+                    "planned.addPageNumbers.primaryLabel": "页码位置",
+                    "planned.addPageNumbers.primaryValue": "底部居中",
+                    "planned.addPageNumbers.optionOne": "底部居中",
+                    "planned.addPageNumbers.optionTwo": "底部右侧",
+                    "planned.signPdf.action": "签署 PDF",
+                    "planned.signPdf.settings": "签名设置包含输入签名、手写签名和图片签名。",
+                    "planned.signPdf.primaryLabel": "签名类型",
+                    "planned.signPdf.primaryValue": "手写",
+                    "planned.signPdf.optionOne": "手写签名",
+                    "planned.signPdf.optionTwo": "上传签名图片",
+                    "planned.protectPdf.action": "加密 PDF",
+                    "planned.protectPdf.settings": "密码控件必须说明密码在当前浏览器中处理。",
+                    "planned.protectPdf.primaryLabel": "密码",
+                    "planned.protectPdf.primaryValue": "必填",
+                    "planned.protectPdf.optionOne": "打开密码",
+                    "planned.protectPdf.optionTwo": "确认密码",
+                    "planned.unlockPdf.action": "解密 PDF",
+                    "planned.unlockPdf.settings": "只有用户已经知道密码时才处理解密。",
+                    "planned.unlockPdf.primaryLabel": "密码",
+                    "planned.unlockPdf.primaryValue": "用户提供",
+                    "planned.unlockPdf.optionOne": "输入密码",
+                    "planned.unlockPdf.optionTwo": "保留原文件",
+                    "planned.pdfToWord.action": "转换为 Word",
+                    "planned.pdfToWord.settings": "高质量 PDF 转 Word 标记为后续评估内容。",
+                    "planned.pdfToWord.primaryLabel": "输出",
+                    "planned.pdfToWord.primaryValue": "DOCX",
+                    "planned.pdfToWord.optionOne": "可编辑 DOCX",
+                    "planned.pdfToWord.optionTwo": "保留版式",
+                    "planned.wordToPdf.action": "转换为 PDF",
+                    "planned.wordToPdf.settings": "Word 转 PDF 需要文档解析能力，并保持上传、处理、下载的短流程。",
+                    "planned.wordToPdf.primaryLabel": "输出",
+                    "planned.wordToPdf.primaryValue": "PDF",
+                    "planned.wordToPdf.optionOne": "保留版式",
+                    "planned.wordToPdf.optionTwo": "适合打印",
+                    "planned.moreConvert.action": "选择转换",
+                    "planned.moreConvert.settings": "更多转换页面可以按文件类型和源格式到目标格式继续扩展。",
+                    "planned.moreConvert.primaryLabel": "转换类型",
+                    "planned.moreConvert.primaryValue": "格式组合",
+                    "planned.moreConvert.optionOne": "文档转换",
+                    "planned.moreConvert.optionTwo": "图片转换",
+                    "footer.copy": "免费 PDF 和图片工具，在支持本地处理的功能中让文件留在浏览器里。"
+            }
+    };
+
+    const plannedTools = {
+      watermarkImage: {
+        titleKey: "tools.watermarkImage.title",
+        subtitleKey: "tools.watermarkImage.card",
+        kind: "IMG",
+        file: "product-watermarked.png",
+        supportKey: "tool.supportImages",
+        dropKey: "planned.imageDrop",
+        chooseKey: "tool.chooseImages",
+        actionKey: "planned.watermark.action",
+        settingsKey: "planned.watermark.settings",
+        primaryLabelKey: "planned.watermark.primaryLabel",
+        primaryValueKey: "planned.watermark.primaryValue",
+        optionOneKey: "planned.watermark.optionOne",
+        optionTwoKey: "planned.watermark.optionTwo"
+      },
+      removeBackground: {
+        titleKey: "tools.removeBackground.title",
+        subtitleKey: "tools.removeBackground.card",
+        kind: "IMG",
+        file: "portrait-transparent.png",
+        supportKey: "tool.supportImages",
+        dropKey: "planned.imageDrop",
+        chooseKey: "tool.chooseImages",
+        actionKey: "planned.removeBackground.action",
+        settingsKey: "planned.removeBackground.settings",
+        primaryLabelKey: "planned.removeBackground.primaryLabel",
+        primaryValueKey: "planned.removeBackground.primaryValue",
+        optionOneKey: "planned.removeBackground.optionOne",
+        optionTwoKey: "planned.removeBackground.optionTwo"
+      },
+      imageToBase64: {
+        titleKey: "tools.imageToBase64.title",
+        subtitleKey: "tools.imageToBase64.card",
+        kind: "TXT",
+        file: "image-base64.txt",
+        supportKey: "tool.supportImages",
+        dropKey: "planned.imageDrop",
+        chooseKey: "tool.chooseImages",
+        actionKey: "planned.imageToBase64.action",
+        settingsKey: "planned.imageToBase64.settings",
+        primaryLabelKey: "planned.imageToBase64.primaryLabel",
+        primaryValueKey: "planned.imageToBase64.primaryValue",
+        optionOneKey: "planned.imageToBase64.optionOne",
+        optionTwoKey: "planned.imageToBase64.optionTwo"
+      },
+      base64ToImage: {
+        titleKey: "tools.base64ToImage.title",
+        subtitleKey: "tools.base64ToImage.card",
+        kind: "IMG",
+        file: "decoded-image.png",
+        supportKey: "planned.supportBase64",
+        dropKey: "planned.base64Drop",
+        chooseKey: "planned.pasteBase64",
+        actionKey: "planned.base64ToImage.action",
+        settingsKey: "planned.base64ToImage.settings",
+        primaryLabelKey: "planned.base64ToImage.primaryLabel",
+        primaryValueKey: "planned.base64ToImage.primaryValue",
+        optionOneKey: "planned.base64ToImage.optionOne",
+        optionTwoKey: "planned.base64ToImage.optionTwo"
+      },
+      rotatePdf: {
+        titleKey: "tools.rotatePdf.title",
+        subtitleKey: "tools.rotatePdf.card",
+        kind: "PDF",
+        file: "rotated-document.pdf",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.rotatePdf.action",
+        settingsKey: "planned.rotatePdf.settings",
+        primaryLabelKey: "planned.rotatePdf.primaryLabel",
+        primaryValueKey: "planned.rotatePdf.primaryValue",
+        optionOneKey: "planned.rotatePdf.optionOne",
+        optionTwoKey: "planned.rotatePdf.optionTwo"
+      },
+      extractPdfPages: {
+        titleKey: "tools.extractPdfPages.title",
+        subtitleKey: "tools.extractPdfPages.card",
+        kind: "PDF",
+        file: "selected-pages.pdf",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.extractPdfPages.action",
+        settingsKey: "planned.extractPdfPages.settings",
+        primaryLabelKey: "planned.extractPdfPages.primaryLabel",
+        primaryValueKey: "planned.extractPdfPages.primaryValue",
+        optionOneKey: "planned.extractPdfPages.optionOne",
+        optionTwoKey: "planned.extractPdfPages.optionTwo"
+      },
+      addPageNumbers: {
+        titleKey: "tools.addPageNumbers.title",
+        subtitleKey: "tools.addPageNumbers.card",
+        kind: "PDF",
+        file: "numbered-document.pdf",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.addPageNumbers.action",
+        settingsKey: "planned.addPageNumbers.settings",
+        primaryLabelKey: "planned.addPageNumbers.primaryLabel",
+        primaryValueKey: "planned.addPageNumbers.primaryValue",
+        optionOneKey: "planned.addPageNumbers.optionOne",
+        optionTwoKey: "planned.addPageNumbers.optionTwo"
+      },
+      signPdf: {
+        titleKey: "tools.signPdf.title",
+        subtitleKey: "tools.signPdf.card",
+        kind: "PDF",
+        file: "signed-document.pdf",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.signPdf.action",
+        settingsKey: "planned.signPdf.settings",
+        primaryLabelKey: "planned.signPdf.primaryLabel",
+        primaryValueKey: "planned.signPdf.primaryValue",
+        optionOneKey: "planned.signPdf.optionOne",
+        optionTwoKey: "planned.signPdf.optionTwo"
+      },
+      protectPdf: {
+        titleKey: "tools.protectPdf.title",
+        subtitleKey: "tools.protectPdf.card",
+        kind: "PDF",
+        file: "protected-document.pdf",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.protectPdf.action",
+        settingsKey: "planned.protectPdf.settings",
+        primaryLabelKey: "planned.protectPdf.primaryLabel",
+        primaryValueKey: "planned.protectPdf.primaryValue",
+        optionOneKey: "planned.protectPdf.optionOne",
+        optionTwoKey: "planned.protectPdf.optionTwo"
+      },
+      unlockPdf: {
+        titleKey: "tools.unlockPdf.title",
+        subtitleKey: "tools.unlockPdf.card",
+        kind: "PDF",
+        file: "unlocked-document.pdf",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.unlockPdf.action",
+        settingsKey: "planned.unlockPdf.settings",
+        primaryLabelKey: "planned.unlockPdf.primaryLabel",
+        primaryValueKey: "planned.unlockPdf.primaryValue",
+        optionOneKey: "planned.unlockPdf.optionOne",
+        optionTwoKey: "planned.unlockPdf.optionTwo"
+      },
+      pdfToWord: {
+        titleKey: "tools.pdfToWord.title",
+        subtitleKey: "tools.pdfToWord.card",
+        kind: "DOC",
+        file: "converted-document.docx",
+        supportKey: "tool.supportPdf",
+        dropKey: "tool.dropPdf",
+        chooseKey: "tool.choosePdf",
+        actionKey: "planned.pdfToWord.action",
+        settingsKey: "planned.pdfToWord.settings",
+        primaryLabelKey: "planned.pdfToWord.primaryLabel",
+        primaryValueKey: "planned.pdfToWord.primaryValue",
+        optionOneKey: "planned.pdfToWord.optionOne",
+        optionTwoKey: "planned.pdfToWord.optionTwo"
+      },
+      wordToPdf: {
+        titleKey: "tools.wordToPdf.title",
+        subtitleKey: "tools.wordToPdf.card",
+        kind: "PDF",
+        file: "document.pdf",
+        supportKey: "planned.supportWord",
+        dropKey: "planned.wordDrop",
+        chooseKey: "planned.chooseWord",
+        actionKey: "planned.wordToPdf.action",
+        settingsKey: "planned.wordToPdf.settings",
+        primaryLabelKey: "planned.wordToPdf.primaryLabel",
+        primaryValueKey: "planned.wordToPdf.primaryValue",
+        optionOneKey: "planned.wordToPdf.optionOne",
+        optionTwoKey: "planned.wordToPdf.optionTwo"
+      },
+      moreConvert: {
+        titleKey: "tools.moreConvert.title",
+        subtitleKey: "tools.moreConvert.card",
+        kind: "FILE",
+        file: "converted-file.zip",
+        supportKey: "planned.supportConvert",
+        dropKey: "planned.convertDrop",
+        chooseKey: "planned.chooseFile",
+        actionKey: "planned.moreConvert.action",
+        settingsKey: "planned.moreConvert.settings",
+        primaryLabelKey: "planned.moreConvert.primaryLabel",
+        primaryValueKey: "planned.moreConvert.primaryValue",
+        optionOneKey: "planned.moreConvert.optionOne",
+        optionTwoKey: "planned.moreConvert.optionTwo"
+      }
+    };
+
+    let currentLanguage = "zh";
+    let currentPlannedTool = "signPdf";
+
+    function showScreen(screenName) {
+      document.querySelectorAll("[data-screen]").forEach((screen) => {
+        screen.classList.toggle("is-active", screen.dataset.screen === screenName);
+      });
+
+      document.querySelectorAll("[data-screen-link]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.screenLink === screenName);
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function applyPlannedTool(toolName) {
+      const tool = plannedTools[toolName] || plannedTools.signPdf;
+      currentPlannedTool = toolName in plannedTools ? toolName : "signPdf";
+      const setText = (selector, value) => {
+        const node = document.querySelector(selector);
+        if (node) node.textContent = value;
+      };
+      const translate = (key) => translations[currentLanguage][key] || translations.en[key] || key;
+
+      setText("[data-planned-title]", translate(tool.titleKey));
+      setText("[data-planned-subtitle]", translate(tool.subtitleKey));
+      setText("[data-planned-drop]", translate(tool.dropKey));
+      setText("[data-planned-drop-copy]", translate("planned.dropCopy"));
+      setText("[data-planned-choose]", translate(tool.chooseKey));
+      setText("[data-planned-support]", translate(tool.supportKey));
+      setText("[data-planned-privacy]", translate("planned.privacy"));
+      setText("[data-planned-result]", translate("planned.result"));
+      setText("[data-planned-chip]", tool.kind);
+      setText("[data-planned-file]", tool.file);
+      setText("[data-planned-result-meta]", translate("planned.resultMeta"));
+      setText("[data-planned-settings]", translate(tool.settingsKey));
+      setText("[data-planned-primary-label]", translate(tool.primaryLabelKey));
+      setText("[data-planned-primary-value]", translate(tool.primaryValueKey));
+      setText("[data-planned-option-one]", translate(tool.optionOneKey));
+      setText("[data-planned-option-two]", translate(tool.optionTwoKey));
+      setText("[data-planned-status]", translate("planned.status"));
+      setText("[data-planned-action]", translate(tool.actionKey));
+      setText("[data-planned-faq-one-q]", translate("planned.faqOneQ"));
+      setText("[data-planned-faq-one-a]", translate("planned.faqOneA"));
+      setText("[data-planned-faq-two-q]", translate("planned.faqTwoQ"));
+      setText("[data-planned-faq-two-a]", translate(tool.supportKey));
+      setText("[data-planned-faq-three-q]", translate("planned.faqThreeQ"));
+      setText("[data-planned-faq-three-a]", translate("planned.faqThreeA"));
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = language;
+      document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.dataset.i18n;
+        node.textContent = translations[language][key] || node.textContent;
+      });
+      applyPlannedTool(currentPlannedTool);
+
+      document.querySelectorAll("[data-language]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.language === language);
+      });
+    }
+
+    // 这个静态页面只负责展示界面流程，文件处理能力由正式页面接入。
+    document.querySelectorAll("[data-screen-link]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showScreen(button.dataset.screenLink);
+      });
+    });
+
+    document.querySelectorAll("[data-tool-link]").forEach((button) => {
+      button.addEventListener("click", () => {
+        applyPlannedTool(button.dataset.toolLink);
+        showScreen("plannedTool");
+      });
+    });
+
+    document.querySelectorAll("[data-language]").forEach((button) => {
+      button.addEventListener("click", () => {
+        applyLanguage(button.dataset.language);
+      });
+    });
+
+    applyPlannedTool(currentPlannedTool);
+    applyLanguage(currentLanguage);
+  </script>
+</body>
+</html>

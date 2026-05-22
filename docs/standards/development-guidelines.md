@@ -1,4 +1,4 @@
-# FilePilot Tools 后续开发规范
+﻿# FilePilot Tools 后续开发规范
 
 ## 1. 文档目的
 
@@ -6,11 +6,11 @@
 
 当前已确认的原型文件：
 
-- `D:\zhizhouAi\myproject\prototype\index.html`
+- `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html`
 
 当前已确认的产品文档：
 
-- `D:\zhizhouAi\myproject\global-tools-site-product-doc.md`
+- `D:\zhizhouAi\myproject\docs\requirements\global-tools-site-product-doc.md`
 
 后续开发时，如果产品文档和原型表现不一致，以用户最新确认过的原型效果为准。
 
@@ -23,13 +23,13 @@
 正确示例：
 
 ```text
-D:\zhizhouAi\myproject\prototype\index.html
+D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html
 ```
 
 错误示例：
 
 ```text
-prototype\index.html
+prototypes\filepilot-tools\index.html
 ```
 
 这样做是为了方便直接定位文件，不需要再自己拼路径。
@@ -106,7 +106,7 @@ FilePilot Tools
 
 ### 3.3 当前原型页面范围
 
-当前原型文件 `D:\zhizhouAi\myproject\prototype\index.html` 包含五个页面状态：
+当前原型文件 `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html` 包含五个页面状态：
 
 - 首页
 - 图片压缩页
@@ -202,7 +202,7 @@ FilePilot Tools
 
 对应文件：
 
-- `D:\zhizhouAi\myproject\prototype\index.html`
+- `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html`
 
 图标风格要求：
 
@@ -257,7 +257,7 @@ FilePilot Tools
 
 ### 6.2 文案维护方式
 
-当前原型在 `D:\zhizhouAi\myproject\prototype\index.html` 的 `translations` 对象里维护文案。
+当前原型在 `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html` 的 `translations` 对象里维护文案。
 
 后续正式项目建议拆成：
 
@@ -334,7 +334,7 @@ Files are processed directly in your browser and are not uploaded to our server.
 
 ## 9. 原型和正式功能边界
 
-当前 `D:\zhizhouAi\myproject\prototype\index.html` 是原型。
+当前 `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html` 是原型。
 
 原型里可以使用模拟结果，但必须让代码注释写清楚：
 
@@ -505,7 +505,7 @@ Compress Image Online - Reduce Image Size in Browser
 
 ### 14.1 原型验证
 
-修改 `D:\zhizhouAi\myproject\prototype\index.html` 后，至少检查：
+修改 `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html` 后，至少检查：
 
 - 首页是否显示
 - 中英文切换是否正常

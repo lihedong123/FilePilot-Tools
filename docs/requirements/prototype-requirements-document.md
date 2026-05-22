@@ -1,4 +1,4 @@
-# FilePilot Tools 需求文档
+﻿# FilePilot Tools 需求文档
 
 ## 1. 文档说明
 
@@ -9,19 +9,19 @@
 原型来源：
 
 ```text
-D:\zhizhouAi\myproject\prototype\index.html
+D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html
 ```
 
 已有产品方向文档：
 
 ```text
-D:\zhizhouAi\myproject\global-tools-site-product-doc.md
+D:\zhizhouAi\myproject\docs\requirements\global-tools-site-product-doc.md
 ```
 
 已有开发规范文档：
 
 ```text
-D:\zhizhouAi\myproject\development-guidelines.md
+D:\zhizhouAi\myproject\docs\standards\development-guidelines.md
 ```
 
 本文档重点说明：
@@ -59,7 +59,7 @@ FilePilot Tools
 原型文件：
 
 ```text
-D:\zhizhouAi\myproject\prototype\index.html
+D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html
 ```
 
 原型中包含 5 个页面状态：
@@ -455,7 +455,7 @@ Compress Images
 
 ### 6.10 当前原型逻辑说明
 
-当前 `D:\zhizhouAi\myproject\prototype\index.html` 里的图片压缩结果是模拟的。
+当前 `D:\zhizhouAi\myproject\prototypes\filepilot-tools\index.html` 里的图片压缩结果是模拟的。
 
 模拟逻辑：
 
