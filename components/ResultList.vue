@@ -27,9 +27,12 @@
           <td>{{ result.originalSize ? formatBytes(result.originalSize) : '-' }}</td>
           <td>{{ result.newSize ? formatBytes(result.newSize) : '-' }}</td>
           <td>
-            <span :class="result.savedPercent && result.savedPercent > 0 ? 'saving' : 'muted-text'">
+            <span :class="getSummaryClass(result)">
               {{ result.summary }}
             </span>
+            <p v-if="result.message" class="result-message">
+              {{ result.message }}
+            </p>
           </td>
           <td>
             <button
@@ -52,6 +55,7 @@
           {{ formatBytes(result.originalSize) }} -> {{ formatBytes(result.newSize) }}
         </span>
         <span>{{ result.summary }}</span>
+        <span v-if="result.message" class="result-message">{{ result.message }}</span>
         <button
           class="download-button"
           type="button"
@@ -77,6 +81,14 @@ const props = defineProps<{
   results: ProcessedResult[]
   toolKey?: ToolKey
 }>()
+
+function getSummaryClass(result: ProcessedResult) {
+  if (result.status === 'warning') {
+    return 'warning-text'
+  }
+
+  return result.savedPercent && result.savedPercent > 0 ? 'saving' : 'muted-text'
+}
 
 function download(result: ProcessedResult) {
   if (result.blob) {

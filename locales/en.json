@@ -182,6 +182,15 @@
     "high": "High compression",
     "notice": "Compression depends on PDF content. If the PDF is already compressed, the file size may not change much."
   },
+  "result": {
+    "savedPercent": "{percent}% saved",
+    "savedLessThanOne": "Saved less than 1%",
+    "imageAlreadyOptimized": "Already optimized, kept original {size} file",
+    "pdfCannotReduce": "Cannot reduce further, kept original {size} file",
+    "pdfCannotReduceMessage": "This PDF is already optimized or contains content that cannot be reduced in the browser.",
+    "pdfCompressionDepends": "Compression depends on how the PDF was created.",
+    "pdfRasterCompressionMessage": "This mode rasterizes pages for stronger compression, so text may no longer be selectable."
+  },
   "qr": {
     "inputModeLabel": "Input type",
     "textMode": "Text or link",

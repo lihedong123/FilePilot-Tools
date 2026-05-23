@@ -182,6 +182,15 @@
     "high": "高压缩",
     "notice": "压缩效果取决于 PDF 内容。如果 PDF 已经被压缩过，文件大小可能不会明显变小。"
   },
+  "result": {
+    "savedPercent": "节省 {percent}%",
+    "savedLessThanOne": "节省不足 1%",
+    "imageAlreadyOptimized": "图片已经比较小，已保留原文件 {size}",
+    "pdfCannotReduce": "无法继续压缩，已保留原文件 {size}",
+    "pdfCannotReduceMessage": "这个 PDF 可能已经优化过，或者包含浏览器内无法继续压缩的内容。",
+    "pdfCompressionDepends": "压缩效果取决于 PDF 的生成方式。",
+    "pdfRasterCompressionMessage": "当前模式会把页面重新压成图片，压缩更明显，但文字可能不能再选中。"
+  },
   "qr": {
     "inputModeLabel": "输入方式",
     "textMode": "文字或链接",

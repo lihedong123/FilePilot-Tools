@@ -87,7 +87,7 @@
         </div>
 
         <p v-if="error" class="error-text">{{ error }}</p>
-        <button class="primary-button process-button" type="button" :disabled="processing" @click="handleProcess">
+        <button class="primary-button process-button" type="button" :disabled="processing" @click="handleProcessAndDownload">
           {{ processing ? t('tool.statusProcessing') : t(tool.actionKey) }}
         </button>
       </aside>
@@ -111,6 +111,7 @@ type ImageTransform = {
 const { t } = useLocale()
 const { getTool } = useToolCatalog()
 const { rotateImages } = useRotateImage()
+const { downloadBlob } = useDownloadFile()
 const { trackToolEvent } = useToolAnalytics()
 const tool = getTool('rotate-image')
 const files = ref<File[]>([])
@@ -270,6 +271,24 @@ async function handleProcess() {
   } finally {
     processing.value = false
   }
+}
+
+async function handleProcessAndDownload() {
+  await handleProcess()
+
+  if (error.value || results.value.length === 0) {
+    return
+  }
+
+  results.value.forEach((result) => {
+    if (result.blob) {
+      downloadBlob(result.blob, result.downloadName)
+      trackToolEvent('tool_result_downloaded', {
+        tool_key: tool.key,
+        result_count: 1
+      })
+    }
+  })
 }
 
 onBeforeUnmount(() => {

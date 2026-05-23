@@ -395,6 +395,19 @@ button:disabled {
   color: var(--muted);
 }
 
+.warning-text {
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 760;
+}
+
+.result-message {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .section {
   padding: 54px 0;
 }
