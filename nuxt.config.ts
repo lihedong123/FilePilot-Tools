@@ -1,8 +1,8 @@
 const analyticsScripts = []
 
 const cloudflareAnalyticsToken = process.env.NUXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
-const la51Id = process.env.NUXT_PUBLIC_51LA_ID
-const la51Ck = process.env.NUXT_PUBLIC_51LA_CK
+const la51Id = process.env.NUXT_PUBLIC_51LA_ID || '3Q1UejfAH5jOa1gt'
+const la51Ck = process.env.NUXT_PUBLIC_51LA_CK || '3Q1UejfAH5jOa1gt'
 
 if (cloudflareAnalyticsToken) {
   analyticsScripts.push({
@@ -18,7 +18,7 @@ if (la51Id && la51Ck) {
   const la51Params = new URLSearchParams({
     id: la51Id,
     ck: la51Ck,
-    // 这个网站是 Nuxt 单页跳转体验，开启后 51la 才能更好地记录页面内路由变化。
+    // Nuxt can change pages without a full browser reload, so hashMode lets 51la record those page changes.
     hashMode: 'true'
   })
 
