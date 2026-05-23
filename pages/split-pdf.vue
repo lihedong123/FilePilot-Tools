@@ -1,7 +1,7 @@
 <template>
   <div>
     <section class="container tool-page-header">
-      <NuxtLink class="crumb-link" to="/">{{ t('tool.back') }}</NuxtLink>
+      <NuxtLink class="crumb-link" to="/tools">{{ t('tool.back') }}</NuxtLink>
       <h1 class="tool-title">{{ t(tool.titleKey) }}</h1>
       <p class="tool-subtitle">{{ t(tool.descriptionKey) }}</p>
     </section>
