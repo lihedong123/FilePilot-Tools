@@ -1,8 +1,6 @@
 const analyticsScripts = []
 
 const cloudflareAnalyticsToken = process.env.NUXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
-const la51Id = process.env.NUXT_PUBLIC_51LA_ID || '3Q1UejfAH5jOa1gt'
-const la51Ck = process.env.NUXT_PUBLIC_51LA_CK || '3Q1UejfAH5jOa1gt'
 
 if (cloudflareAnalyticsToken) {
   analyticsScripts.push({
@@ -11,22 +9,6 @@ if (cloudflareAnalyticsToken) {
     'data-cf-beacon': JSON.stringify({
       token: cloudflareAnalyticsToken
     })
-  })
-}
-
-if (la51Id && la51Ck) {
-  const la51Params = new URLSearchParams({
-    id: la51Id,
-    ck: la51Ck,
-    // Nuxt can change pages without a full browser reload, so hashMode lets 51la record those page changes.
-    hashMode: 'true'
-  })
-
-  analyticsScripts.push({
-    id: 'LA_COLLECT',
-    charset: 'UTF-8',
-    src: `https://sdk.51.la/js-sdk-pro.min.js?${la51Params.toString()}`,
-    defer: true
   })
 }
 
