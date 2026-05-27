@@ -18,13 +18,11 @@
 const { t } = useLocale()
 const { imageTools } = useToolCatalog()
 
-useHead(() => ({
-  title: t('seo.imageCategoryTitle'),
-  meta: [
-    {
-      name: 'description',
-      content: t('seo.imageCategoryDescription')
-    }
-  ]
-}))
+usePageSeo({
+  titleKey: 'seo.imageCategoryTitle',
+  descriptionKey: 'seo.imageCategoryDescription',
+  path: '/image-tools',
+  schemaType: 'CollectionPage'
+})
 </script>
+

@@ -42,7 +42,7 @@
     </section>
 
     <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
-    <ToolFaq class="container" />
+    <ToolFaq class="container" :tool-key="tool.key" />
   </div>
 </template>
 
@@ -77,7 +77,7 @@ function clearFiles() {
 }
 
 function moveFile() {
-  // 单文件工具不需要调整顺序；保留这个事件处理是为了复用 FileDropzone 的统一组件接口。
+  // Single-file PDF splitting does not use ordering; this keeps FileDropzone on one shared event API.
 }
 
 async function handleProcess() {
@@ -110,13 +110,6 @@ async function handleProcess() {
   }
 }
 
-useHead(() => ({
-  title: t(tool.seoTitleKey),
-  meta: [
-    {
-      name: 'description',
-      content: t(tool.seoDescriptionKey)
-    }
-  ]
-}))
+useToolSeo(tool)
 </script>
+

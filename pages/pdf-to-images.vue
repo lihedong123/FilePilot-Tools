@@ -60,7 +60,7 @@
     </section>
 
     <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
-    <ToolFaq class="container" />
+    <ToolFaq class="container" :tool-key="tool.key" />
   </div>
 </template>
 
@@ -101,7 +101,7 @@ function clearFiles() {
 }
 
 function moveFile() {
-  // PDF 转图片只处理一个 PDF，保留空函数是为了让页面继续使用同一个文件选择组件。
+  // Single-file PDF rendering does not use ordering; this keeps FileDropzone on one shared event API.
 }
 
 async function handleProcess() {
@@ -135,13 +135,6 @@ async function handleProcess() {
   }
 }
 
-useHead(() => ({
-  title: t(tool.seoTitleKey),
-  meta: [
-    {
-      name: 'description',
-      content: t(tool.seoDescriptionKey)
-    }
-  ]
-}))
+useToolSeo(tool)
 </script>
+

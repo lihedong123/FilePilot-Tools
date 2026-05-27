@@ -109,7 +109,7 @@ function openCompressorWithFiles(fileList: FileList | File[]) {
     return
   }
 
-  // 首页快速入口只负责接住文件并跳到压缩页，真正的压缩逻辑仍然在图片压缩页执行。
+  // The homepage only carries valid image files into the image compressor; actual compression still runs on the tool page.
   quickCompressFiles.value = imageFiles.slice(0, 20)
   trackToolEvent('tool_file_selected', {
     tool_key: 'image-compressor',
@@ -137,13 +137,11 @@ function handleQuickInput(event: Event) {
   }
 }
 
-useHead(() => ({
-  title: t('seo.homeTitle'),
-  meta: [
-    {
-      name: 'description',
-      content: t('seo.homeDescription')
-    }
-  ]
-}))
+usePageSeo({
+  titleKey: 'seo.homeTitle',
+  descriptionKey: 'seo.homeDescription',
+  path: '/',
+  schemaType: 'WebSite'
+})
 </script>
+

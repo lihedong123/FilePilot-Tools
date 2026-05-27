@@ -1,6 +1,7 @@
 const analyticsScripts = []
 
 const cloudflareAnalyticsToken = process.env.NUXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN
+const la51AnalyticsScript = process.env.NUXT_PUBLIC_51LA_ANALYTICS_SCRIPT
 
 if (cloudflareAnalyticsToken) {
   analyticsScripts.push({
@@ -9,6 +10,13 @@ if (cloudflareAnalyticsToken) {
     'data-cf-beacon': JSON.stringify({
       token: cloudflareAnalyticsToken
     })
+  })
+}
+
+if (la51AnalyticsScript) {
+  analyticsScripts.push({
+    src: la51AnalyticsScript,
+    defer: true
   })
 }
 

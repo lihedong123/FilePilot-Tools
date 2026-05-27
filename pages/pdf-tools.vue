@@ -18,13 +18,11 @@
 const { t } = useLocale()
 const { pdfTools } = useToolCatalog()
 
-useHead(() => ({
-  title: t('seo.pdfCategoryTitle'),
-  meta: [
-    {
-      name: 'description',
-      content: t('seo.pdfCategoryDescription')
-    }
-  ]
-}))
+usePageSeo({
+  titleKey: 'seo.pdfCategoryTitle',
+  descriptionKey: 'seo.pdfCategoryDescription',
+  path: '/pdf-tools',
+  schemaType: 'CollectionPage'
+})
 </script>
+

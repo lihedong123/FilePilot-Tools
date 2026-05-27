@@ -39,7 +39,7 @@
     </section>
 
     <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
-    <ToolFaq class="container" />
+    <ToolFaq class="container" :tool-key="tool.key" />
   </div>
 </template>
 
@@ -113,13 +113,6 @@ async function handleProcess() {
   }
 }
 
-useHead(() => ({
-  title: t(tool.seoTitleKey),
-  meta: [
-    {
-      name: 'description',
-      content: t(tool.seoDescriptionKey)
-    }
-  ]
-}))
+useToolSeo(tool)
 </script>
+

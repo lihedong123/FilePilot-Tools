@@ -49,13 +49,11 @@ const groups = computed(() => [
   }
 ])
 
-useHead(() => ({
-  title: t('seo.allToolsTitle'),
-  meta: [
-    {
-      name: 'description',
-      content: t('seo.allToolsDescription')
-    }
-  ]
-}))
+usePageSeo({
+  titleKey: 'seo.allToolsTitle',
+  descriptionKey: 'seo.allToolsDescription',
+  path: '/tools',
+  schemaType: 'CollectionPage'
+})
 </script>
+

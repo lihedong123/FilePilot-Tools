@@ -145,7 +145,7 @@
       </aside>
     </section>
 
-    <ToolFaq class="container" />
+    <ToolFaq class="container" :tool-key="tool.key" />
   </div>
 </template>
 
@@ -341,13 +341,6 @@ watch([content, imageContent, size, foreground, background, margin, inputMode], 
   }
 })
 
-useHead(() => ({
-  title: t(tool.seoTitleKey),
-  meta: [
-    {
-      name: 'description',
-      content: t(tool.seoDescriptionKey)
-    }
-  ]
-}))
+useToolSeo(tool)
 </script>
+

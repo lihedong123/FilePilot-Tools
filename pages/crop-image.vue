@@ -87,7 +87,7 @@
     </section>
 
     <RelatedTools class="container related-tools" :tool-keys="relatedKeys" />
-    <ToolFaq class="container" />
+    <ToolFaq class="container" :tool-key="tool.key" />
   </div>
 </template>
 
@@ -171,7 +171,7 @@ function clearFiles() {
 }
 
 function moveFile() {
-  // 图片裁剪只处理一张图片，不需要排序；保留这个接口用于复用 FileDropzone。
+  // Single-image cropping does not use ordering; this keeps FileDropzone on one shared event API.
 }
 
 function setRatio(value: CropRatio) {
@@ -298,13 +298,6 @@ onBeforeUnmount(() => {
   }
 })
 
-useHead(() => ({
-  title: t(tool.seoTitleKey),
-  meta: [
-    {
-      name: 'description',
-      content: t(tool.seoDescriptionKey)
-    }
-  ]
-}))
+useToolSeo(tool)
 </script>
+
